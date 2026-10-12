@@ -8,5 +8,5 @@ cd "${CLAUDE_PROJECT_DIR:-$(dirname "$0")/../..}"
 (cd broll && npm install --no-audit --no-fund --silent)
 (cd hyperframes && npm install --no-audit --no-fund --silent && npx --no-install hyperframes browser ensure >/dev/null)
 
-cp -n raw/main.mp4 broll/public/main.mp4
-cp -n raw/main.mp4 hyperframes/ai-seo-day1/main.mp4
+cp --update=none raw/main.mp4 broll/public/main.mp4
+cp --update=none raw/main.mp4 hyperframes/ai-seo-day1/main.mp4
