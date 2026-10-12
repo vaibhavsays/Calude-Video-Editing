@@ -22,5 +22,7 @@ To re-render:
 cd broll
 npm install
 npm run setup
-npm run render -- --browser-executable=<path to chrome-headless-shell>
+./render.sh   # set BROWSER=<path to chrome-headless-shell> if it isn't found automatically
 ```
+
+`render.sh` renders only the B-roll inserts, losslessly (PNG frames to ProRes 4444), and lays them over the untouched original. The original is encoded only once (x264, CRF 15), and the original audio is copied unchanged.
