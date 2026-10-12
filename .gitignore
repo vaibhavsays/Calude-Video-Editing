@@ -18,3 +18,5 @@ broll/public/main.mp4
 # Scratch frames and stills
 work/
 broll/inserts/
+hyperframes/*/main.mp4
+hyperframes/*/renders/
