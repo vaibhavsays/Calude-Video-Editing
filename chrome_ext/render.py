@@ -2,11 +2,13 @@
 """Clean edit of raw/chrome_extension.mp4: colour grade, light denoise + sharpen, clean dissolves, loudness.
 
 Nothing is cut: every frame of the demo stays. The only frames replaced are the ones inside each dissolve.
-Single video encode (x264 CRF 16); audio is normalised to -14 LUFS for social.
+Single video encode (x264 CRF 18, capped at 7 Mbit/s: about 3x the 2.4 Mbit/s source, since the
+phone-filmed screen noise otherwise balloons the file without adding real detail); audio is normalised to -14 LUFS for social.
 """
 import json, subprocess, sys
 from pathlib import Path
 import numpy as np
+from PIL import Image, ImageFilter
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "raw/chrome_extension.mp4"
@@ -58,6 +60,14 @@ def graded_frames(frames):
     assert len(arr) == len(frames), (len(arr), len(frames))
     return dict(zip(sorted(frames), arr))
 
+BLUR = 22  # peak blur radius (px) at the middle of a dissolve
+
+def blur(frame16, sigma):
+    img = Image.fromarray((frame16 >> 8).astype(np.uint8))
+    if sigma > 0.5:
+        img = img.filter(ImageFilter.GaussianBlur(float(sigma)))
+    return np.asarray(img, np.float32)
+
 def build_patches():
     need = set()
     for a, b, lo, li in DISSOLVES:
@@ -74,8 +84,10 @@ def build_patches():
         for n in range(a, b + 1):
             t = (n - a + 1) / span
             k = t * t * (3 - 2 * t)  # smoothstep
-            mix = fr[min(n, lo)].astype(np.float32) * (1 - k) + fr[max(n, li)].astype(np.float32) * k
-            enc.stdin.write(np.clip(mix, 0, 65535).astype(np.uint16).tobytes())
+            # Blur both shots towards the middle so the face and the bright screen never ghost through each other.
+            sigma = BLUR * np.sin(np.pi * t)
+            mix = blur(fr[min(n, lo)], sigma) * (1 - k) + blur(fr[max(n, li)], sigma) * k
+            enc.stdin.write(np.clip(mix * 257, 0, 65535).astype(np.uint16).tobytes())
         enc.stdin.close(); enc.wait()
         patches.append((a, path))
     return patches
@@ -99,7 +111,7 @@ def main():
     chain += f";[v{len(patches)}]format=yuv420p[vout]"
     OUT.parent.mkdir(exist_ok=True)
     run(["ffmpeg", "-v", "error", "-y", *inputs, "-filter_complex", chain, "-map", "[vout]", "-map", "0:a",
-         "-c:v", "libx264", "-preset", "slow", "-crf", "16", "-profile:v", "high", "-tune", "film",
+         "-c:v", "libx264", "-preset", "slow", "-crf", "18", "-maxrate", "7M", "-bufsize", "14M", "-profile:v", "high", "-tune", "film",
          "-af", loudnorm_params(), "-ar", "48000", "-c:a", "aac", "-b:a", "256k",
          "-movflags", "+faststart", str(OUT)])
     print("Wrote", OUT)
