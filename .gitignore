@@ -20,3 +20,4 @@ work/
 broll/inserts/
 hyperframes/*/main.mp4
 hyperframes/*/renders/
+__pycache__/
