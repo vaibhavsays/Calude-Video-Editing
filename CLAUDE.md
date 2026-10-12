@@ -7,6 +7,10 @@ Short-form video editing (9:16 Reels/Shorts). Source footage lives in `raw/`, fi
 - **Remotion** (`broll/`): the AI SEO Day 1 B-roll edit. Re-render with `broll/render.sh`.
 - **FFmpeg** is installed system-wide.
 
+## Thumbnails
+- Every Instagram Reel gets a cover in the standard style in `thumbnails/STYLE.md` (reference: `thumbnails/style_reference.webp`). Follow it exactly; only the per-video inputs change.
+- Only make a thumbnail when the user asks for one.
+
 ## Environment gotchas (cloud sessions)
 - The network blocks `cdn.jsdelivr.net`, Google Fonts' file host as seen by Chrome, and Hugging Face. Load GSAP from `vendor/gsap.min.js` (copy from `hyperframes/node_modules/gsap/dist/`), and bundle fonts locally (see `broll/public/fonts/`), never from a CDN.
 - Transcription (`hyperframes transcribe`, Whisper) needs model downloads from Hugging Face, which is blocked. Read burned-in subtitles from frames, or ask the user for an `.srt` file.
