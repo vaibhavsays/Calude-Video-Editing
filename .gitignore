@@ -10,3 +10,10 @@ Thumbs.db
 *.tmp
 renders/
 exports/
+
+# Node / Remotion
+node_modules/
+broll/public/main.mp4
+
+# Scratch frames and stills
+work/

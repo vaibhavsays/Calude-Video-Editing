@@ -1,0 +1,16 @@
+{
+  "name": "broll",
+  "version": "1.0.0",
+  "scripts": {
+    "setup": "cp ../raw/main.mp4 public/main.mp4",
+    "studio": "remotion studio src/index.ts",
+    "render": "remotion render src/index.ts Main ../output/AI_SEO_Day1_broll.mp4 --codec=h264 --crf=18 --audio-codec=aac --audio-bitrate=192k"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.535",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "remotion": "^4.0.535"
+  },
+  "private": true
+}
