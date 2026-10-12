@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face { font-family: "Playfair Display"; src: url("assets/fonts/PlayfairDisplay-var.woff2"); font-weight: 400 900; }
+  @font-face { font-family: "Instrument Serif"; src: url("assets/fonts/InstrumentSerif-400.woff2"); }
+  @font-face { font-family: "Montserrat"; src: url("assets/fonts/Montserrat-var.woff2"); font-weight: 100 900; }
+  :root { --bg-center: $bg_center; --bg-edge: $bg_edge; --ink: $ink; --big: $big_color; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; }
+  body { position: relative; background: radial-gradient(ellipse 85% 60% at 50% 52%, var(--bg-center) 0%, var(--bg-edge) 100%); }
+
+  .logos { position: absolute; top: 270px; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 34px; }
+  .logos img { height: 62px; width: auto; }
+  .logos .rule { width: 2px; height: 58px; background: var(--ink); opacity: .55; }
+
+  .title { position: absolute; top: 368px; width: 100%; text-align: center; font-family: "Playfair Display"; font-weight: 700;
+           font-size: $title_size; line-height: 1.05; color: var(--ink); letter-spacing: -1px; }
+  .sub { position: absolute; top: $sub_top; width: 100%; display: flex; justify-content: center; align-items: center; gap: 26px;
+         font-family: "Montserrat"; font-weight: 600; font-size: 40px; letter-spacing: 4px; color: var(--ink); }
+  .sub .line { width: 130px; height: 2px; background: var(--ink); opacity: .6; }
+
+  .big { position: absolute; top: $big_top; width: 100%; text-align: center; font-family: "Instrument Serif";
+         font-size: $big_size; line-height: .8; color: var(--big); letter-spacing: 4px; }
+
+  .arc { position: absolute; inset: 0; }
+  .person { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: $person_width;
+            filter: drop-shadow(0 24px 40px rgba(20, 40, 70, .22)); }
+</style>
+</head>
+<body>
+  <div class="big">$big_word</div>
+  <svg class="arc" width="1080" height="1920" viewBox="0 0 1080 1920">
+    <defs><filter id="glow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+    <ellipse cx="540" cy="1330" rx="600" ry="250" transform="rotate(-14 540 1330)" fill="none" stroke="#fff"
+             stroke-width="4" stroke-opacity=".9" filter="url(#glow)"/>
+  </svg>
+  <img class="person" src="$photo">
+  <div class="logos">$logos</div>
+  <div class="title">$title</div>
+  <div class="sub"><span class="line"></span><span>$subtitle</span><span class="line"></span></div>
+</body>
+</html>

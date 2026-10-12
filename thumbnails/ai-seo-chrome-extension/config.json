@@ -1,0 +1,9 @@
+{
+  "theme": "blue",
+  "logos": ["googlechrome.svg", "openai.svg", "perplexity-color.svg", "gemini-color.svg"],
+  "title": "AI SEO Checker",
+  "subtitle": "SEO · AEO · GEO",
+  "big_word": "FREE",
+  "photo": "assets/vaibhav_suit_cutout.png",
+  "output": "cover.png"
+}
