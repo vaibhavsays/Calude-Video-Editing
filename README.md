@@ -14,7 +14,7 @@ Video editing project.
 | 3.2–4.5s | "AI search me visible nahi hai" | "visible" flickers out | Black kinetic type |
 | 15.5–18.4s | "ChatGPT, AI Overviews and Perplexity" | Glowing icon ring, lights up as each is named | Purple neon icons |
 | 22.2–23.4s | "even according to Google, daily 100M+" | Google + AI search bar | Grey grid, hero object |
-| 28.8–30.0s | "aap game me bahut peeche ho" | Red-tinted AI search card, "not found" | Dark/red card, flying shapes |
+| 26.25–30.05s | "agar aapka business AI searches me visible nahi hai, to aap game me bahut peeche ho" | AI answer recommends competitors and not your business, then an "AI visibility race" with your business at #47, then "bahut PEECHE" | Dark/red, lime vs red |
 
 To re-render:
 

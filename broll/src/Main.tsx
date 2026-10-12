@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   AbsoluteFill,
-  Img,
   OffthreadVideo,
   Sequence,
   interpolate,
@@ -306,53 +305,149 @@ const GoogleScale: React.FC = () => {
   );
 };
 
-/* ---------- 5. "Aap game me bahut peeche ho" — dark/red, AI app card (ref 5) ---------- */
+/* ---------- 5. "Agar aapka business AI searches me visible nahi hai, to aap game me bahut peeche ho" ---------- */
 
-const Peeche: React.FC = () => {
+// Local frame cues (sequence starts at 26.25s), matched to the burned-in captions.
+const CUE = {business: 22, notFound: 52, race: 66, peeche: 82};
+
+const Check: React.FC<{ok: boolean}> = ({ok}) => (
+  <div style={{width: 46, height: 46, borderRadius: 23, background: ok ? LIME : RED, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0}}>
+    <svg width={26} height={26} viewBox="0 0 24 24">
+      <path d={ok ? 'M5 12.5l4.5 4.5L19 7.5' : 'M6 6l12 12M18 6L6 18'} fill="none" stroke={ok ? '#111' : '#fff'} strokeWidth={3.2} strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  </div>
+);
+
+const RIVALS = ['Competitor A', 'Competitor B', 'Competitor C'];
+
+const AIAnswer: React.FC = () => {
   const frame = useCurrentFrame();
-  const top = usePop(0);
-  const big = usePop(4, 10);
-  const card = usePop(2, 11);
-  const flying = [
-    {x: -80, y: 380, r: -20, s: 1.1, v: 9},
-    {x: 820, y: 120, r: 25, s: 0.9, v: 7},
-    {x: 760, y: 1250, r: -30, s: 1.3, v: 11},
-    {x: -40, y: 1400, r: 15, s: 1.0, v: 8},
+  const {fps} = useVideoConfig();
+  const card = usePop(0, 13);
+  const typed = 'Best business for this?';
+  const shown = typed.slice(0, Math.floor(interpolate(frame, [2, 16], [0, typed.length], clamp)));
+  const youIn = spring({frame: frame - 38, fps, config: {damping: 12}});
+  const fail = frame >= CUE.notFound;
+  const shake = fail ? Math.sin((frame - CUE.notFound) * 2.2) * interpolate(frame, [CUE.notFound, CUE.notFound + 10], [14, 0], clamp) : 0;
+  const strike = interpolate(frame, [CUE.notFound, CUE.notFound + 5], [0, 1], clamp);
+  const row = (i: number) => spring({frame: frame - (14 + i * 7), fps, config: {damping: 12}});
+  return (
+    <div style={{width: 820, background: '#151515', border: '1px solid #2c2c2c', borderRadius: 34, padding: 40, boxShadow: '0 40px 90px rgba(0,0,0,.6)', transform: `scale(${0.9 + card * 0.1})`, opacity: card}}>
+      <div style={{display: 'flex', alignItems: 'center', gap: 14, fontFamily: POP, fontWeight: 600, fontSize: 34, color: '#fff'}}>
+        <svg width={38} height={38} viewBox="0 0 32 32">
+          <path d="M16 2c1.2 7 4 10.8 12 14-8 3.2-10.8 7-12 14-1.2-7-4-10.8-12-14 8-3.2 10.8-7 12-14z" fill={LIME} />
+        </svg>
+        AI Search
+      </div>
+      <div style={{marginTop: 26, marginLeft: 'auto', width: 'fit-content', background: '#2a2a2a', borderRadius: 26, padding: '16px 26px', fontFamily: POP, fontSize: 32, color: '#eee', minHeight: 48}}>
+        {shown}
+        <span style={{opacity: frame % 10 < 5 && frame < 20 ? 1 : 0}}>|</span>
+      </div>
+      <div style={{marginTop: 26, display: 'flex', flexDirection: 'column', gap: 16}}>
+        {RIVALS.map((name, i) => (
+          <div key={name} style={{display: 'flex', alignItems: 'center', gap: 20, background: '#1f1f1f', borderRadius: 20, padding: '18px 22px', opacity: row(i), transform: `translateX(${(1 - row(i)) * 80}px)`}}>
+            <Check ok />
+            <div style={{fontFamily: POP, fontWeight: 600, fontSize: 36, color: '#fff'}}>{name}</div>
+            <div style={{marginLeft: 'auto', fontFamily: POP, fontSize: 26, color: LIME}}>recommended</div>
+          </div>
+        ))}
+        <div style={{display: 'flex', alignItems: 'center', gap: 20, borderRadius: 20, padding: '18px 22px', border: `3px dashed ${fail ? RED : '#555'}`, opacity: youIn, transform: `translateX(${(1 - youIn) * 80 + shake}px)`, background: fail ? 'rgba(255,43,43,.12)' : 'transparent'}}>
+          {fail ? <Check ok={false} /> : <div style={{width: 46, height: 46, borderRadius: 23, border: '3px solid #555'}} />}
+          <div style={{position: 'relative', fontFamily: MONT, fontWeight: 800, fontSize: 38, color: fail ? '#999' : '#fff'}}>
+            Your Business
+            <div style={{position: 'absolute', left: -4, right: -4, top: '52%', height: 5, background: RED, transformOrigin: 'left', transform: `scaleX(${strike})`}} />
+          </div>
+          <div style={{marginLeft: 'auto', fontFamily: POP, fontWeight: 600, fontSize: 26, color: RED, opacity: strike}}>not mentioned</div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const RACE = [
+  {name: 'Competitor A', to: 0.92, rank: '#1'},
+  {name: 'Competitor B', to: 0.8, rank: '#2'},
+  {name: 'Competitor C', to: 0.7, rank: '#3'},
+  {name: 'Your Business', to: 0.07, rank: '#47', you: true},
+];
+
+const Race: React.FC = () => {
+  const frame = useCurrentFrame();
+  const {fps} = useVideoConfig();
+  const inP = spring({frame, fps, config: {damping: 13}});
+  const grow = interpolate(frame, [3, 26], [0, 1], {...clamp, easing: (t) => 1 - Math.pow(1 - t, 3)});
+  const pulse = 1 + Math.sin(frame * 0.5) * 0.08;
+  return (
+    <div style={{width: 860, opacity: inP, transform: `translateY(${(1 - inP) * 120}px)`}}>
+      <div style={{fontFamily: POP, fontWeight: 600, fontSize: 34, letterSpacing: 6, color: 'rgba(255,255,255,.7)', textAlign: 'center', marginBottom: 34}}>AI VISIBILITY RACE</div>
+      {RACE.map((r) => (
+        <div key={r.name} style={{marginBottom: 30}}>
+          <div style={{display: 'flex', justifyContent: 'space-between', fontFamily: POP, fontWeight: 600, fontSize: 32, color: r.you ? RED : '#fff', marginBottom: 10}}>
+            <span>{r.name}</span>
+            <span style={{fontFamily: MONT, fontWeight: 800, transform: r.you ? `scale(${pulse})` : undefined}}>{r.rank}</span>
+          </div>
+          <div style={{height: 34, borderRadius: 17, background: '#222', overflow: 'hidden', border: r.you ? `2px solid ${RED}` : '2px solid #2c2c2c'}}>
+            <div style={{height: '100%', width: `${r.to * grow * 100}%`, borderRadius: 17, background: r.you ? RED : LIME, boxShadow: r.you ? `0 0 20px ${RED}` : `0 0 20px rgba(200,254,60,.6)`}} />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const Headline: React.FC = () => {
+  const frame = useCurrentFrame();
+  const beat = frame < CUE.business ? 0 : frame < CUE.notFound ? 1 : frame < CUE.race ? 2 : 3;
+  const starts = [0, CUE.business, CUE.notFound, CUE.race];
+  const p = usePop(starts[beat], 12);
+  const big = usePop(CUE.peeche, 10);
+  const lines: React.ReactNode[] = [
+    <span key="0" style={{color: '#fff'}}>agar aapka</span>,
+    <span key="1">
+      <span style={{color: LIME}}>business</span> <span style={{color: '#fff'}}>AI searches me</span>
+    </span>,
+    <span key="2">
+      <span style={{color: '#fff'}}>visible</span> <span style={{color: RED, fontStyle: 'italic', textShadow: `0 0 30px ${RED}`}}>nahi hai</span>
+    </span>,
+    <span key="3">
+      <span style={{color: '#fff'}}>to aap game me</span> <span style={{color: RED, fontStyle: 'italic', textShadow: `0 0 30px ${RED}`}}>bahut</span>
+    </span>,
   ];
   return (
+    <div style={{position: 'absolute', top: 300, width: '100%', textAlign: 'center', fontFamily: MONT, lineHeight: 1}}>
+      <div style={{fontSize: 68, fontWeight: 800, opacity: p, transform: `translateY(${(1 - p) * 30}px)`}}>{lines[beat]}</div>
+      {beat === 3 && (
+        <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 16, marginTop: 10, opacity: big, transform: `scale(${0.75 + big * 0.25})`}}>
+          <span style={{fontSize: 168, fontWeight: 900, letterSpacing: -4, background: 'linear-gradient(180deg,#ffffff,#8d8d8d)', WebkitBackgroundClip: 'text', color: 'transparent'}}>PEECHE</span>
+          <svg width={90} height={124} viewBox="0 0 24 32">
+            <path d="M12 3v24M4 19l8 8 8-8" fill="none" stroke={RED} strokeWidth={3.5} strokeLinecap="round" strokeLinejoin="round" style={{filter: `drop-shadow(0 0 8px ${RED})`}} />
+          </svg>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const FallingBehind: React.FC = () => {
+  const frame = useCurrentFrame();
+  const out = interpolate(frame, [CUE.race - 6, CUE.race], [1, 0], clamp);
+  const glow = interpolate(frame, [CUE.notFound, CUE.race], [0, 1], clamp);
+  return (
     <Shell bg="#0a0a0a">
-      {flying.map((f, i) => (
-        <div key={i} style={{position: 'absolute', left: f.x, top: f.y + frame * f.v, width: 360 * f.s, height: 200 * f.s, background: 'linear-gradient(135deg,#5b5b5b,#2b2b2b)', borderRadius: 20, transform: `rotate(${f.r + frame * 0.6}deg)`, filter: 'blur(14px)', opacity: 0.8}} />
-      ))}
-      <div style={{position: 'absolute', top: 400, width: '100%', textAlign: 'center', fontFamily: MONT, lineHeight: 1}}>
-        <div style={{fontSize: 96, fontWeight: 800, color: '#fff', opacity: top, transform: `translateY(${(1 - top) * 30}px)`}}>
-          game me{' '}
-          <span style={{color: RED, fontStyle: 'italic', fontWeight: 600, textShadow: `0 0 30px ${RED}, 0 0 60px rgba(255,43,43,.6)`}}>bahut</span>
-        </div>
-        <div style={{fontSize: 196, fontWeight: 900, letterSpacing: -4, background: 'linear-gradient(180deg,#ffffff,#8d8d8d)', WebkitBackgroundClip: 'text', color: 'transparent', opacity: big, transform: `scale(${0.8 + big * 0.2})`}}>
-          PEECHE
-        </div>
-      </div>
-      <div style={{position: 'absolute', left: 210, top: 860, width: 660, background: '#fff', borderRadius: 18, overflow: 'hidden', boxShadow: '0 40px 80px rgba(0,0,0,.6)', transform: `translateY(${(1 - card) * 200}px) scale(${0.85 + card * 0.15})`, opacity: card}}>
-        <div style={{display: 'flex', alignItems: 'center', gap: 12, padding: '22px 26px', fontFamily: POP, fontWeight: 600, fontSize: 32, color: '#222'}}>
-          <svg width={34} height={34} viewBox="0 0 32 32">
-            <path d="M16 2c1.2 7 4 10.8 12 14-8 3.2-10.8 7-12 14-1.2-7-4-10.8-12-14 8-3.2 10.8-7 12-14z" fill="#222" />
-          </svg>
-          AI Search
-          <div style={{marginLeft: 'auto', fontSize: 26, color: '#999'}}>•••</div>
-        </div>
-        <div style={{position: 'relative', margin: '0 18px', height: 560, borderRadius: 8, overflow: 'hidden', isolation: 'isolate'}}>
-          <Img src={staticFile('face_crop.jpg')} style={{width: '100%', height: '100%', objectFit: 'cover', filter: 'grayscale(1) contrast(1.25) brightness(1.1)'}} />
-          <div style={{position: 'absolute', inset: 0, background: '#ff1e1e', mixBlendMode: 'color'}} />
-          <div style={{position: 'absolute', inset: 0, background: 'rgba(255,30,30,.18)', mixBlendMode: 'multiply'}} />
-        </div>
-        <div style={{display: 'flex', alignItems: 'center', gap: 14, padding: '22px 26px', fontFamily: POP, fontWeight: 600, fontSize: 30, color: RED}}>
-          <svg width={30} height={30} viewBox="0 0 24 24">
-            <path d="M12 4v15M5 12l7 7 7-7" fill="none" stroke={RED} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          Your business: not found
-        </div>
-      </div>
+      <AbsoluteFill style={{background: `radial-gradient(circle at 50% 60%, rgba(200,254,60,${0.1 * (1 - glow)}) 0%, rgba(255,43,43,${0.16 * glow}) 35%, transparent 70%)`}} />
+      <AbsoluteFill style={{backgroundImage: 'linear-gradient(rgba(255,255,255,.04) 2px, transparent 2px), linear-gradient(90deg, rgba(255,255,255,.04) 2px, transparent 2px)', backgroundSize: '90px 90px'}} />
+      <Headline />
+      <AbsoluteFill style={{justifyContent: 'center', alignItems: 'center', top: 220}}>
+        {frame < CUE.race ? (
+          <div style={{opacity: out, transform: `translateY(${(1 - out) * -100}px)`}}>
+            <AIAnswer />
+          </div>
+        ) : (
+          <Sequence from={CUE.race} layout="none">
+            <Race />
+          </Sequence>
+        )}
+      </AbsoluteFill>
     </Shell>
   );
 };
@@ -365,7 +460,7 @@ export const INSERTS = [
   {id: 'Invisible', from: 3.2, to: 4.5, Component: Invisible},
   {id: 'AIRing', from: 15.5, to: 18.4, Component: AIRing},
   {id: 'GoogleScale', from: 22.2, to: 23.4, Component: GoogleScale},
-  {id: 'Peeche', from: 28.8, to: 30.0, Component: Peeche},
+  {id: 'FallingBehind', from: 26.25, to: 30.05, Component: FallingBehind},
 ];
 
 export const Main: React.FC = () => {
