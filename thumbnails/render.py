@@ -31,8 +31,8 @@ def main(cfg_path):
     html = Template((HERE / "template.html").read_text()).substitute(
         bg_center=bg_center, bg_edge=bg_edge, ink=ink, big_color=big,
         title=cfg["title"], subtitle=cfg["subtitle"], big_word=cfg["big_word"],
-        title_size=cfg.get("title_size", "112px"), sub_top=cfg.get("sub_top", "510px"),
-        big_top=cfg.get("big_top", "585px"), big_size=cfg.get("big_size", "520px"),
+        title_size=cfg.get("title_size", "112px"), sub_top=cfg.get("sub_top", "534px"),
+        big_top=cfg.get("big_top", "605px"), big_size=cfg.get("big_size", "520px"),
         person_width=cfg.get("person_width", "980px"), photo=cfg["photo"], logos=logos)
     page = HERE / "_render.html"
     page.write_text(html)

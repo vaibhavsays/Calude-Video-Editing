@@ -17,7 +17,7 @@ Every Reel gets a cover in exactly this design. Reference: `style_reference.webp
 3. **Big word**: one huge, condensed high-contrast serif word in a light tint of the background colour, sitting behind the person (the person overlaps its lower part). E.g. "INSANE", "2026", "FLASH".
 
 ## Logos (optional)
-- Small logos at the very top, centred, separated by a thin vertical rule (e.g. Claude | ElevenLabs).
+- Logos at the very top, centred, separated by a thin vertical rule (e.g. Claude | ElevenLabs). Keep them large enough to read at a glance (~100px tall on the 1080×1920 canvas).
 - Use the tools or AI search/LLM platforms the video actually covers: ChatGPT, Perplexity, Gemini, Google AI Overviews, Claude, the PPCBlogPro extension, and so on. Official logo files only.
 
 ## Person
