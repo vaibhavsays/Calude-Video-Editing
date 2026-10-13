@@ -1,0 +1,181 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Technical SEO Audit Case Study</title>
+<style>
+@font-face{font-family:Mont;src:url(fonts/Montserrat-var.woff2) format("woff2");font-weight:100 900}
+@font-face{font-family:Pop;src:url(fonts/Poppins-normal-400.woff2) format("woff2");font-weight:400}
+@font-face{font-family:Pop;src:url(fonts/Poppins-normal-600.woff2) format("woff2");font-weight:600}
+:root{--navy:#0b1f4d;--blue:#1d4ed8;--sky:#2f6bff;--yellow:#ffc928;--green:#0f9d6b;--red:#e2463b;--ink:#13203d;--muted:#5b6785;--line:#dfe6f3;--bg:#f4f7fd}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1600px;height:1200px;overflow:hidden;background:#fff;font-family:Pop,sans-serif;color:var(--ink)}
+.slide{display:none;width:1600px;height:1200px;position:relative;overflow:hidden;background:#fff}
+.slide.on{display:block}
+.top{position:absolute;inset:0 0 auto 0;height:14px;background:linear-gradient(90deg,var(--navy),var(--sky))}
+.badge{display:inline-flex;align-items:center;gap:14px;background:var(--navy);color:#fff;font:700 26px Mont;letter-spacing:.06em;padding:14px 26px;border-radius:999px}
+.badge i{width:14px;height:14px;border-radius:50%;background:var(--yellow);display:block}
+h1{font:900 104px/1.0 Mont;color:var(--navy);letter-spacing:-.02em}
+h1 em{font-style:normal;color:var(--sky)}
+h2{font:900 72px/1.05 Mont;color:var(--navy);letter-spacing:-.015em}
+h2 em{font-style:normal;color:var(--sky)}
+.sub{font:400 32px/1.4 Pop;color:var(--muted)}
+.foot{position:absolute;left:0;right:0;bottom:0;height:110px;background:var(--navy);display:flex;align-items:center;justify-content:space-around;color:#fff;font:600 24px Pop}
+.foot span{display:flex;align-items:center;gap:14px}
+.foot b{width:40px;height:40px;border-radius:10px;background:var(--yellow);color:var(--navy);display:grid;place-items:center;font:900 22px Mont}
+.pad{position:absolute;left:90px;right:90px;top:84px}
+
+/* cover */
+.score{display:flex;align-items:center;gap:34px;margin-top:56px}
+.ring{width:250px;height:250px;border-radius:50%;display:grid;place-items:center;position:relative}
+.ring::after{content:"";position:absolute;inset:26px;border-radius:50%;background:#fff}
+.ring div{position:relative;z-index:1;text-align:center;font:900 76px/1 Mont;color:var(--navy)}
+.ring small{display:block;font:600 20px Pop;color:var(--muted);margin-top:8px;letter-spacing:.04em}
+.arrow{font:900 90px Mont;color:var(--yellow);-webkit-text-stroke:3px var(--navy)}
+.chips{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:58px}
+.chip{border:2px solid var(--line);border-radius:22px;padding:24px 28px;background:var(--bg);display:flex;align-items:center;gap:22px}
+.chip .n{font:900 46px/1 Mont;color:var(--navy);white-space:nowrap}
+.chip .n s{color:var(--red);text-decoration:none}
+.chip .n u{color:var(--green);text-decoration:none}
+.chip .l{font:400 24px/1.3 Pop;color:var(--muted)}
+.rightcol{position:absolute;right:90px;top:310px;width:520px}
+
+/* screenshots */
+.shot{max-width:1300px;border:2px solid var(--line);border-radius:22px;overflow:hidden;background:#fff;box-shadow:0 18px 40px rgba(11,31,77,.12)}
+.shot img{display:block;width:100%}
+.lbl{display:inline-flex;gap:14px;align-items:center;font:800 30px Mont;margin:0 0 16px 4px}
+.lbl .t{padding:8px 18px;border-radius:12px;color:#fff;font:800 22px Mont;letter-spacing:.05em}
+
+/* table */
+table{width:100%;border-collapse:separate;border-spacing:0 12px;margin-top:40px}
+th{font:600 22px Pop;color:var(--muted);text-align:left;padding:0 26px;letter-spacing:.04em;text-transform:uppercase}
+td{background:var(--bg);padding:22px 26px;font:600 28px Pop;color:var(--ink)}
+td:first-child{border-radius:16px 0 0 16px}
+td:last-child{border-radius:0 16px 16px 0}
+td.b{color:var(--red);font:800 34px Mont}
+td.a{color:var(--green);font:800 34px Mont}
+td.p{font:900 34px Mont;color:var(--navy)}
+
+/* findings */
+.cols{display:grid;grid-template-columns:1.25fr 1fr;gap:44px;margin-top:44px}
+.find{display:flex;gap:18px;align-items:flex-start;margin-bottom:22px}
+.find b{flex:none;width:126px;text-align:center;font:800 18px Mont;letter-spacing:.06em;color:#fff;background:var(--red);padding:7px 12px;border-radius:8px;margin-top:4px}
+.find b.h{background:#f08a24}
+.find p{font:400 25px/1.38 Pop;color:var(--ink)}
+.find p strong{font-weight:600}
+.box{background:var(--navy);color:#fff;border-radius:26px;padding:38px 40px}
+.box h3{font:800 32px Mont;margin-bottom:22px;color:var(--yellow)}
+.box li{list-style:none;font:400 24px/1.35 Pop;padding:11px 0 11px 40px;position:relative;border-bottom:1px solid rgba(255,255,255,.12)}
+.box li:last-child{border:0}
+.box li::before{content:"✓";position:absolute;left:0;top:10px;color:var(--yellow);font:900 24px Mont}
+.big{display:flex;gap:26px;margin-top:30px}
+.big div{flex:1;background:var(--bg);border-radius:20px;padding:22px 26px;border:2px solid var(--line)}
+.big strong{display:block;font:900 54px/1 Mont;color:var(--navy)}
+.big span{font:400 21px Pop;color:var(--muted)}
+.note{font:400 19px Pop;color:var(--muted);margin-top:18px}
+</style></head><body>
+
+<!-- 1 COVER -->
+<section class="slide" id="s1">
+  <div class="top"></div>
+  <div class="pad">
+    <span class="badge"><i></i>TECHNICAL SEO AUDIT · CASE STUDY</span>
+    <h1 style="margin-top:44px">Site Health<br><em>85% → 98%</em></h1>
+    <p class="sub" style="margin-top:26px;max-width:860px">Deep technical, on-page &amp; AI-search audit for a UAE accounting &amp; ERP software partner, followed by a full re-audit.</p>
+    <div class="chips" style="max-width:900px">
+      <div class="chip"><div class="n"><s>23</s>→<u>3</u></div><div class="l">4xx error pages</div></div>
+      <div class="chip"><div class="n"><s>59</s>→<u>11</u></div><div class="l">Broken internal links</div></div>
+      <div class="chip"><div class="n"><s>20</s>→<u>1</u></div><div class="l">Broken images</div></div>
+      <div class="chip"><div class="n"><s>2,690</s>→<u>7</u></div><div class="l">Unminified JS/CSS files</div></div>
+    </div>
+  </div>
+  <div class="rightcol">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:18px">
+      <div class="ring" style="background:conic-gradient(var(--red) 0 85%,#e7ebf3 0)"><div>85%<small>SEP 8 · BEFORE</small></div></div>
+      <div class="arrow">↓</div>
+      <div class="ring" style="background:conic-gradient(var(--green) 0 98%,#e7ebf3 0)"><div>98%<small>OCT 6 · AFTER</small></div></div>
+    </div>
+  </div>
+  <div class="foot">
+    <span><b>1</b>Technical SEO</span><span><b>2</b>On-Page SEO</span><span><b>3</b>AI Search Readiness</span><span><b>4</b>Fix Roadmap</span>
+  </div>
+</section>
+
+<!-- 2 BEFORE / AFTER -->
+<section class="slide" id="s2">
+  <div class="top"></div>
+  <div class="pad">
+    <span class="badge"><i></i>SEMRUSH SITE AUDIT · BEFORE vs AFTER</span>
+    <h2 style="margin-top:34px">Healthier site, <em>5× bigger crawl</em></h2>
+    <p class="sub" style="margin-top:14px;font-size:27px">Site Health 85% → 98% · broken pages 1 → 0 · now above the top-10% benchmark (92%)</p>
+    <div style="margin:40px auto 0;width:1300px">
+      <div class="lbl"><span class="t" style="background:var(--red)">BEFORE</span>Sep 8, 2026 · 100 pages crawled</div>
+      <div class="shot"><img src="assets/before_sep8.png"></div>
+    </div>
+    <div style="margin:38px auto 0;width:1300px">
+      <div class="lbl"><span class="t" style="background:var(--green)">AFTER</span>Oct 6, 2026 · 500 pages crawled</div>
+      <div class="shot"><img src="assets/after_oct6.png"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 ISSUES FIXED -->
+<section class="slide" id="s3">
+  <div class="top"></div>
+  <div class="pad">
+    <span class="badge"><i></i>FIRST AUDIT vs RE-AUDIT</span>
+    <h2 style="margin-top:34px">Issues <em>cleared</em> after the fixes</h2>
+    <table>
+      <tr><th>Issue</th><th>First audit</th><th>Re-audit</th><th>Change</th></tr>
+      <tr><td>Unminified JavaScript / CSS files</td><td class="b">2,690</td><td class="a">7</td><td class="p">−99%</td></tr>
+      <tr><td>Broken images</td><td class="b">20</td><td class="a">1</td><td class="p">−95%</td></tr>
+      <tr><td>4xx client-error pages</td><td class="b">23</td><td class="a">3</td><td class="p">−87%</td></tr>
+      <tr><td>Broken internal links</td><td class="b">59</td><td class="a">11</td><td class="p">−81%</td></tr>
+      <tr><td>Uncached JavaScript / CSS files</td><td class="b">9,415</td><td class="a">2,266</td><td class="p">−76%</td></tr>
+      <tr><td>Duplicate H1 &amp; title tags</td><td class="b">8</td><td class="a">5</td><td class="p">−38%</td></tr>
+    </table>
+  </div>
+  <div class="foot">
+    <span><b>✓</b>Faster pages</span><span><b>✓</b>Fewer dead ends</span><span><b>✓</b>Cleaner crawl for Google &amp; AI bots</span>
+  </div>
+</section>
+
+<!-- 4 WHAT THE AUDIT FOUND -->
+<section class="slide" id="s4">
+  <div class="top"></div>
+  <div class="pad">
+    <span class="badge"><i></i>WHAT THE DEEP AUDIT UNCOVERED</span>
+    <h2 style="margin-top:34px">Beyond the tool score: <em>37 findings</em></h2>
+    <div class="cols">
+      <div>
+        <div class="find"><b>CRITICAL</b><p><strong>Broken shortcode</strong> leaking raw code into a landing page's meta/OG description.</p></div>
+        <div class="find"><b>CRITICAL</b><p><strong>Wrong phone number</strong> in a paid-traffic landing page hero, so leads couldn't call.</p></div>
+        <div class="find"><b>CRITICAL</b><p><strong>Poor mobile Core Web Vitals</strong>: PageSpeed 47, LCP 8.6s, CLS 0.479.</p></div>
+        <div class="find"><b>CRITICAL</b><p><strong>Legacy duplicate pages</strong> still indexed and competing with the new site.</p></div>
+        <div class="find"><b>CRITICAL</b><p><strong>Lorem-ipsum FAQ page</strong> live, indexed and in the sitemap.</p></div>
+        <div class="find"><b class="h">HIGH</b><p><strong>Keyword cannibalisation</strong> between PPC landing pages and product pages; conflicting prices across pages.</p></div>
+        <div class="find"><b class="h">HIGH</b><p><strong>Inconsistent NAP</strong>, tag/category archive bloat, duplicate JSON-LD schema.</p></div>
+      </div>
+      <div>
+        <div class="box">
+          <h3>Audit deliverables</h3>
+          <ul>
+            <li>Technical audit with severity, impact &amp; fix</li>
+            <li>Page-by-page on-page audit</li>
+            <li>Sitewide 404 &amp; broken-link map</li>
+            <li>126-URL 301 redirect map</li>
+            <li>Title, meta, heading &amp; image issues</li>
+            <li>AI-search &amp; schema checks</li>
+            <li>3-month prioritised fix plan</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="foot">
+    <span><b>✓</b>Screaming Frog</span><span><b>✓</b>Semrush</span><span><b>✓</b>PageSpeed Insights</span><span><b>✓</b>Manual review</span>
+  </div>
+</section>
+
+<script>
+var n=(location.hash||'#1').slice(1);
+document.getElementById('s'+n).classList.add('on');
+</script>
+</body></html>
