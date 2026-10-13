@@ -32,8 +32,9 @@ def main(cfg_path):
         bg_center=bg_center, bg_edge=bg_edge, ink=ink, big_color=big,
         title=cfg["title"], subtitle=cfg["subtitle"], big_word=cfg["big_word"],
         title_size=cfg.get("title_size", "112px"), sub_top=cfg.get("sub_top", "534px"),
+        title_top=cfg.get("title_top", "392px"),
         big_top=cfg.get("big_top", "605px"), big_size=cfg.get("big_size", "520px"),
-        person_width=cfg.get("person_width", "980px"), photo=cfg["photo"], logos=logos)
+        person_width=cfg.get("person_width", "980px"), logo_size=cfg.get("logo_size", "100px"), photo=cfg["photo"], logos=logos)
     page = HERE / "_render.html"
     page.write_text(html)
     out = cfg_path.parent / cfg.get("output", "cover.png")

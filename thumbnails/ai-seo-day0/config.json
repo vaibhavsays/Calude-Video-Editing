@@ -1,0 +1,18 @@
+{
+  "theme": "peach",
+  "logos": [
+    "openai.svg",
+    "google-color.svg",
+    "perplexity-color.svg"
+  ],
+  "title": "Invisible on AI?",
+  "subtitle": "AI SEO · DAY 0",
+  "big_word": "DAY 0",
+  "big_size": "450px",
+  "big_top": "640px",
+  "photo": "assets/vaibhav_suit_cutout.png",
+  "output": "cover.png",
+  "logo_size": "128px",
+  "title_top": "408px",
+  "sub_top": "550px"
+}
