@@ -1,0 +1,15 @@
+{
+  "theme": "mint",
+  "logos": ["openai.svg", "gemini-color.svg"],
+  "title": "Invisible to ChatGPT?",
+  "title_size": "96px",
+  "subtitle": "AI SEO · DAY 1",
+  "big_word": "DAY 1",
+  "big_size": "450px",
+  "big_top": "640px",
+  "photo": "assets/vaibhav_suit_cutout.png",
+  "output": "cover.png",
+  "logo_size": "128px",
+  "title_top": "414px",
+  "sub_top": "550px"
+}
