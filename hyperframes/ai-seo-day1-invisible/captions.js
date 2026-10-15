@@ -2,10 +2,15 @@
 // "|" splits a segment into on-screen phrases; phrases share the segment's time by text length.
 // *word* = yellow highlight. A segment with deva:true is shown in Devanagari.
 const SEGMENTS = [
-  [0.05, 1.57, "क्या आपका बिज़नेस", { deva: true }],
-  [1.71, 2.22, "*visible* hai"],
-  [2.47, 4.30, "*ChatGPT*, *Gemini* | aur AI search engines pe?"],
-  [4.85, 9.78, "Agar aapke shehar mein | koi aapke business ko | AI searches mein | search karta hai | toh kya aapka business | *recommend* hota hai?"],
+  [0.05, 1.57, "So is your business"],
+  [1.71, 2.22, "*visible* to"],
+  [2.47, 3.80, "*ChatGPT*, *Gemini* | and other"],
+  [3.94, 4.40, "search engines?"],
+  [4.85, 6.34, "Agar aapke is | shehar mein"],
+  [6.47, 7.40, "koi aapke business ko"],
+  [7.40, 8.08, "AI searches mein search"],
+  [8.08, 8.74, "karta hai"],
+  [8.88, 9.78, "toh kya aapka business | *recommend* hota hai?"],
   [10.41, 13.12, "Welcome to *Day 1* | of 100 Days of | Decoding *AI SEO* | with AISEO.Vaibhav"],
   [13.89, 16.79, "Maximum business owners | ko lagta hai ki | agar unke business ki | *website* ban gayi"],
   [17.17, 17.81, "तो काम ख़तम!", { deva: true }],
