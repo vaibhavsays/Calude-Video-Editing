@@ -1,0 +1,14 @@
+{
+  "theme": "mint",
+  "logos": ["semrush.svg", "google-ads.svg", "trustpilot.svg", "g2.svg"],
+  "title": "Best SEO Tools",
+  "subtitle": "AI SEO TOOLKIT",
+  "big_word": "TOOLS",
+  "big_size": "430px",
+  "big_top": "650px",
+  "photo": "assets/vaibhav_suit_cutout.png",
+  "output": "cover.png",
+  "logo_size": "104px",
+  "title_top": "404px",
+  "sub_top": "550px"
+}
