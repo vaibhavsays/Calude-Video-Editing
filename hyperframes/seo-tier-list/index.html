@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="vendor/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "P5"; src: url("assets/fonts/poppins-latin-500-normal.woff2"); font-weight: 500; }
+      @font-face { font-family: "P6"; src: url("assets/fonts/poppins-latin-600-normal.woff2"); font-weight: 600; }
+      @font-face { font-family: "P7"; src: url("assets/fonts/poppins-latin-700-normal.woff2"); font-weight: 700; }
+      @font-face { font-family: "P8"; src: url("assets/fonts/poppins-latin-800-normal.woff2"); font-weight: 800; }
+      @font-face { font-family: "Anton"; src: url("assets/fonts/anton-latin-400-normal.woff2"); }
+      :root { --cyan: #38d6ff; --ink: #121216; --panel: rgba(18,18,22,.9); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
+      body { font-family: "P6", sans-serif; color: #fff; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; }
+      .clip { position: absolute; inset: 0; }
+
+      /* header */
+      .title { position: absolute; top: 92px; left: 0; right: 0; display: flex; justify-content: center; }
+      .title div { font-family: "P8"; font-size: 54px; color: var(--ink); background: #fff; padding: 12px 34px 10px; border-radius: 18px; box-shadow: 0 12px 40px rgba(0,0,0,.25); letter-spacing: -0.5px; }
+      .title span { color: #e8364f; }
+
+      /* tier board */
+      .board { position: absolute; left: 56px; top: 1100px; width: 968px; border-radius: 22px; overflow: hidden; background: var(--panel); box-shadow: 0 24px 70px rgba(0,0,0,.45); }
+      .trow { display: flex; height: 124px; border-top: 3px solid #0b0b0d; }
+      .trow:first-child { border-top: 0; }
+      .tlab { width: 138px; flex: none; display: grid; place-items: center; font-family: "Anton"; font-size: 70px; color: #1a1a1a; }
+      .tslot { flex: 1; position: relative; }
+      .tglow { position: absolute; inset: 0; opacity: 0; }
+
+      /* item tiles */
+      .tile { position: absolute; width: 104px; height: 104px; border-radius: 22px; background: #fff; box-shadow: 0 10px 26px rgba(0,0,0,.35); display: grid; place-items: center; z-index: 40; opacity: 0; }
+      .tile svg { width: 70px; height: 70px; }
+
+      /* captions */
+      #captions { position: absolute; left: 40px; right: 40px; top: 0; height: 100%; z-index: 60; }
+      .cap { position: absolute; left: 0; right: 0; top: 990px; display: flex; flex-wrap: wrap; justify-content: center; gap: 0 14px; opacity: 0;
+             font-family: "P7"; font-size: 54px; line-height: 1.15; text-align: center; letter-spacing: -0.3px;
+             text-shadow: 0 3px 0 rgba(0,0,0,.5), 0 4px 18px rgba(0,0,0,.65), 2px 2px 0 #000, -2px 2px 0 #000, 2px -2px 0 #000, -2px -2px 0 #000; }
+      .cap .w { display: inline-block; }
+      .cap .hl { color: var(--cyan); }
+      .cap.name { font-family: "P8"; font-size: 64px; color: var(--cyan); padding-left: 130px; }
+
+      /* B-roll cards above the head */
+      .br { position: absolute; left: 90px; right: 90px; top: 210px; height: 300px; border-radius: 30px; background: rgba(255,255,255,.96); box-shadow: 0 20px 60px rgba(0,0,0,.3);
+            color: var(--ink); overflow: hidden; opacity: 0; }
+      .br .hd { position: absolute; top: 22px; left: 30px; font-family: "P8"; font-size: 26px; letter-spacing: 2px; text-transform: uppercase; color: #6b6b75; }
+      .node { position: absolute; width: 120px; height: 150px; border-radius: 16px; background: #eef2f8; border: 3px solid #cfd8e6; }
+      .node i { position: absolute; left: 16px; right: 16px; height: 10px; border-radius: 5px; background: #c6d1e2; }
+      .chipb { position: absolute; font-family: "P7"; font-size: 28px; padding: 10px 22px; border-radius: 40px; background: #eef2f8; border: 2px solid #d5deea; white-space: nowrap; }
+      .serp { position: absolute; left: 34px; right: 34px; top: 70px; }
+      .serp .u { font-family: "P5"; font-size: 22px; color: #4d5156; }
+      .serp .h { font-family: "P7"; font-size: 34px; color: #1a0dab; margin: 6px 0; }
+      .serp .st { font-family: "P6"; font-size: 26px; color: #4d5156; }
+      .serp .st b { color: #f4b400; letter-spacing: 2px; }
+      .bar { position: absolute; left: 34px; right: 34px; height: 30px; border-radius: 15px; background: #eceff4; overflow: hidden; }
+      .bar i { position: absolute; left: 0; top: 0; bottom: 0; width: 100%; background: linear-gradient(90deg, #ff6b6b, #ffb04d); transform-origin: left center; display: block; }
+      .bigstat { position: absolute; font-family: "Anton"; font-size: 120px; line-height: 1; }
+      .col { position: absolute; bottom: 40px; width: 70px; border-radius: 12px 12px 4px 4px; transform-origin: bottom center; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="78.266" data-width="1080" data-height="1920">
+
+      <section id="ui" class="clip" data-start="0" data-duration="78.266" data-track-index="1">
+        <div class="title"><div id="ttl">SEO Tier List <span>2026</span></div></div>
+        <div class="board" id="board"></div>
+      </section>
+
+      <!-- B-roll cards (small, above the head) -->
+      <section id="brIL" class="clip" data-start="8.3" data-duration="3.6" data-track-index="2">
+        <div class="br" id="brIL-c"><div class="hd">Internal linking</div>
+          <div class="node" id="n1" style="left:60px;top:90px"><i style="top:24px"></i><i style="top:48px;right:40px"></i><i style="top:72px"></i></div>
+          <div class="node" id="n2" style="left:390px;top:90px"><i style="top:24px"></i><i style="top:48px;right:40px"></i><i style="top:72px"></i></div>
+          <div class="node" id="n3" style="left:720px;top:90px"><i style="top:24px"></i><i style="top:48px;right:40px"></i><i style="top:72px"></i></div>
+          <svg style="position:absolute;inset:0" width="900" height="300"><path id="l1" d="M185 165 L385 165" stroke="#38a3ff" stroke-width="8" stroke-linecap="round" fill="none" stroke-dasharray="200" stroke-dashoffset="200"/><path id="l2" d="M515 165 L715 165" stroke="#38a3ff" stroke-width="8" stroke-linecap="round" fill="none" stroke-dasharray="200" stroke-dashoffset="200"/></svg>
+          <div class="chipb" id="ilc" style="left:300px;top:240px;font-size:24px;padding:6px 18px;background:#e7f9ef;border-color:#a6e3bf;color:#137a3d">✓ Crawled &amp; indexed</div>
+        </div>
+      </section>
+
+      <section id="brTA" class="clip" data-start="16.6" data-duration="5.9" data-track-index="2">
+        <div class="br" id="brTA-c"><div class="hd">Topical authority</div>
+          <div class="chipb" id="t0" style="left:290px;top:120px;background:#121216;color:#fff;border-color:#121216;font-size:32px;">🦷 Dental care</div>
+          <div class="chipb" id="t1" style="left:40px;top:70px">Teeth whitening</div>
+          <div class="chipb" id="t2" style="left:560px;top:70px">Braces cost</div>
+          <div class="chipb" id="t3" style="left:60px;top:205px">Root canal</div>
+          <div class="chipb" id="t4" style="left:540px;top:205px">Kids dentist</div>
+        </div>
+      </section>
+
+      <section id="brSC" class="clip" data-start="24.9" data-duration="3.0" data-track-index="2">
+        <div class="br" id="brSC-c"><div class="hd">Rich result</div>
+          <div class="serp"><div class="u">yourclinic.in › teeth-whitening</div><div class="h">Teeth Whitening in Pune – Price &amp; Results</div>
+            <div class="st" id="stars"><b>★★★★★</b> 4.8 · 126 reviews · ₹4,999</div></div>
+        </div>
+      </section>
+
+      <section id="brPS" class="clip" data-start="37.4" data-duration="6.9" data-track-index="2">
+        <div class="br" id="brPS-c"><div class="hd">Slow page</div>
+          <div class="bar" style="top:90px"><i id="load"></i></div>
+          <div class="chipb" style="left:34px;top:140px;font-size:26px">⏳ Loading… 6.2s</div>
+          <div class="bigstat" id="bounce" style="right:40px;top:120px;color:#e8364f">↑ 72%</div>
+          <div class="chipb" style="left:34px;top:210px;font-size:26px;background:#fde8eb;border-color:#f5b5bf;color:#b3243f">Bounce rate</div>
+        </div>
+      </section>
+
+      <section id="brOD" class="clip" data-start="64.8" data-duration="6.6" data-track-index="2">
+        <div class="br" id="brOD-c"><div class="hd">Original data → AI citations</div>
+          <div class="col" id="c1" style="left:90px;height:70px;background:#c9d4e6"></div>
+          <div class="col" id="c2" style="left:190px;height:110px;background:#b3c4e0"></div>
+          <div class="col" id="c3" style="left:290px;height:160px;background:#8fb0e6"></div>
+          <div class="col" id="c4" style="left:390px;height:210px;background:#38a3ff"></div>
+          <div class="chipb" id="odc" style="left:520px;top:120px;font-size:30px;background:#e7f9ef;border-color:#a6e3bf;color:#137a3d">✓ Cited by AI</div>
+        </div>
+      </section>
+
+      <section id="brPR" class="clip" data-start="72.9" data-duration="4.7" data-track-index="2">
+        <div class="br" id="brPR-c"><div class="hd">Digital PR</div>
+          <div class="chipb" id="p1" style="left:40px;top:80px;font-size:26px">📰 Featured in a top publication</div>
+          <div class="chipb" id="p2" style="left:40px;top:150px;font-size:26px">🔗 +38 quality backlinks</div>
+          <div class="chipb" id="p3" style="left:40px;top:220px;font-size:26px;background:#e7f9ef;border-color:#a6e3bf;color:#137a3d">↑ Domain Authority</div>
+        </div>
+      </section>
+
+      <div id="tiles"></div>
+      <div id="captions"></div>
+    </div>
+
+    <script>
+      const TIERS = [["S", "#ff7f7f"], ["A", "#ffbf7f"], ["B", "#ffdf7f"], ["C", "#ffff7f"], ["D", "#bfff7f"]];
+      const ICONS = {
+        da: '<svg viewBox="0 0 64 64"><path d="M8 44a24 24 0 0 1 48 0" fill="none" stroke="#3b82f6" stroke-width="7" stroke-linecap="round"/><path d="M32 44 L44 24" stroke="#121216" stroke-width="5" stroke-linecap="round"/><circle cx="32" cy="44" r="5" fill="#121216"/><text x="32" y="62" font-family="Anton" font-size="13" text-anchor="middle" fill="#121216">DA</text></svg>',
+        link: '<svg viewBox="0 0 64 64"><rect x="6" y="22" width="30" height="20" rx="10" fill="none" stroke="#121216" stroke-width="6" transform="rotate(-35 21 32)"/><rect x="28" y="22" width="30" height="20" rx="10" fill="none" stroke="#3b82f6" stroke-width="6" transform="rotate(-35 43 32)"/></svg>',
+        topic: '<svg viewBox="0 0 64 64"><g stroke="#94a3b8" stroke-width="3"><line x1="32" y1="32" x2="10" y2="12"/><line x1="32" y1="32" x2="54" y2="12"/><line x1="32" y1="32" x2="10" y2="52"/><line x1="32" y1="32" x2="54" y2="52"/></g><circle cx="32" cy="32" r="11" fill="#8b5cf6"/><circle cx="10" cy="12" r="7" fill="#f59e0b"/><circle cx="54" cy="12" r="7" fill="#10b981"/><circle cx="10" cy="52" r="7" fill="#3b82f6"/><circle cx="54" cy="52" r="7" fill="#ef4444"/></svg>',
+        schema: '<svg viewBox="0 0 64 64"><rect x="4" y="16" width="56" height="32" rx="7" fill="#b91c1c"/><text x="32" y="38" font-family="P7" font-size="13" text-anchor="middle" fill="#fff">schema</text></svg>',
+        speed: '<svg viewBox="0 0 64 64"><path d="M8 46a24 24 0 0 1 48 0" fill="none" stroke="#e5e7eb" stroke-width="8" stroke-linecap="round"/><path d="M8 46a24 24 0 0 1 12-21" fill="none" stroke="#ef4444" stroke-width="8" stroke-linecap="round"/><path d="M20 25a24 24 0 0 1 24 0" fill="none" stroke="#f59e0b" stroke-width="8"/><path d="M44 25a24 24 0 0 1 12 21" fill="none" stroke="#10b981" stroke-width="8" stroke-linecap="round"/><path d="M32 46 L46 30" stroke="#121216" stroke-width="5" stroke-linecap="round"/><circle cx="32" cy="46" r="5" fill="#121216"/></svg>',
+        eeat: '<svg viewBox="0 0 64 64"><g font-family="Anton" font-size="20" text-anchor="middle"><circle cx="20" cy="20" r="14" fill="#3b82f6"/><text x="20" y="27" fill="#fff">E</text><circle cx="44" cy="20" r="14" fill="#ef4444"/><text x="44" y="27" fill="#fff">E</text><circle cx="20" cy="44" r="14" fill="#f59e0b"/><text x="20" y="51" fill="#fff">A</text><circle cx="44" cy="44" r="14" fill="#10b981"/><text x="44" y="51" fill="#fff">T</text></g></svg>',
+        data: '<svg viewBox="0 0 64 64"><rect x="8" y="34" width="9" height="20" rx="2" fill="#94a3b8"/><rect x="21" y="24" width="9" height="30" rx="2" fill="#3b82f6"/><rect x="34" y="14" width="9" height="40" rx="2" fill="#121216"/><circle cx="45" cy="42" r="10" fill="none" stroke="#f59e0b" stroke-width="5"/><line x1="52" y1="49" x2="60" y2="57" stroke="#f59e0b" stroke-width="6" stroke-linecap="round"/></svg>',
+        pr: '<svg viewBox="0 0 64 64"><rect x="6" y="12" width="44" height="40" rx="5" fill="#121216"/><rect x="12" y="18" width="18" height="12" rx="2" fill="#38d6ff"/><rect x="34" y="19" width="10" height="4" rx="2" fill="#fff"/><rect x="34" y="27" width="10" height="4" rx="2" fill="#fff"/><rect x="12" y="36" width="32" height="4" rx="2" fill="#fff"/><rect x="12" y="44" width="24" height="4" rx="2" fill="#fff"/><rect x="50" y="22" width="9" height="30" rx="4" fill="#94a3b8"/></svg>',
+      };
+      // Each rated item: icon, when it's named (pop next to the caption), when the tier is said (fly into the row), tier.
+      const ITEMS = window.ITEMS = [
+        { id: "da", icon: "da", intro: 0.12, place: 1.45, tier: "C" },
+        { id: "il", icon: "link", intro: 6.93, place: 8.1, tier: "A" },
+        { id: "ta", icon: "topic", intro: 12.53, place: 13.7, tier: "A" },
+        { id: "sc", icon: "schema", intro: 23.11, place: 24.85, tier: "B" },
+        { id: "ps", icon: "speed", intro: 30.4, place: 34.2, tier: "B" },
+        { id: "ee", icon: "eeat", intro: 44.82, place: 46.9, tier: "B" },
+        { id: "od", icon: "data", intro: 60.08, place: 62.6, tier: "A" },
+        { id: "pr", icon: "pr", intro: 71.99, place: 72.8, tier: "S" },
+      ];
+
+      // [start, end, text, opts] - *word* = cyan. opts.name = the item-name card (big cyan, with the icon beside it).
+      const CUES = window.CUES = [];
+
+      const tl = gsap.timeline({ paused: true });
+      const board = document.getElementById("board");
+      const BOARD_TOP = 1100, BOARD_LEFT = 56, ROW_H = 124 + 3, LAB_W = 138;
+      TIERS.forEach(([t, c]) => {
+        board.insertAdjacentHTML("beforeend", `<div class="trow" id="row-${t}"><div class="tlab" style="background:${c}">${t}</div><div class="tslot"><div class="tglow" style="background:${c}"></div></div></div>`);
+      });
+
+      function buildCaptions() {
+        const root = document.getElementById("captions");
+        CUES.forEach(([start, end, text, opts = {}]) => {
+          const el = document.createElement("div");
+          el.className = "cap" + (opts.name ? " name" : "");
+          let on = false;
+          const words = text.split(" ").map((w) => {
+            const hl = on || w.startsWith("*");
+            if (w.startsWith("*")) on = true;
+            if (/\*[,?.!]?$/.test(w)) on = false;
+            return { w: w.replace(/\*/g, ""), hl };
+          });
+          el.innerHTML = words.map((o) => `<span class="w${o.hl ? " hl" : ""}">${o.w}</span>`).join(" ");
+          root.appendChild(el);
+          tl.set(el, { opacity: 1 }, start);
+          tl.set(el, { opacity: 0 }, end);
+          const ws = [...el.querySelectorAll(".w")];
+          const span = Math.min(0.9, (end - start) * 0.6);
+          ws.forEach((w, k) => tl.fromTo(w, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.14, ease: "power2.out" }, start + span * k / ws.length));
+        });
+      }
+
+      function buildItems() {
+        const root = document.getElementById("tiles");
+        const count = {};
+        ITEMS.forEach((it) => {
+          const el = document.createElement("div");
+          el.className = "tile";
+          el.innerHTML = ICONS[it.icon];
+          root.appendChild(el);
+          const row = TIERS.findIndex(([t]) => t === it.tier);
+          const k = count[it.tier] = (count[it.tier] || 0);
+          count[it.tier]++;
+          // landing spot inside the tier row
+          const tx = BOARD_LEFT + LAB_W + 14 + k * 118, ty = BOARD_TOP + row * ROW_H + 10;
+          // intro spot: left of the item-name caption
+          const ix = 130, iy = 966;
+          el.style.left = tx + "px"; el.style.top = ty + "px";
+          tl.fromTo(el, { opacity: 0, x: ix - tx, y: iy - ty, scale: 0.3, rotation: -12 },
+            { opacity: 1, scale: 1.12, rotation: 0, duration: 0.35, ease: "back.out(2.2)" }, it.intro);
+          tl.to(el, { x: 0, y: 0, scale: 1, duration: 0.42, ease: "power3.inOut" }, it.place);
+          tl.fromTo(el, { scale: 1 }, { scale: 1.12, duration: 0.09, yoyo: true, repeat: 1, ease: "power1.out", immediateRender: false }, it.place + 0.42);
+          const glow = document.getElementById("row-" + it.tier).querySelector(".tglow");
+          tl.fromTo(glow, { opacity: 0.55 }, { opacity: 0, duration: 0.6, ease: "power2.out", immediateRender: false }, it.place + 0.4);
+        });
+      }
+
+      function card(id, t, out) {
+        tl.fromTo(id, { opacity: 0, y: -30, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.3, ease: "back.out(1.6)" }, t);
+        tl.to(id, { opacity: 0, y: -20, duration: 0.2, ease: "power2.in" }, out - 0.2);
+      }
+
+      function build() {
+        buildCaptions();
+        // header + board build-in
+        tl.fromTo("#ttl", { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.35, ease: "back.out(1.8)" }, 0);
+        tl.fromTo("#board", { opacity: 0, y: 80 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 0);
+        tl.fromTo(".tlab", { x: -140 }, { x: 0, duration: 0.3, ease: "power3.out", stagger: 0.05 }, 0.1);
+        buildItems();
+
+        // B-roll cards
+        card("#brIL-c", 8.3, 11.9);
+        tl.fromTo("#n1, #n2, #n3", { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.25, stagger: 0.12, ease: "back.out(2)" }, 8.45);
+        tl.to("#l1", { strokeDashoffset: 0, duration: 0.4, ease: "power2.out" }, 8.9);
+        tl.to("#l2", { strokeDashoffset: 0, duration: 0.4, ease: "power2.out" }, 9.25);
+        tl.fromTo("#ilc", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3 }, 10.1);
+
+        card("#brTA-c", 16.6, 22.5);
+        tl.fromTo("#t0", { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "back.out(2)" }, 16.75);
+        tl.fromTo("#t1, #t2, #t3, #t4", { scale: 0.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.25, stagger: 0.35, ease: "back.out(2)" }, 19.4);
+
+        card("#brSC-c", 24.9, 27.9);
+        tl.fromTo("#stars", { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: 0.3 }, 25.4);
+
+        card("#brPS-c", 37.4, 44.3);
+        tl.fromTo("#load", { scaleX: 0 }, { scaleX: 0.32, duration: 2.2, ease: "power1.out" }, 37.6);
+        tl.fromTo("#bounce", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)" }, 38.6);
+
+        card("#brOD-c", 64.8, 71.4);
+        tl.fromTo("#c1, #c2, #c3, #c4", { scaleY: 0 }, { scaleY: 1, duration: 0.35, stagger: 0.15, ease: "back.out(1.5)" }, 65.0);
+        tl.fromTo("#odc", { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.3 }, 66.2);
+
+        card("#brPR-c", 72.9, 77.6);
+        tl.fromTo("#p1, #p2, #p3", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.3, stagger: 0.5, ease: "power3.out" }, 73.1);
+
+        window.__timelines["main"] = tl;
+      }
+    </script>
+    <script src="captions.js"></script>
+    <script>document.fonts.ready.then(build);</script>
+  </body>
+</html>
