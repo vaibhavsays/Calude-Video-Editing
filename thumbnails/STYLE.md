@@ -31,5 +31,5 @@ Title, subtitle, big word, background colour, photo, logos. Everything else stay
 ## How to make one
 1. Background-removed photo: `python3 thumbnails/cutout.py <photo.jpg> thumbnails/assets/<name>_cutout.png` (works for plain white/light backdrops).
 2. Logos go in `thumbnails/assets/logos/` (official files only; current set from the `simple-icons` and `@lobehub/icons-static-svg` npm packages).
-3. Write `thumbnails/<video>/config.json` (theme: blue / peach / mint / pink; title; subtitle; big_word; logos; photo) and run
+3. Write `thumbnails/<video>/config.json` (theme: blue / peach / mint / pink / lavender; title; subtitle; big_word; logos; photo) and run
    `python3 thumbnails/render.py thumbnails/<video>/config.json` to write `cover.png` (1080×1920).

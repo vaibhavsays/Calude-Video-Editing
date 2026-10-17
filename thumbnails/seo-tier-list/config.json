@@ -1,0 +1,14 @@
+{
+  "theme": "lavender",
+  "logos": ["google-color.svg", "google-search-console.svg"],
+  "title": "SEO Tier List",
+  "subtitle": "TECHNICAL SEO · 2026",
+  "big_word": "S-TIER",
+  "big_size": "400px",
+  "big_top": "660px",
+  "photo": "assets/vaibhav_suit_cutout.png",
+  "output": "cover.png",
+  "logo_size": "112px",
+  "title_top": "404px",
+  "sub_top": "550px"
+}

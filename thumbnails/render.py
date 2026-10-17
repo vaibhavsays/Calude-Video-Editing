@@ -15,6 +15,7 @@ THEMES = {
     "peach": ("#fbe9df", "#f2c9b4", "#4a2a1c", "#efc2a8"),
     "mint":  ("#e3f5f0", "#b9e3d8", "#1f4a44", "#a6d8cb"),
     "pink":  ("#fbe6ec", "#f1c3d0", "#6b1f36", "#e8a9bb"),
+    "lavender": ("#efeafd", "#cfc4f1", "#35246a", "#c2b5ec"),
 }
 
 def browser():
