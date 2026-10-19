@@ -1,0 +1,15 @@
+{
+  "theme": "lavender",
+  "logos": ["google-color.svg", "openai.svg"],
+  "title": "Is AI Content Punished?",
+  "title_size": "92px",
+  "subtitle": "GOOGLE · AI SEARCH",
+  "big_word": "EEAT",
+  "big_size": "420px",
+  "big_top": "650px",
+  "photo": "assets/vaibhav_suit_cutout.png",
+  "output": "cover.png",
+  "logo_size": "112px",
+  "title_top": "410px",
+  "sub_top": "550px"
+}
