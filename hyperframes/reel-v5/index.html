@@ -4,184 +4,201 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1080, height=1920" />
     <script src="vendor/gsap.min.js"></script>
+    <script src="edl.js"></script>
     <style>
       @font-face { font-family: "P5"; src: url("assets/fonts/poppins-latin-500-normal.woff2"); font-weight: 500; }
       @font-face { font-family: "P6"; src: url("assets/fonts/poppins-latin-600-normal.woff2"); font-weight: 600; }
       @font-face { font-family: "P7"; src: url("assets/fonts/poppins-latin-700-normal.woff2"); font-weight: 700; }
       @font-face { font-family: "P8"; src: url("assets/fonts/poppins-latin-800-normal.woff2"); font-weight: 800; }
       @font-face { font-family: "Anton"; src: url("assets/fonts/anton-latin-400-normal.woff2"); }
-      :root { --y: #ffd426; --ink: #17151a; --cream: #f7f3ee; --red: #e5383b; --green: #12a150; }
+      :root { --y: #ffd426; --ink: #17151a; --cream: #f7f3ee; --red: #e5383b; --green: #12a150; --blue: #2563eb; }
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html, body { width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
       body { font-family: "P6", sans-serif; color: var(--ink); }
       #root { position: relative; width: 100%; height: 100%; overflow: hidden; }
       .clip { position: absolute; inset: 0; }
+      .scene { position: absolute; inset: 0; opacity: 0; }
 
-      /* ---------- panels ---------- */
+      /* panels */
       .top { position: absolute; left: 0; right: 0; top: 0; height: 990px; }
-      .top .bg { position: absolute; inset: 0 0 30px 0; background: radial-gradient(ellipse 90% 70% at 50% 40%, #ffffff 0%, var(--cream) 70%, #efe8df 100%); }
+      .top .bg, .full .bg { position: absolute; inset: 0 0 30px 0; background: radial-gradient(ellipse 90% 70% at 50% 40%, #ffffff 0%, var(--cream) 68%, #ece4d9 100%); }
+      .full .bg { inset: 0; }
+      .dots { position: absolute; inset: 0; background-image: radial-gradient(rgba(23,21,26,.07) 2px, transparent 2px); background-size: 36px 36px; }
       .top svg.wave { position: absolute; left: 0; bottom: 0; width: 1080px; height: 60px; filter: drop-shadow(0 8px 10px rgba(0,0,0,.18)); }
-      .full { position: absolute; inset: 0; background: radial-gradient(ellipse 90% 60% at 50% 35%, #ffffff 0%, var(--cream) 70%, #ece4d9 100%); }
-      .stage { position: absolute; inset: 0; }
-      .h { position: absolute; left: 60px; right: 60px; text-align: center; font-family: "P8"; font-size: 54px; line-height: 1.15; letter-spacing: -0.5px; }
-      .h em { font-style: normal; background: var(--y); padding: 0 12px; border-radius: 10px; }
-      .card { position: absolute; background: #fff; border-radius: 30px; box-shadow: 0 18px 50px rgba(40,30,20,.14); }
-      .pill { position: absolute; display: flex; align-items: center; gap: 14px; background: #fff; border-radius: 60px; padding: 18px 30px; font-family: "P7"; font-size: 36px; box-shadow: 0 12px 34px rgba(40,30,20,.12); white-space: nowrap; }
-      .pill img { height: 46px; }
-      .logo { position: absolute; width: 170px; height: 170px; border-radius: 40px; background: #fff; display: grid; place-items: center; box-shadow: 0 16px 40px rgba(40,30,20,.14); }
-      .logo img { width: 104px; height: 104px; }
-      .logo b { position: absolute; bottom: -46px; left: -20px; right: -20px; text-align: center; font-family: "P7"; font-size: 26px; }
-      .stamp { position: absolute; font-family: "P8"; font-size: 50px; color: #fff; background: var(--red); padding: 14px 34px; border-radius: 18px; box-shadow: 0 18px 44px rgba(229,56,59,.35); white-space: nowrap; }
-      .line { height: 18px; border-radius: 9px; background: #e9e4dd; margin: 14px 0; }
-      .cursor { position: absolute; width: 46px; height: 46px; }
-      .tile { position: absolute; width: 222px; height: 300px; border-radius: 32px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; color: #fff; box-shadow: 0 18px 44px rgba(40,30,20,.18); }
-      .tile .L { font-family: "Anton"; font-size: 130px; line-height: 1; }
-      .tile .w { font-family: "P7"; font-size: 30px; }
-      .check { position: absolute; display: flex; align-items: center; gap: 20px; font-family: "P7"; font-size: 40px; white-space: nowrap; }
-      .check i { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-style: normal; font-family: "P8"; font-size: 32px; background: var(--green); flex: none; }
+      .full { position: absolute; inset: 0; }
+      .el { position: absolute; opacity: 0; }
+      .h { left: 50px; right: 50px; text-align: center; font-family: "P8"; font-size: 62px; line-height: 1.12; letter-spacing: -0.5px; }
+      .h em { font-style: normal; background: var(--y); padding: 0 14px; border-radius: 12px; }
+      .h em.r { background: var(--red); color: #fff; }
+      .card { background: #fff; border-radius: 34px; box-shadow: 0 20px 56px rgba(40,30,20,.15); }
+      .logo { width: 230px; height: 230px; border-radius: 52px; background: #fff; display: grid; place-items: center; box-shadow: 0 18px 46px rgba(40,30,20,.16); }
+      .logo img { width: 140px; height: 140px; }
+      .logo b { position: absolute; bottom: -54px; left: -40px; right: -40px; text-align: center; font-family: "P7"; font-size: 32px; }
+      .stamp { font-family: "P8"; font-size: 60px; color: #fff; background: var(--red); padding: 16px 40px; border-radius: 20px; box-shadow: 0 18px 44px rgba(229,56,59,.35); white-space: nowrap; }
+      .line { height: 24px; border-radius: 12px; background: #e9e4dd; margin: 18px 0; transform-origin: left center; }
+      .tile { width: 230px; height: 400px; border-radius: 36px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; color: #fff; box-shadow: 0 20px 50px rgba(40,30,20,.2); }
+      .tile .L { font-family: "Anton"; font-size: 170px; line-height: 1; }
+      .tile .w { font-family: "P7"; font-size: 32px; }
+      .check { display: flex; align-items: center; gap: 24px; font-family: "P7"; font-size: 52px; white-space: nowrap; }
+      .check i { width: 72px; height: 72px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-style: normal; font-family: "P8"; font-size: 40px; background: var(--green); flex: none; }
       .check.x i { background: var(--red); }
+      .check img { height: 64px; }
+      .chip { display: flex; align-items: center; gap: 16px; background: #fff; border-radius: 70px; padding: 20px 36px; font-family: "P7"; font-size: 42px; box-shadow: 0 14px 36px rgba(40,30,20,.14); white-space: nowrap; }
+      .big { font-family: "Anton"; text-align: center; line-height: .95; }
 
-      /* ---------- hook ---------- */
-      .hook { position: absolute; left: 70px; right: 70px; top: 210px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-      .hook .a { font-family: "P8"; font-size: 54px; color: #fff; text-shadow: 0 4px 18px rgba(0,0,0,.6); }
-      .hook .b { font-family: "Anton"; font-size: 120px; line-height: 1.02; color: #fff; background: var(--red); padding: 6px 30px 0; border-radius: 16px; transform: rotate(-2deg); display: block; }
-      .hook .c { font-family: "P8"; font-size: 58px; color: var(--ink); background: var(--y); padding: 4px 24px; border-radius: 14px; display: block; }
+      /* full-mode chips above the head */
+      .tchip { left: 0; right: 0; top: 170px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+      .tchip div { font-family: "P8"; font-size: 50px; color: #fff; background: rgba(23,21,26,.88); padding: 14px 34px; border-radius: 20px; box-shadow: 0 14px 40px rgba(0,0,0,.35); white-space: nowrap; }
+      .tchip div b { color: var(--y); }
 
-      /* ---------- captions ---------- */
+      /* hook */
+      .hook { left: 70px; right: 70px; top: 200px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+      .hook .a { font-family: "P8"; font-size: 58px; color: #fff; text-shadow: 0 4px 18px rgba(0,0,0,.6); }
+      .hook .b { font-family: "Anton"; font-size: 132px; line-height: 1.02; color: #fff; background: var(--red); padding: 6px 30px 0; border-radius: 16px; transform: rotate(-2deg); display: block; }
+      .hook .c { font-family: "P8"; font-size: 60px; color: var(--ink); background: var(--y); padding: 4px 24px; border-radius: 14px; display: block; }
+
+      /* captions */
       #captions { position: absolute; left: 50px; right: 50px; top: 0; height: 100%; z-index: 60; }
       .cap { position: absolute; left: 0; right: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 14px; opacity: 0;
-             font-family: "P7"; font-size: 54px; line-height: 1.22; text-align: center; color: #fff;
+             font-family: "P7"; font-size: 56px; line-height: 1.22; text-align: center; color: #fff;
              text-shadow: 0 3px 0 rgba(0,0,0,.45), 0 4px 16px rgba(0,0,0,.6), 2px 2px 0 #000, -2px 2px 0 #000, 2px -2px 0 #000, -2px -2px 0 #000; }
       .cap .w { display: inline-block; }
       .cap .hl { color: var(--ink); background: var(--y); padding: 0 12px; border-radius: 10px; text-shadow: none; box-shadow: 0 4px 14px rgba(0,0,0,.3); }
+      .cap.dark { color: var(--ink); text-shadow: none; }
       .flash { position: absolute; inset: 0; background: #fff; opacity: 0; z-index: 80; }
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="94.533" data-width="1080" data-height="1920">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="88.188" data-width="1080" data-height="1920">
+      <section id="gfx" class="clip" data-start="0" data-duration="88.188" data-track-index="1">
 
-      <!-- Hook (first frames only) -->
-      <section id="hookc" class="clip" data-start="0" data-duration="3.0" data-track-index="1">
-        <div class="hook"><div class="a" id="hk1">Is Google</div><div class="b" id="hk2">PUNISHING</div><div class="c" id="hk3">your AI content? 🚫</div></div>
-      </section>
+        <!-- full-frame: hook + chips above the head -->
+        <div class="el hook" id="hook"><div class="a">Is Google</div><div class="b" id="hk2">PUNISHING</div><div class="c">your AI content? 🚫</div></div>
+        <div class="el tchip" id="fc1"><div id="fc1a">No proper <b>E-E-A-T</b>?</div><div id="fc1b">❌ No rank</div><div id="fc1c">❌ No AI visibility</div></div>
+        <div class="el tchip" id="fc2"><div id="fc2a">Show your <b>expertise</b> 💡</div><div id="fc2b">or ❌ no ranking</div></div>
 
-      <!-- S1: split, why punished + engines -->
-      <section id="s1" class="clip" data-start="5.5" data-duration="10.25" data-track-index="2">
-        <div class="top" id="s1p"><div class="bg"></div><svg class="wave" viewBox="0 0 1080 60" preserveAspectRatio="none"><path d="M0 0 H1080 V22 C 900 60, 720 0, 540 26 C 360 52, 180 4, 0 30 Z" fill="#efe8df"/></svg>
-          <div class="stage">
-            <div class="h" id="s1h" style="top:110px">Why do search engines <em>punish</em> your content? 🤔</div>
-            <div class="card" id="s1g" style="left:150px;top:330px;width:780px;height:330px;padding:30px 40px">
-              <div style="font-family:P7;font-size:28px;color:#8b8279">Your blog's traffic</div>
-              <svg width="700" height="230" viewBox="0 0 700 230"><path id="s1line" d="M10 40 C 120 30, 200 60, 280 70 S 420 120, 480 170 S 620 215, 690 220" fill="none" stroke="#e5383b" stroke-width="10" stroke-linecap="round" stroke-dasharray="900" stroke-dashoffset="900"/></svg>
-            </div>
-            <div class="stamp" id="s1x" style="left:330px;top:620px">PENALTY 📉</div>
-            <div class="logo" id="lg1" style="left:95px;top:350px"><img src="assets/logos/google-color.svg"><b>Google</b></div>
-            <div class="logo" id="lg2" style="left:335px;top:350px"><img src="assets/logos/bing-color.svg"><b>Bing</b></div>
-            <div class="logo" id="lg3" style="left:575px;top:350px"><img src="assets/logos/openai.svg"><b>ChatGPT</b></div>
-            <div class="logo" id="lg4" style="left:815px;top:350px"><img src="assets/logos/perplexity-color.svg"><b>Perplexity</b></div>
-          </div></div>
-      </section>
-
-      <!-- B1: full, copy-paste AI workflow -->
-      <section id="b1" class="clip" data-start="15.8" data-duration="8.25" data-track-index="2">
-        <div class="full" id="b1p"><div class="stage">
-          <div class="h" id="b1h" style="top:170px">Copy → Paste → <em>Publish</em></div>
-          <div class="card" id="b1c" style="left:80px;top:340px;width:920px;height:760px;padding:40px 46px">
-            <div style="display:flex;align-items:center;gap:16px;font-family:P7;font-size:32px"><img src="assets/logos/openai.svg" style="height:44px">ChatGPT</div>
-            <div id="b1q" style="margin:26px 0 0 auto;width:640px;background:#f1eee9;border-radius:26px;padding:20px 26px;font-family:P6;font-size:30px">Write a 1500-word blog on teeth whitening</div>
-            <div id="b1a" style="margin-top:28px"><div class="line" style="width:92%"></div><div class="line" style="width:86%"></div><div class="line" style="width:95%"></div><div class="line" style="width:70%"></div><div class="line" style="width:90%"></div><div class="line" style="width:60%"></div></div>
-            <div id="b1copy" style="display:inline-block;margin-top:20px;font-family:P7;font-size:28px;border:3px solid #d9d2c9;border-radius:16px;padding:10px 22px">📋 Copy</div>
+        <!-- S1 split: why punished -->
+        <div class="scene top" id="s1"><div class="bg"><div class="dots"></div></div><svg class="wave" viewBox="0 0 1080 60" preserveAspectRatio="none"><path d="M0 0 H1080 V22 C 900 60, 720 0, 540 26 C 360 52, 180 4, 0 30 Z" fill="#ece4d9"/></svg>
+          <div class="el h" id="s1h" style="top:96px">Why do search engines <em class="r">punish</em> your content? 🤔</div>
+          <div class="el card" id="s1g" style="left:80px;top:300px;width:920px;height:520px;padding:36px 44px">
+            <div style="font-family:P7;font-size:34px;color:#8b8279">📈 Your blog's traffic</div>
+            <svg width="830" height="380" viewBox="0 0 830 380"><path id="s1line" d="M10 60 C 140 40, 240 80, 330 100 S 500 180, 570 260 S 740 355, 820 365" fill="none" stroke="#e5383b" stroke-width="14" stroke-linecap="round" stroke-dasharray="1100" stroke-dashoffset="1100"/></svg>
           </div>
-          <div class="pill" id="b1pub" style="left:330px;top:1140px;background:#2271b1;color:#fff;font-size:42px;padding:22px 46px">Publish 🚀</div>
-          <div class="stamp" id="b1x" style="left:140px;top:1280px;font-size:46px">✕ No E-E-A-T = No rankings</div>
-          <svg class="cursor" id="b1cur" style="left:260px;top:1000px" viewBox="0 0 24 24"><path d="M3 2 L20 12 L12 14 L9 22 Z" fill="#17151a" stroke="#fff" stroke-width="1.5"/></svg>
-        </div></div>
-      </section>
+          <div class="el stamp" id="s1x" style="left:300px;top:700px">PENALTY 📉</div>
+          <div class="el logo" id="lg1" style="left:80px;top:330px"><img src="assets/logos/openai.svg"><b>ChatGPT</b></div>
+          <div class="el logo" id="lg2" style="left:425px;top:330px"><img src="assets/logos/google-color.svg"><b>Google</b></div>
+          <div class="el logo" id="lg3" style="left:770px;top:330px"><img src="assets/logos/bing-color.svg"><b>Bing</b></div>
+          <div class="el chip" id="lgc" style="left:210px;top:700px">🤖 AI search &amp; classic search</div>
+        </div>
 
-      <!-- S2: split, E-E-A-T, health example, doctor -->
-      <section id="s2" class="clip" data-start="31.1" data-duration="19.2" data-track-index="2">
-        <div class="top" id="s2p"><div class="bg"></div><svg class="wave" viewBox="0 0 1080 60" preserveAspectRatio="none"><path d="M0 0 H1080 V22 C 900 60, 720 0, 540 26 C 360 52, 180 4, 0 30 Z" fill="#efe8df"/></svg>
-          <div class="stage" id="s2a">
-            <div class="h" style="top:110px">What is <em>E-E-A-T</em>?</div>
-            <div class="tile" id="e1" style="left:60px;top:300px;background:#3b82f6"><div class="L">E</div><div class="w">Expertise</div></div>
-            <div class="tile" id="e2" style="left:304px;top:300px;background:#e5383b"><div class="L">E</div><div class="w">Experience</div></div>
-            <div class="tile" id="e3" style="left:548px;top:300px;background:#f59e0b"><div class="L">A</div><div class="w">Authority</div></div>
-            <div class="tile" id="e4" style="left:792px;top:300px;background:#12a150"><div class="L">T</div><div class="w">Trust</div></div>
+        <!-- B1 full: copy-paste AI content -->
+        <div class="scene full" id="b1"><div class="bg"><div class="dots"></div></div>
+          <div class="el h" id="b1h" style="top:150px;font-size:70px">🤖 AI content = <em class="r">punished?</em></div>
+          <div class="el card" id="b1c" style="left:60px;top:330px;width:960px;height:860px;padding:44px 50px">
+            <div style="display:flex;align-items:center;gap:18px;font-family:P7;font-size:40px"><img src="assets/logos/openai.svg" style="height:58px">ChatGPT</div>
+            <div id="b1q" style="margin:30px 0 0 auto;width:720px;background:#f1eee9;border-radius:30px;padding:24px 30px;font-family:P6;font-size:36px">Write a 1500-word blog on teeth whitening</div>
+            <div id="b1a" style="margin-top:30px"><div class="line" style="width:94%"></div><div class="line" style="width:86%"></div><div class="line" style="width:96%"></div><div class="line" style="width:72%"></div><div class="line" style="width:90%"></div><div class="line" style="width:62%"></div></div>
+            <div id="b1copy" style="display:inline-block;margin-top:16px;font-family:P7;font-size:36px;border:4px solid #d9d2c9;border-radius:18px;padding:12px 28px;background:#fff">📋 Copy</div>
           </div>
-          <div class="stage" id="s2b">
-            <div class="h" style="top:110px">Example: <em>health</em> content 🩺</div>
-            <div class="pill" id="yml" style="left:170px;top:270px;font-size:32px">⚠️ Health = YMYL topic (Your Money, Your Life)</div>
-            <div class="card" id="doc" style="left:110px;top:400px;width:860px;height:440px;padding:40px 50px">
-              <div style="display:flex;align-items:center;gap:22px;font-family:P8;font-size:44px"><span style="font-size:80px">👨‍⚕️</span>A doctor writes from…</div>
-              <div class="check" id="d1" style="left:60px;top:190px"><i>✓</i>Real perspective</div>
-              <div class="check" id="d2" style="left:60px;top:270px"><i>✓</i>First-hand experience</div>
-              <div class="check" id="d3" style="left:60px;top:350px"><i>✓</i>Medical expertise</div>
-            </div>
+          <div class="el chip" id="b1pub" style="left:350px;top:1230px;background:#2271b1;color:#fff;font-size:50px;padding:24px 54px">Publish 🚀</div>
+          <div class="el stamp" id="b1x" style="left:90px;top:1240px;font-size:52px">✕ No E-E-A-T = No rankings</div>
+        </div>
+
+        <!-- S2 split: E-E-A-T -->
+        <div class="scene top" id="s2"><div class="bg"><div class="dots"></div></div><svg class="wave" viewBox="0 0 1080 60" preserveAspectRatio="none"><path d="M0 0 H1080 V22 C 900 60, 720 0, 540 26 C 360 52, 180 4, 0 30 Z" fill="#ece4d9"/></svg>
+          <div class="el h" id="s2h" style="top:90px">What is <em>E-E-A-T</em>?</div>
+          <div class="el tile" id="e1" style="left:40px;top:300px;background:#2563eb"><div class="L">E</div><div class="w">Expertise</div></div>
+          <div class="el tile" id="e2" style="left:295px;top:300px;background:#e5383b"><div class="L">E</div><div class="w">Experience</div></div>
+          <div class="el tile" id="e3" style="left:550px;top:300px;background:#f59e0b"><div class="L">A</div><div class="w">Authority</div></div>
+          <div class="el tile" id="e4" style="left:805px;top:300px;background:#12a150"><div class="L">T</div><div class="w">Trust</div></div>
+        </div>
+
+        <!-- S3 split: health / doctor example -->
+        <div class="scene top" id="s3"><div class="bg"><div class="dots"></div></div><svg class="wave" viewBox="0 0 1080 60" preserveAspectRatio="none"><path d="M0 0 H1080 V22 C 900 60, 720 0, 540 26 C 360 52, 180 4, 0 30 Z" fill="#ece4d9"/></svg>
+          <div class="el h" id="s3h" style="top:90px">Example: <em>health</em> content 🩺</div>
+          <div class="el" id="s3doc" style="left:0;right:0;top:250px;text-align:center;font-size:300px;line-height:1">📄</div>
+          <div class="el chip" id="s3y" style="left:120px;top:640px;font-size:40px">⚠️ Health = YMYL (Your Money, Your Life)</div>
+          <div class="el card" id="doc" style="left:70px;top:250px;width:940px;height:600px;padding:44px 54px">
+            <div style="display:flex;align-items:center;gap:24px;font-family:P8;font-size:56px"><span style="font-size:110px">👨‍⚕️</span>A doctor writes from…</div>
+            <div class="check" id="d1" style="position:absolute;left:70px;top:240px"><i>✓</i>Real perspective</div>
+            <div class="check" id="d2" style="position:absolute;left:70px;top:350px"><i>✓</i>First-hand experience</div>
+            <div class="check" id="d3" style="position:absolute;left:70px;top:460px"><i>✓</i>Medical expertise</div>
           </div>
         </div>
-      </section>
 
-      <!-- B2: full, content writer + AI tools -->
-      <section id="b2" class="clip" data-start="50.4" data-duration="10.8" data-track-index="2">
-        <div class="full" id="b2p"><div class="stage">
-          <div class="h" style="top:170px">Meanwhile, a <em>content writer</em> ✍️</div>
-          <div class="logo" id="w1" style="left:250px;top:360px"><img src="assets/logos/openai.svg"><b>ChatGPT</b></div>
-          <div class="logo" id="w2" style="left:660px;top:360px"><img src="assets/logos/claude-color.svg"><b>Claude</b></div>
-          <div class="card" id="w3" style="left:120px;top:640px;width:840px;height:440px;padding:40px 46px">
-            <div style="font-family:P8;font-size:40px">10 Tips for Healthy Teeth</div>
-            <div class="line" style="width:94%;margin-top:26px"></div><div class="line" style="width:88%"></div><div class="line" style="width:92%"></div><div class="line" style="width:75%"></div><div class="line" style="width:85%"></div><div class="line" style="width:55%"></div>
+        <!-- B2 full: content writer + AI -->
+        <div class="scene full" id="b2"><div class="bg"><div class="dots"></div></div>
+          <div class="el h" id="b2h" style="top:150px;font-size:70px">Meanwhile, a <em>content writer</em> ✍️</div>
+          <div class="el" id="b2w" style="left:0;right:0;top:330px;text-align:center;font-size:300px;line-height:1">👨‍💻</div>
+          <div class="el" id="b2t" style="left:0;right:0;top:760px;text-align:center"><span class="chip" style="display:inline-flex;font-size:46px">💭 “I'll just get AI to write it”</span></div>
+          <div class="el logo" id="w1" style="left:190px;top:470px"><img src="assets/logos/openai.svg"><b>ChatGPT</b></div>
+          <div class="el logo" id="w2" style="left:660px;top:470px"><img src="assets/logos/claude-color.svg"><b>Claude</b></div>
+          <div class="el card" id="w3" style="left:90px;top:800px;width:900px;height:420px;padding:40px 50px">
+            <div style="font-family:P8;font-size:48px">10 Tips for Healthy Teeth</div>
+            <div class="line" style="width:94%;margin-top:26px"></div><div class="line" style="width:86%"></div><div class="line" style="width:92%"></div><div class="line" style="width:68%"></div>
           </div>
-          <div class="check x" id="w4" style="left:170px;top:1140px"><i>✕</i>No real experience</div>
-          <div class="check x" id="w5" style="left:170px;top:1230px"><i>✕</i>No expertise. Generic.</div>
-        </div></div>
-      </section>
+          <div class="el check x" id="w4" style="left:110px;top:1250px;font-size:46px"><i>✕</i>No real experience</div>
+          <div class="el check x" id="w5" style="left:110px;top:1350px;font-size:46px"><i>✕</i>No expertise. Generic.</div>
+        </div>
 
-      <!-- S4: split, how to fix -->
-      <section id="s4" class="clip" data-start="61.3" data-duration="17.1" data-track-index="2">
-        <div class="top" id="s4p"><div class="bg"></div><svg class="wave" viewBox="0 0 1080 60" preserveAspectRatio="none"><path d="M0 0 H1080 V22 C 900 60, 720 0, 540 26 C 360 52, 180 4, 0 30 Z" fill="#efe8df"/></svg>
-          <div class="stage">
-            <div class="h" style="top:90px">Use AI tools, but <em>add YOU</em> ✅</div>
-            <div class="check" id="f1" style="left:110px;top:260px"><i>✓</i>Your expertise</div>
-            <div class="check" id="f2" style="left:110px;top:350px"><i>✓</i>Your experience</div>
-            <div class="check" id="f3" style="left:110px;top:440px"><i>✓</i>Questions from your clients</div>
-            <div class="check" id="f4" style="left:110px;top:530px"><i>✓</i>Ideas from your website</div>
-            <div class="check" id="f5" style="left:110px;top:620px"><i>✓</i>Insights from <img src="assets/logos/reddit.svg" style="height:50px;margin:0 4px"> Reddit &amp; <img src="assets/logos/quora.svg" style="height:46px;margin:0 4px"> Quora</div>
-          </div></div>
-      </section>
+        <!-- S4 split: fix -->
+        <div class="scene top" id="s4"><div class="bg"><div class="dots"></div></div><svg class="wave" viewBox="0 0 1080 60" preserveAspectRatio="none"><path d="M0 0 H1080 V22 C 900 60, 720 0, 540 26 C 360 52, 180 4, 0 30 Z" fill="#ece4d9"/></svg>
+          <div class="el h" id="s4h" style="top:70px;font-size:58px">Use AI, but <em>add YOU</em> ✅</div>
+          <div class="el logo" id="t1" style="left:120px;top:250px;width:200px;height:200px"><img src="assets/logos/openai.svg" style="width:120px;height:120px"><b>ChatGPT</b></div>
+          <div class="el logo" id="t2" style="left:440px;top:250px;width:200px;height:200px"><img src="assets/logos/claude-color.svg" style="width:120px;height:120px"><b>Claude</b></div>
+          <div class="el logo" id="t3" style="left:760px;top:250px;width:200px;height:200px"><img src="assets/logos/gemini-color.svg" style="width:120px;height:120px"><b>Gemini</b></div>
+          <div class="el chip" id="t4" style="left:230px;top:600px;font-size:44px">🤖 AI writes the first draft</div>
+          <div class="el check" id="f1" style="left:90px;top:220px"><i>✓</i>Your expertise</div>
+          <div class="el check" id="f2" style="left:90px;top:320px"><i>✓</i>Your experience</div>
+          <div class="el check" id="f3" style="left:90px;top:420px"><i>✓</i>Your clients' questions</div>
+          <div class="el check" id="f4" style="left:90px;top:520px"><i>✓</i>Ideas from your website</div>
+          <div class="el check" id="f5" style="left:90px;top:620px"><i>✓</i>Directories &amp; other sites</div>
+          <div class="el check" id="f6" style="left:90px;top:720px"><i>✓</i><img src="assets/logos/reddit.svg"> Reddit &amp; <img src="assets/logos/quora.svg" style="height:58px"> Quora</div>
+        </div>
 
-      <!-- S5: split, SOP CTA -->
-      <section id="s5" class="clip" data-start="83.3" data-duration="11.233" data-track-index="2">
-        <div class="top" id="s5p"><div class="bg"></div><svg class="wave" viewBox="0 0 1080 60" preserveAspectRatio="none"><path d="M0 0 H1080 V22 C 900 60, 720 0, 540 26 C 360 52, 180 4, 0 30 Z" fill="#efe8df"/></svg>
-          <div class="stage">
-            <div class="card" id="sop" style="left:250px;top:90px;width:580px;height:560px;padding:44px 46px;transform:rotate(-3deg)">
-              <div style="font-family:P8;font-size:26px;letter-spacing:3px;color:#8b8279">FREE GUIDE</div>
-              <div style="font-family:P8;font-size:52px;line-height:1.1;margin-top:10px">AI Content SOP 📘</div>
-              <div style="font-family:P6;font-size:28px;color:#6b635b;margin-top:12px">Works for every niche</div>
-              <div class="line" style="width:90%;margin-top:30px"></div><div class="line" style="width:80%"></div><div class="line" style="width:86%"></div><div class="line" style="width:64%"></div>
-            </div>
-            <div class="pill" id="cta" style="left:200px;top:720px;background:var(--ink);color:#fff;font-size:46px;padding:24px 50px">Comment <span style="background:var(--y);color:var(--ink);padding:0 16px;border-radius:12px;margin:0 8px">SOP</span> 👇</div>
-          </div></div>
-      </section>
+        <!-- S5 split: SOP CTA -->
+        <div class="scene top" id="s5"><div class="bg"><div class="dots"></div></div><svg class="wave" viewBox="0 0 1080 60" preserveAspectRatio="none"><path d="M0 0 H1080 V22 C 900 60, 720 0, 540 26 C 360 52, 180 4, 0 30 Z" fill="#ece4d9"/></svg>
+          <div class="el h" id="s5h" style="top:80px">Complete <em>SOP guide</em> 📘</div>
+          <div class="el card" id="sop" style="left:230px;top:230px;width:620px;height:520px;padding:44px 50px;transform:rotate(-3deg)">
+            <div style="font-family:P8;font-size:28px;letter-spacing:3px;color:#8b8279">FREE GUIDE</div>
+            <div style="font-family:P8;font-size:60px;line-height:1.08;margin-top:10px">AI Content SOP</div>
+            <div class="line" style="width:90%;margin-top:34px"></div><div class="line" style="width:78%"></div><div class="line" style="width:86%"></div><div class="line" style="width:60%"></div>
+          </div>
+          <div class="el chip" id="n1" style="left:40px;top:290px;font-size:34px">🦷 Health</div>
+          <div class="el chip" id="n2" style="left:800px;top:330px;font-size:34px">🏠 Real estate</div>
+          <div class="el chip" id="n3" style="left:30px;top:560px;font-size:34px">💻 SaaS</div>
+          <div class="el chip" id="n4" style="left:820px;top:600px;font-size:34px">🍰 Food</div>
+          <div class="el chip" id="cta" style="left:180px;top:790px;background:var(--ink);color:#fff;font-size:54px;padding:24px 56px">Comment <span style="background:var(--y);color:var(--ink);padding:0 18px;border-radius:14px;margin:0 10px">SOP</span> 👇</div>
+        </div>
 
+      </section>
       <div id="captions"></div>
       <div class="flash" id="flash"></div>
     </div>
 
     <script>
-      // Layout modes (keep in sync with MODES in composite.sh): split = B-roll top half, speaker bottom half; broll = full-screen B-roll.
-      const MODES = [["split", 5.5, 15.75], ["broll", 15.8, 24.05], ["split", 31.1, 50.3], ["broll", 50.4, 61.2], ["split", 61.3, 78.4], ["split", 83.3, 94.533]];
+      // All times below are written on the ORIGINAL recording clock; T() maps them onto the tight cut (pauses/fillers removed).
+      const KEEP = window.KEEP;
+      function T(x) { let acc = 0; for (const [a, b] of KEEP) { if (x < a) return acc; if (x <= b) return acc + x - a; acc += b - a; } return acc; }
+      window.T = T;
+      // Layout modes, original clock (composite.py uses the same list): split = B-roll top half / speaker bottom half; broll = full screen.
+      const MODES = [["split", 5.5, 15.75, "#s1"], ["broll", 15.8, 24.05, "#b1"], ["split", 31.1, 34.25, "#s2"], ["split", 34.25, 50.3, "#s3"], ["broll", 50.4, 61.35, "#b2"], ["split", 61.38, 78.4, "#s4"], ["split", 83.3, 94.533, "#s5"]];
+      window.MODES = MODES;
       const CUES = window.CUES = [];
       const tl = gsap.timeline({ paused: true });
-
-      function modeAt(t) { const m = MODES.find(([, a, b]) => t >= a && t < b); return m ? m[0] : "full"; }
+      const at = (x) => T(x);
+      function modeAt(x) { const m = MODES.find(([, a, b]) => x >= a && x < b); return m ? m[0] : "full"; }
 
       function buildCaptions() {
         const root = document.getElementById("captions");
         CUES.forEach(([start, end, text]) => {
           const el = document.createElement("div");
           el.className = "cap";
-          const m = modeAt(start + 0.05);
-          el.style.top = (m === "full" ? 1330 : 1500) + "px";
+          // CUES are on the new clock; find mode via the inverse lookup on the original clock
+          let orig = 0, acc = 0;
+          for (const [a, b] of KEEP) { if (start <= acc + (b - a)) { orig = a + start - acc; break; } acc += b - a; }
+          const m = modeAt(orig + 0.05);
+          el.style.top = (m === "full" ? 1330 : m === "split" ? 1520 : 1590) + "px";
           let on = false;
           const words = text.split(" ").map((w) => {
             const hl = on || w.startsWith("*");
@@ -194,86 +211,138 @@
           tl.set(el, { opacity: 1 }, start);
           tl.set(el, { opacity: 0 }, end);
           const ws = [...el.querySelectorAll(".w")];
-          const span = Math.min(0.8, (end - start) * 0.6);
-          ws.forEach((w, k) => tl.fromTo(w, { opacity: 0, y: 16, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.16, ease: "back.out(2)" }, start + span * k / ws.length));
+          const span = Math.min(0.7, (end - start) * 0.55);
+          ws.forEach((w, k) => tl.fromTo(w, { opacity: 0, y: 16, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.15, ease: "back.out(2)" }, start + span * k / ws.length));
         });
       }
 
-      function flash(t, p = 0.7) { tl.fromTo("#flash", { opacity: p }, { opacity: 0, duration: 0.22, ease: "power2.out", immediateRender: false }, t); }
-      function panelIn(id, t, kind) {
-        if (kind === "split") tl.fromTo(id, { yPercent: -100 }, { yPercent: 0, duration: 0.42, ease: "power3.out" }, t);
-        else tl.fromTo(id, { scale: 1.12, opacity: 0, filter: "blur(16px)" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.35, ease: "expo.out" }, t);
-        flash(t, 0.55);
+      const flash = (x, p = 0.55) => tl.fromTo("#flash", { opacity: p }, { opacity: 0, duration: 0.2, ease: "power2.out", immediateRender: false }, at(x));
+      function sceneIn(id, x, kind) {
+        tl.set(id, { opacity: 1 }, at(x));
+        if (kind === "split") tl.fromTo(id, { yPercent: -100 }, { yPercent: 0, duration: 0.38, ease: "power3.out", immediateRender: false }, at(x));
+        else tl.fromTo(id, { scale: 1.1, filter: "blur(14px)" }, { scale: 1, filter: "blur(0px)", duration: 0.32, ease: "expo.out", immediateRender: false }, at(x));
+        flash(x);
       }
-      function panelOut(id, t, kind) {
-        if (kind === "split") tl.to(id, { yPercent: -100, duration: 0.3, ease: "power3.in" }, t - 0.3);
-        else tl.to(id, { scale: 0.9, opacity: 0, filter: "blur(10px)", duration: 0.25, ease: "power3.in" }, t - 0.25);
+      function sceneOut(id, x, kind) {
+        if (kind === "split") tl.to(id, { yPercent: -100, duration: 0.26, ease: "power3.in" }, at(x) - 0.26);
+        else tl.to(id, { scale: 0.92, opacity: 0, duration: 0.22, ease: "power3.in" }, at(x) - 0.22);
+        tl.set(id, { opacity: 0 }, at(x));
       }
-      const pop = (sel, t, from = { opacity: 0, scale: 0.5 }) => tl.fromTo(sel, from, { opacity: 1, scale: 1, x: 0, y: 0, duration: 0.32, ease: "back.out(2)" }, t);
-      const hide = (sel, t) => tl.to(sel, { opacity: 0, scale: 0.9, duration: 0.2, ease: "power2.in" }, t);
+      // element in on a word, then a gentle idle float until it leaves (so nothing sits frozen)
+      function show(sel, x, from = { scale: 0.5 }, idle = true) {
+        tl.fromTo(sel, { opacity: 0, ...from }, { opacity: 1, scale: 1, x: 0, y: 0, rotation: 0, duration: 0.3, ease: "back.out(2)" }, at(x));
+      }
+      function floatIdle(sel, x0, x1, amp = 8) {
+        const d = 1.4, n = Math.max(0, Math.floor((at(x1) - at(x0)) / d) - 1);
+        if (n > 0) tl.fromTo(sel, { y: 0 }, { y: -amp, duration: d / 2, yoyo: true, repeat: n * 2 - 1, ease: "sine.inOut", immediateRender: false }, at(x0));
+      }
+      const out = (sel, x) => tl.to(sel, { opacity: 0, scale: 0.85, duration: 0.2, ease: "power2.in" }, at(x));
 
       function build() {
         buildCaptions();
-        // hook
-        tl.fromTo("#hk1", { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, 0.05);
-        tl.fromTo("#hk2", { opacity: 0, scale: 2.4, rotation: -8 }, { opacity: 1, scale: 1, rotation: -2, duration: 0.35, ease: "back.out(2)" }, 0.25);
-        tl.fromTo("#hk3", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, 0.6);
-        tl.to("#hookc .hook", { opacity: 0, y: -30, duration: 0.25, ease: "power2.in" }, 2.75);
+        // ---- hook (first frames only)
+        tl.fromTo("#hook", { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, 0.03);
+        tl.fromTo("#hk2", { scale: 2.4, rotation: -8 }, { scale: 1, rotation: -2, duration: 0.35, ease: "back.out(2)" }, 0.2);
+        tl.to("#hook", { opacity: 0, y: -30, duration: 0.25, ease: "power2.in" }, at(2.9));
 
-        // S1
-        panelIn("#s1p", 5.5, "split");
-        pop("#s1h", 5.75, { opacity: 0, y: -20 });
-        pop("#s1g", 6.3, { opacity: 0, y: 40 });
-        tl.to("#s1line", { strokeDashoffset: 0, duration: 1.6, ease: "power1.inOut" }, 6.6);
-        pop("#s1x", 8.6, { opacity: 0, scale: 2.4, rotation: -10 });
-        tl.to("#s1x", { rotation: -4, duration: 0.01 }, 8.95);
-        hide(["#s1g", "#s1x"], 11.05);
-        ["#lg1", "#lg2", "#lg3", "#lg4"].forEach((s, i) => pop(s, [11.35, 12.9, 13.8, 14.6][i], { opacity: 0, scale: 0.3, y: 60 }));
-        panelOut("#s1p", 15.75, "split");
+        // ---- S1: why punished (split)
+        sceneIn("#s1", 5.5, "split");
+        show("#s1h", 5.6, { y: -30, scale: 1 });
+        show("#s1g", 7.1, { y: 50, scale: 0.9 });
+        tl.to("#s1line", { strokeDashoffset: 0, duration: at(10.2) - at(7.4), ease: "power1.inOut" }, at(7.4));
+        show("#s1x", 10.0, { scale: 2.4, rotation: -10 });
+        floatIdle("#s1g", 7.5, 11.2, 6);
+        out(["#s1g", "#s1x"], 11.2);
+        show("#lg1", 11.8, { y: 70, scale: 0.3 });
+        show("#lg2", 12.8, { y: 70, scale: 0.3 });
+        show("#lg3", 14.3, { y: 70, scale: 0.3 });
+        show("#lgc", 14.8, { y: 30, scale: 0.8 });
+        floatIdle(["#lg1", "#lg2", "#lg3"], 12.2, 15.6, 10);
+        sceneOut("#s1", 15.75, "split");
 
-        // B1
-        panelIn("#b1p", 15.8, "broll");
-        pop("#b1h", 16.0, { opacity: 0, y: -20 });
-        pop("#b1c", 16.2, { opacity: 0, y: 40 });
-        pop("#b1q", 16.6, { opacity: 0, x: 40 });
-        tl.fromTo("#b1a .line", { scaleX: 0, transformOrigin: "left center" }, { scaleX: 1, duration: 0.3, stagger: 0.18, ease: "power2.out" }, 17.5);
-        tl.fromTo("#b1cur", { opacity: 0, x: 300, y: 200 }, { opacity: 1, x: 0, y: 0, duration: 0.5, ease: "power2.out" }, 18.9);
-        tl.fromTo("#b1copy", { background: "#fff" }, { background: "#ffd426", duration: 0.15 }, 19.45);
-        tl.to("#b1cur", { x: 210, y: 180, duration: 0.5, ease: "power2.inOut" }, 20.3);
-        pop("#b1pub", 20.6, { opacity: 0, scale: 0.6 });
-        tl.fromTo("#b1pub", { scale: 1 }, { scale: 0.92, duration: 0.08, yoyo: true, repeat: 1, immediateRender: false }, 21.2);
-        pop("#b1x", 22.1, { opacity: 0, scale: 2.2, rotation: -8 });
-        panelOut("#b1p", 24.05, "broll");
+        // ---- B1: AI content (full)
+        sceneIn("#b1", 15.8, "broll");
+        show("#b1h", 15.9, { y: -30, scale: 1 });
+        show("#b1c", 16.5, { y: 70, scale: 0.92 });
+        show("#b1q", 17.7, { x: 60, scale: 1 });
+        tl.fromTo("#b1a .line", { scaleX: 0 }, { scaleX: 1, duration: 0.28, stagger: 0.2, ease: "power2.out" }, at(19.4));
+        tl.fromTo("#b1copy", { background: "#ffffff", scale: 1 }, { background: "#ffd426", scale: 1.08, duration: 0.15, yoyo: true, repeat: 1 }, at(21.4));
+        show("#b1pub", 22.0, { scale: 0.5 });
+        tl.fromTo("#b1pub", { scale: 1 }, { scale: 0.9, duration: 0.08, yoyo: true, repeat: 1, immediateRender: false }, at(22.4));
+        out("#b1pub", 23.0);
+        show("#b1x", 23.2, { scale: 2.2, rotation: -8 });
+        floatIdle("#b1c", 17.0, 23.9, 6);
+        sceneOut("#b1", 24.05, "broll");
 
-        // S2
-        panelIn("#s2p", 31.1, "split");
-        ["#e1", "#e2", "#e3", "#e4"].forEach((s, i) => pop(s, [31.9, 32.4, 33.0, 33.5][i], { opacity: 0, y: 80, scale: 0.6 }));
-        tl.to("#s2a", { opacity: 0, x: -200, duration: 0.3, ease: "power2.in" }, 34.2);
-        tl.fromTo("#s2b", { opacity: 0, x: 200 }, { opacity: 1, x: 0, duration: 0.35, ease: "power3.out" }, 34.4);
-        pop("#yml", 39.0, { opacity: 0, y: -30 });
-        pop("#doc", 43.7, { opacity: 0, y: 60 });
-        ["#d1", "#d2", "#d3"].forEach((s, i) => pop(s, [45.0, 46.7, 48.1][i], { opacity: 0, x: -40 }));
-        panelOut("#s2p", 50.3, "split");
+        // ---- full: E-E-A-T chips above the head
+        show("#fc1a", 25.6, { y: -30, scale: 0.8 });
+        show("#fc1b", 28.1, { x: -60, scale: 0.8 });
+        show("#fc1c", 29.2, { x: 60, scale: 0.8 });
+        tl.set("#fc1", { opacity: 1 }, at(25.6));
+        out("#fc1", 30.9);
 
-        // B2
-        panelIn("#b2p", 50.4, "broll");
-        pop("#w1", 55.6, { opacity: 0, scale: 0.3 });
-        pop("#w2", 57.6, { opacity: 0, scale: 0.3 });
-        pop("#w3", 58.2, { opacity: 0, y: 60 });
-        pop("#w4", 59.0, { opacity: 0, x: -40 });
-        pop("#w5", 60.0, { opacity: 0, x: -40 });
-        panelOut("#b2p", 61.2, "broll");
+        // ---- S2: E-E-A-T tiles (split)
+        sceneIn("#s2", 31.1, "split");
+        show("#s2h", 31.2, { y: -30, scale: 1 });
+        ["#e1", "#e2", "#e3", "#e4"].forEach((s, i) => show(s, [32.2, 32.7, 33.2, 33.7][i], { y: 120, scale: 0.6 }));
+        floatIdle(["#e1", "#e3"], 33.0, 34.2, 8);
+        tl.set("#s2", { opacity: 0 }, at(34.25));
 
-        // S4
-        panelIn("#s4p", 61.3, "split");
-        ["#f1", "#f2", "#f3", "#f4", "#f5"].forEach((s, i) => pop(s, [66.5, 68.0, 70.3, 71.6, 75.6][i], { opacity: 0, x: -50 }));
-        panelOut("#s4p", 78.4, "split");
+        // ---- S3: health example (split, continues seamlessly)
+        tl.set("#s3", { opacity: 1 }, at(34.25));
+        tl.fromTo("#s3", { x: 300 }, { x: 0, duration: 0.3, ease: "power3.out", immediateRender: false }, at(34.25));
+        show("#s3h", 34.4, { y: -30, scale: 1 });
+        show("#s3doc", 35.3, { scale: 0.4, rotation: -10 });
+        floatIdle("#s3doc", 35.6, 40.4, 12);
+        show("#s3y", 40.5, { y: 40, scale: 0.7 });
+        out(["#s3doc", "#s3y"], 43.6);
+        show("#doc", 44.2, { y: 70, scale: 0.9 });
+        ["#d1", "#d2", "#d3"].forEach((s, i) => show(s, [45.9, 47.3, 48.7][i], { x: -60, scale: 0.9 }));
+        sceneOut("#s3", 50.3, "split");
 
-        // S5
-        panelIn("#s5p", 83.3, "split");
-        pop("#sop", 83.7, { opacity: 0, y: 60, rotation: 6 });
-        pop("#cta", 89.3, { opacity: 0, scale: 0.5 });
-        tl.fromTo("#cta", { scale: 1 }, { scale: 1.07, duration: 0.35, yoyo: true, repeat: 5, ease: "sine.inOut", immediateRender: false }, 89.8);
+        // ---- B2: content writer (full)
+        sceneIn("#b2", 50.4, "broll");
+        show("#b2h", 51.1, { y: -30, scale: 1 });
+        show("#b2w", 52.2, { scale: 0.3, y: 60 });
+        floatIdle("#b2w", 52.6, 57.4, 14);
+        show("#b2t", 55.0, { scale: 0.6 });
+        out(["#b2w", "#b2t"], 57.5);
+        show("#w1", 57.7, { y: 70, scale: 0.3 });
+        show("#w2", 58.6, { y: 70, scale: 0.3 });
+        floatIdle(["#w1", "#w2"], 58.0, 61.3, 10);
+        show("#w3", 58.75, { y: 70, scale: 0.9 });
+        show("#w4", 60.45, { x: -60, scale: 0.9 });
+        show("#w5", 60.75, { x: -60, scale: 0.9 });
+        sceneOut("#b2", 61.35, "broll");
+
+        // ---- S4: the fix (split)
+        sceneIn("#s4", 61.38, "split");
+        show("#s4h", 61.5, { y: -30, scale: 1 });
+        show("#t1", 63.6, { y: 70, scale: 0.3 });
+        show("#t2", 63.9, { y: 70, scale: 0.3 });
+        show("#t3", 64.2, { y: 70, scale: 0.3 });
+        show("#t4", 64.7, { y: 40, scale: 0.7 });
+        floatIdle(["#t1", "#t2", "#t3"], 64.6, 66.3, 10);
+        out(["#t1", "#t2", "#t3", "#t4"], 66.4);
+        ["#f1", "#f2", "#f3", "#f4", "#f5", "#f6"].forEach((s, i) => show(s, [67.2, 67.9, 70.2, 72.2, 74.6, 76.4][i], { x: -80, scale: 0.9 }));
+        floatIdle("#s4h", 62.0, 78.2, 6);
+        sceneOut("#s4", 78.4, "split");
+
+        // ---- full: show it or no rank
+        tl.set("#fc2", { opacity: 1 }, at(79.5));
+        show("#fc2a", 79.6, { y: -30, scale: 0.8 });
+        show("#fc2b", 82.0, { y: 30, scale: 0.8 });
+        out("#fc2", 83.2);
+
+        // ---- S5: SOP + CTA (split)
+        sceneIn("#s5", 83.3, "split");
+        show("#s5h", 83.4, { y: -30, scale: 1 });
+        show("#sop", 85.2, { y: 80, scale: 0.8, rotation: 6 });
+        floatIdle("#sop", 85.6, 94.4, 10);
+        ["#n1", "#n2", "#n3", "#n4"].forEach((s, i) => show(s, [87.4, 87.8, 88.3, 88.7][i], { scale: 0.3 }));
+        out(["#n1", "#n2", "#n3", "#n4"], 90.6);
+        show("#cta", 90.8, { scale: 0.4 });
+        tl.fromTo("#cta", { scale: 1 }, { scale: 1.07, duration: 0.35, yoyo: true, repeat: 7, ease: "sine.inOut", immediateRender: false }, at(91.3));
 
         window.__timelines["main"] = tl;
       }
