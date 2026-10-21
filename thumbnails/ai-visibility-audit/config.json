@@ -1,0 +1,15 @@
+{
+  "theme": "blue",
+  "logos": ["openai.svg", "gemini-color.svg", "perplexity-color.svg", "google-color.svg"],
+  "title": "AI Visibility Audit",
+  "title_size": "100px",
+  "subtitle": "DOES AI RECOMMEND YOU?",
+  "big_word": "AUDIT",
+  "big_size": "430px",
+  "big_top": "650px",
+  "photo": "assets/vaibhav_suit_cutout.png",
+  "output": "cover.png",
+  "logo_size": "100px",
+  "title_top": "404px",
+  "sub_top": "550px"
+}
