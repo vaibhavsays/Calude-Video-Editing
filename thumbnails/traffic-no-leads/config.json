@@ -1,0 +1,15 @@
+{
+  "theme": "peach",
+  "logos": ["google-color.svg", "google-search-console.svg"],
+  "title": "Traffic but No Leads?",
+  "title_size": "96px",
+  "subtitle": "KEYWORD FUNNEL · SEO",
+  "big_word": "LEADS",
+  "big_size": "440px",
+  "big_top": "650px",
+  "photo": "assets/vaibhav_suit_cutout.png",
+  "output": "cover.png",
+  "logo_size": "112px",
+  "title_top": "410px",
+  "sub_top": "550px"
+}
