@@ -79,8 +79,8 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="103.077" data-width="1080" data-height="1920">
-      <section id="gfx" class="clip" data-start="0" data-duration="103.077" data-track-index="1">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="113.169" data-width="1080" data-height="1920">
+      <section id="gfx" class="clip" data-start="0" data-duration="113.169" data-track-index="1">
 
         <div class="el hook" id="hook"><div class="a">Paying ₹50K/month for SEO</div><div class="b" id="hk2">ZERO LEADS?</div><div class="c">Watch this 👇</div></div>
         <div class="el tchip" id="fd1"><div id="fd1a">📅 100 Days of <b>Decoding AI SEO</b></div></div>
@@ -170,7 +170,7 @@
       function T(x) { let acc = 0; for (const [a, b] of KEEP) { if (x < a) return acc; if (x <= b) return acc + x - a; acc += b - a; } return acc; }
       window.T = T;
       // Layout modes, original clock (composite.py uses the same list): split = B-roll top half / speaker bottom half; broll = full screen.
-      const MODES = [["split", 2.98, 10.95], ["full", 11.0, 14.6], ["split", 14.63, 35.45], ["broll", 90.93, 101.05], ["split", 142.3, 191.99], ["split", 192.1, 201]];
+      const MODES = [["split", 2.98, 10.95], ["full", 11.0, 14.6], ["split", 14.63, 37.78], ["broll", 90.93, 99.72], ["split", 142.3, 191.99], ["split", 192.1, 201]];
       window.MODES = MODES;
       const CUES = window.CUES = [];
       const tl = gsap.timeline({ paused: true });
@@ -264,8 +264,9 @@
         show("#q3", 30.2, { x: 60, scale: 0.9 });
         show("#r1", 32.4, { scale: 0.5 });
         show("#r2", 34.0, { scale: 0.5 });
-        floatIdle("#fun", 21.5, 35.3, 6);
-        sceneOut("#s2", 35.45, "split");
+        tl.fromTo("#r2", { scale: 1 }, { scale: 1.15, duration: 0.15, yoyo: true, repeat: 1, immediateRender: false }, at(36.9));
+        floatIdle("#fun", 21.5, 37.6, 6);
+        sceneOut("#s2", 37.78, "split");
 
         // full: the question
         tl.set("#fq", { opacity: 1 }, at(44.6));
@@ -279,8 +280,8 @@
         show("#c1", 91.4, { x: -80, scale: 0.9 });
         show("#c2", 92.6, { x: -80, scale: 0.9 });
         show("#c3", 94.9, { x: -80, scale: 0.9 });
-        show("#stop", 99.0, { scale: 2.4, rotation: -8 });
-        sceneOut("#b1", 101.05, "broll");
+        show("#stop", 98.2, { scale: 2.4, rotation: -8 });
+        sceneOut("#b1", 99.72, "broll");
 
         // S3 funnel + phone
         sceneIn("#s3", 142.3, "split");

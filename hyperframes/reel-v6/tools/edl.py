@@ -4,17 +4,18 @@
 Take selection (original clock, seconds):
   keep   0.00-10.95  hook ("business owners paying 40-50k... calls & leads zero")
   keep  11.03-14.60  "Welcome to 100 Days of Decoding AI SEO"
-  keep  14.63-35.45  best take: agencies target traffic keywords, ToFu/MoFu/BoFu, question keywords -> traffic, no leads
-  drop  35.45-44.50  retake of "agencies target traffic keywords"
+  keep  14.63-37.78  best take: agencies target traffic keywords, ToFu/MoFu/BoFu, question keywords -> traffic, no leads
+  drop  37.78-44.50  retake of "agencies target traffic keywords"
   keep  44.50-53.41  "ask: is this traffic converting into leads / calls?"
   drop  53.73-90.93  third retake of the same point (+ garbled tracking aside)
-  keep  90.93-101.05 "no qualified leads -> stop that marketing"
-  drop 101.05-125.10 funnel explained again (duplicate of 14.63)
+  keep  90.93-99.72  "no qualified leads -> stop that marketing" (ends on "chahiye")
+  drop  99.72-125.10 funnel explained again (duplicate of 14.63)
   drop 125.10-127.75 empty chair
   drop 127.75-142.30 question-based queries point (already covered)
   keep 142.30-200.90 funnel self-check, phone-buying example (top/middle/bottom), CTA
 
-Inside kept takes every pause longer than 0.30 s is shortened to ~0.15 s.
+Inside kept takes only pauses longer than 0.50 s are shortened, keeping 0.22 s after a word ends and 0.15 s
+before the next one starts (silence map at -38 dB, so soft word endings are never treated as silence).
 
     python3 tools/edl.py   -> edl.json + edl.js
 """
@@ -22,15 +23,15 @@ import json
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-TAKES = [(0.0, 10.95), (11.03, 14.60), (14.63, 35.45), (44.50, 53.41), (90.93, 101.05), (142.30, 200.90)]
-LEAD, TAIL = 0.08, 0.07
+TAKES = [(0.0, 10.95), (11.03, 14.60), (14.63, 37.78), (44.50, 53.60), (90.93, 99.72), (142.30, 200.90)]
+LEAD, TAIL = 0.22, 0.15
 
 sil = [tuple(map(float, l.split())) for l in open(HERE / "silences.txt") if l.strip()]
 keep = []
 for a, b in TAKES:
     t = a
     for s, e in sil:
-        if e - s > 0.30 and s > a and e < b:
+        if e - s > 0.50 and s > a and e < b:
             if s + LEAD > t: keep.append([round(t, 3), round(s + LEAD, 3)])
             t = e - TAIL
     if b > t: keep.append([round(t, 3), round(b, 3)])
