@@ -6,7 +6,7 @@
   2. Clean + upscale the 576x1024 WhatsApp source to 1080x1920 (deblock, light denoise, Lanczos, sharpen, gentle grade).
   3. Full-frame shots: every join gets an eased zoom punch; zoom levels alternate so jump cuts read as deliberate.
   4. Split windows: the speaker sits in the bottom half (the overlay fills the top half with B-roll).
-  5. HyperFrames overlay (renders/overlay.mov: hook, B-roll, captions) on top, SFX mixed under the voice, one CRF 16 encode.
+  5. HyperFrames overlay (renders/overlay.mov: hook, B-roll, captions) on top, SFX mixed under the voice, one CRF 17 encode (keeps the file under GitHub's 100 MB).
 
     python3 composite.py [out.mp4]
 """
@@ -28,7 +28,7 @@ def T(x):
     return acc
 
 # Same windows as MODES in index.html (original clock)
-SPLIT = [(2.98, 10.95), (14.63, 37.78), (142.3, 191.99), (192.1, 201.0)]
+SPLIT = [(2.98, 10.95), (14.63, 37.78), (142.3, 191.99), (192.1, 202.0)]
 BROLL = [(90.93, 99.72)]
 
 UP = ("deblock=filter=strong:block=8,hqdn3d=1.5:1.5:4:4,scale=1080:1920:flags=lanczos+accurate_rnd+full_chroma_int,"
@@ -74,8 +74,8 @@ def main():
     g.append("".join(f"[vc{i}][ac{i}]" for i in range(n)) + f"concat=n={n}:v=1:a=1[vcat][acat]")
     g.append(f"[vcat]{UP},split[u1][u2]")
     g.append(f"[u1]scale=2160:3840:flags=lanczos,zoompan=z='{z}':x='iw/2-iw/zoom/2':y='(ih-ih/zoom)*0.22':d=1:s=1080x1920:fps=30[full]")
-    g.append("[u2]crop=1080:960:0:110[half]")
-    g.append(f"[full][half]overlay=0:960:enable='{split_en}'[v1]")
+    g.append("[u2]crop=1080:1160:0:40[half]")
+    g.append(f"[full][half]overlay=0:760:enable='{split_en}'[v1]")
     g.append("[v1][1:v]overlay=0:0:format=auto:eof_action=pass[v]")
     mix = ["[acat]"]
     for k, (name, t, gain) in enumerate(SFX):
@@ -86,7 +86,7 @@ def main():
         mix.append(f"[s{k}]")
     g.append("".join(mix) + f"amix=inputs={len(mix)}:normalize=0:duration=first,alimiter=limit=0.95[a]")
     cmd = ["ffmpeg", "-y", "-v", "error", *inputs, "-filter_complex", ";\n".join(g), "-map", "[v]", "-map", "[a]",
-           "-t", f"{DUR:.3f}", "-c:v", "libx264", "-preset", "slow", "-crf", "16", "-profile:v", "high", "-pix_fmt", "yuv420p",
+           "-t", f"{DUR:.3f}", "-c:v", "libx264", "-preset", "slow", "-crf", "17", "-profile:v", "high", "-pix_fmt", "yuv420p",
            "-tune", "film", "-r", "30", "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709",
            "-c:a", "aac", "-b:a", "320k", "-movflags", "+faststart", str(OUT)]
     subprocess.run(cmd, check=True)

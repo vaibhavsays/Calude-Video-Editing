@@ -27,7 +27,7 @@ const SEGMENTS = [
   [185.65, 188.97, "yaani *conversion-based*, | *transactional* keywords."],
   [189.47, 191.99, "Toh ye saare keywords hote hain | proper *funnel-wise*."],
   [192.37, 197.09, "Agar aapko apni website ke liye | proper *keyword research* chahiye,"],
-  [197.56, 200.84, "reel *share* kijiye, comment kijiye *KEYWORD*, | main bhejunga research | *personalised* to your brand."],
+  [197.56, 201.80, "reel *share* kijiye, comment kijiye *KEYWORD*, | main bhejunga keyword research | *personalised* to your brand only."],
 ];
 
 SEGMENTS.forEach(([s, e, text]) => {

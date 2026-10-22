@@ -20,7 +20,8 @@
       .scene { position: absolute; inset: 0; opacity: 0; }
 
       /* panels */
-      .top { position: absolute; left: 0; right: 0; top: 0; height: 990px; }
+      .top { position: absolute; left: 0; right: 0; top: 0; height: 790px; }
+      .inner { position: absolute; left: 0; top: 0; width: 1080px; height: 960px; transform: scale(0.8); transform-origin: 50% 0; }
       .top .bg, .full .bg { position: absolute; inset: 0 0 30px 0; background: radial-gradient(ellipse 90% 70% at 50% 40%, #ffffff 0%, var(--cream) 68%, #ece4d9 100%); }
       .full .bg { inset: 0; }
       .dots { position: absolute; inset: 0; background-image: radial-gradient(rgba(23,21,26,.07) 2px, transparent 2px); background-size: 36px 36px; }
@@ -79,25 +80,28 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="113.169" data-width="1080" data-height="1920">
-      <section id="gfx" class="clip" data-start="0" data-duration="113.169" data-track-index="1">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="114.199" data-width="1080" data-height="1920">
+      <section id="gfx" class="clip" data-start="0" data-duration="114.199" data-track-index="1">
 
         <div class="el hook" id="hook"><div class="a">Paying ₹50K/month for SEO</div><div class="b" id="hk2">ZERO LEADS?</div><div class="c">Watch this 👇</div></div>
-        <div class="el tchip" id="fd1"><div id="fd1a">📅 100 Days of <b>Decoding AI SEO</b></div></div>
+        <div class="el tchip" id="fd1"><div id="fd1a"><b>Day 2</b> of 100 Days of <b>Decoding AI SEO</b></div></div>
         <div class="el tchip" id="fq"><div id="fqa">Traffic ➜ <b>Leads?</b> 🤔</div><div id="fqb">📞 Calls aa rahe hain?</div></div>
 
         <!-- S1: paying agency, zero leads -->
         <div class="scene top" id="s1"><div class="bg"><div class="dots"></div></div><svg class="wave" viewBox="0 0 1080 60" preserveAspectRatio="none"><path d="M0 0 H1080 V22 C 900 60, 720 0, 540 26 C 360 52, 180 4, 0 30 Z" fill="#ece4d9"/></svg>
+          <div class="inner">
           <div class="el card" id="inv" style="left:90px;top:110px;width:900px;height:300px;padding:40px 50px">
             <div style="font-family:P7;font-size:34px;color:#8b8279">🧾 SEO agency invoice</div>
             <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:24px"><span style="font-family:P7;font-size:44px">Monthly retainer</span><span style="font-family:Anton;font-size:110px;color:var(--ink)">₹50,000</span></div>
           </div>
           <div class="el card stat" id="z1" style="left:90px;top:450px;width:420px;height:400px;padding-top:40px"><div class="v" style="color:var(--red)">0</div><div class="k">📞 Calls</div></div>
           <div class="el card stat" id="z2" style="left:570px;top:450px;width:420px;height:400px;padding-top:40px"><div class="v" style="color:var(--red)">0</div><div class="k">🎯 Leads</div></div>
+          </div>
         </div>
 
         <!-- S2: traffic vs leads + funnel -->
         <div class="scene top" id="s2"><div class="bg"><div class="dots"></div></div><svg class="wave" viewBox="0 0 1080 60" preserveAspectRatio="none"><path d="M0 0 H1080 V22 C 900 60, 720 0, 540 26 C 360 52, 180 4, 0 30 Z" fill="#ece4d9"/></svg>
+          <div class="inner">
           <div class="el h" id="s2h" style="top:70px">Agencies chase <em>traffic</em> 📈</div>
           <div class="el card" id="tg" style="left:90px;top:230px;width:900px;height:560px;padding:36px 44px">
             <div style="font-family:P7;font-size:34px;color:#8b8279">Website traffic</div>
@@ -117,6 +121,7 @@
           <div class="el chip" id="q3" style="left:560px;top:560px;font-size:40px">❓ When to post?</div>
           <div class="el check" id="r1" style="left:560px;top:690px;font-size:44px"><i>✓</i>Traffic</div>
           <div class="el check x" id="r2" style="left:800px;top:690px;font-size:44px"><i>✕</i>Leads</div>
+          </div>
         </div>
 
         <!-- B1: stop the marketing -->
@@ -130,6 +135,7 @@
 
         <!-- S3: funnel + phone example -->
         <div class="scene top" id="s3"><div class="bg"><div class="dots"></div></div><svg class="wave" viewBox="0 0 1080 60" preserveAspectRatio="none"><path d="M0 0 H1080 V22 C 900 60, 720 0, 540 26 C 360 52, 180 4, 0 30 Z" fill="#ece4d9"/></svg>
+          <div class="inner">
           <div class="el h" id="s3h" style="top:60px;font-size:54px">Which <em>funnel stage</em> are you on?</div>
           <div class="el" id="fun2" style="left:50px;top:200px"><div class="funnel">
             <div class="tier t1" id="u1"><div>TOP<small>learn</small></div></div>
@@ -147,10 +153,12 @@
           <div class="el chip" id="b1c" style="left:500px;top:600px;font-size:38px">💰 Phone price?</div>
           <div class="el chip" id="b2c" style="left:500px;top:710px;font-size:38px">📊 Price comparison</div>
           <div class="el chip" id="b3c" style="left:500px;top:820px;font-size:38px;background:var(--green);color:#fff">✅ Buy now</div>
+          </div>
         </div>
 
         <!-- S4: CTA -->
         <div class="scene top" id="s4"><div class="bg"><div class="dots"></div></div><svg class="wave" viewBox="0 0 1080 60" preserveAspectRatio="none"><path d="M0 0 H1080 V22 C 900 60, 720 0, 540 26 C 360 52, 180 4, 0 30 Z" fill="#ece4d9"/></svg>
+          <div class="inner">
           <div class="el h" id="s4h" style="top:110px">Free <em>keyword research</em> 🔎</div>
           <div class="el card" id="kr" style="left:140px;top:280px;width:800px;height:340px;padding:40px 50px">
             <div style="font-family:P8;font-size:30px;letter-spacing:3px;color:#8b8279">PERSONALISED FOR YOUR BRAND</div>
@@ -159,6 +167,7 @@
             <div class="check" style="position:absolute;left:50px;top:270px;font-size:42px"><i>✓</i>Bottom-funnel keywords</div>
           </div>
           <div class="el chip" id="cta" style="left:150px;top:680px;background:var(--ink);color:#fff;font-size:54px;padding:24px 56px">Comment <span style="background:var(--y);color:var(--ink);padding:0 18px;border-radius:14px;margin:0 10px">KEYWORD</span> 👇</div>
+          </div>
         </div>
 
       </section>
@@ -170,7 +179,7 @@
       function T(x) { let acc = 0; for (const [a, b] of KEEP) { if (x < a) return acc; if (x <= b) return acc + x - a; acc += b - a; } return acc; }
       window.T = T;
       // Layout modes, original clock (composite.py uses the same list): split = B-roll top half / speaker bottom half; broll = full screen.
-      const MODES = [["split", 2.98, 10.95], ["full", 11.0, 14.6], ["split", 14.63, 37.78], ["broll", 90.93, 99.72], ["split", 142.3, 191.99], ["split", 192.1, 201]];
+      const MODES = [["split", 2.98, 10.95], ["full", 11.0, 14.6], ["split", 14.63, 37.78], ["broll", 90.93, 99.72], ["split", 142.3, 191.99], ["split", 192.1, 202]];
       window.MODES = MODES;
       const CUES = window.CUES = [];
       const tl = gsap.timeline({ paused: true });
@@ -186,7 +195,7 @@
           let orig = 0, acc = 0;
           for (const [a, b] of KEEP) { if (start <= acc + (b - a)) { orig = a + start - acc; break; } acc += b - a; }
           const m = modeAt(orig + 0.05);
-          el.style.top = (m === "full" ? 1330 : m === "split" ? 1520 : 1590) + "px";
+          el.style.top = (m === "full" ? 1590 : m === "split" ? 1610 : 1590) + "px";
           let on = false;
           const words = text.split(" ").map((w) => {
             const hl = on || w.startsWith("*");
