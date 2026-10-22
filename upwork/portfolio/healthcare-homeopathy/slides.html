@@ -1,0 +1,127 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Homeopathy SEO Case Study</title>
+<style>
+@font-face{font-family:Mont;src:url(fonts/Montserrat-var.woff2) format("woff2");font-weight:100 900}
+@font-face{font-family:Pop;src:url(fonts/Poppins-normal-400.woff2) format("woff2");font-weight:400}
+@font-face{font-family:Pop;src:url(fonts/Poppins-normal-600.woff2) format("woff2");font-weight:600}
+:root{--navy:#0b1f4d;--blue:#1d4ed8;--sky:#2f6bff;--yellow:#ffc928;--green:#0f9d6b;--red:#e2463b;--ink:#13203d;--muted:#5b6785;--line:#dfe6f3;--bg:#f4f7fd}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1600px;height:1200px;overflow:hidden;background:#fff;font-family:Pop,sans-serif;color:var(--ink)}
+.slide{display:none;width:1600px;height:1200px;position:relative;overflow:hidden;background:#fff}
+.slide.on{display:block}
+.top{position:absolute;inset:0 0 auto 0;height:14px;background:linear-gradient(90deg,var(--navy),var(--sky))}
+.badge{display:inline-flex;align-items:center;gap:14px;background:var(--navy);color:#fff;font:700 26px Mont;letter-spacing:.06em;padding:14px 26px;border-radius:999px}
+.badge i{width:14px;height:14px;border-radius:50%;background:var(--yellow);display:block}
+h1{font:900 104px/1.0 Mont;color:var(--navy);letter-spacing:-.02em}
+h1 em{font-style:normal;color:var(--sky)}
+h2{font:900 72px/1.05 Mont;color:var(--navy);letter-spacing:-.015em}
+h2 em{font-style:normal;color:var(--sky)}
+.sub{font:400 32px/1.4 Pop;color:var(--muted)}
+.foot{position:absolute;left:0;right:0;bottom:0;height:110px;background:var(--navy);display:flex;align-items:center;justify-content:space-around;color:#fff;font:600 24px Pop}
+.foot span{display:flex;align-items:center;gap:14px}
+.foot b{width:40px;height:40px;border-radius:10px;background:var(--yellow);color:var(--navy);display:grid;place-items:center;font:900 22px Mont}
+.pad{position:absolute;left:90px;right:90px;top:84px}
+
+/* cover */
+.score{display:flex;align-items:center;gap:34px;margin-top:56px}
+.ring{width:250px;height:250px;border-radius:50%;display:grid;place-items:center;position:relative}
+.ring::after{content:"";position:absolute;inset:26px;border-radius:50%;background:#fff}
+.ring div{position:relative;z-index:1;text-align:center;font:900 76px/1 Mont;color:var(--navy)}
+.ring small{display:block;font:600 20px Pop;color:var(--muted);margin-top:8px;letter-spacing:.04em}
+.arrow{font:900 90px Mont;color:var(--yellow);-webkit-text-stroke:3px var(--navy)}
+.chips{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:58px}
+.chip{border:2px solid var(--line);border-radius:22px;padding:24px 28px;background:var(--bg);display:flex;align-items:center;gap:22px}
+.chip .n{font:900 46px/1 Mont;color:var(--navy);white-space:nowrap}
+.chip .n s{color:var(--red);text-decoration:none}
+.chip .n u{color:var(--green);text-decoration:none}
+.chip .l{font:400 24px/1.3 Pop;color:var(--muted)}
+.rightcol{position:absolute;right:90px;top:310px;width:520px}
+
+/* screenshots */
+.shot{max-width:1300px;border:2px solid var(--line);border-radius:22px;overflow:hidden;background:#fff;box-shadow:0 18px 40px rgba(11,31,77,.12)}
+.shot img{display:block;width:100%}
+.lbl{display:inline-flex;gap:14px;align-items:center;font:800 30px Mont;margin:0 0 16px 4px}
+.lbl .t{padding:8px 18px;border-radius:12px;color:#fff;font:800 22px Mont;letter-spacing:.05em}
+
+/* table */
+table{width:100%;border-collapse:separate;border-spacing:0 12px;margin-top:40px}
+th{font:600 22px Pop;color:var(--muted);text-align:left;padding:0 26px;letter-spacing:.04em;text-transform:uppercase}
+td{background:var(--bg);padding:22px 26px;font:600 28px Pop;color:var(--ink)}
+td:first-child{border-radius:16px 0 0 16px}
+td:last-child{border-radius:0 16px 16px 0}
+td.b{color:var(--red);font:800 34px Mont}
+td.a{color:var(--green);font:800 34px Mont}
+td.p{font:900 34px Mont;color:var(--navy)}
+
+/* findings */
+.cols{display:grid;grid-template-columns:1.25fr 1fr;gap:44px;margin-top:44px}
+.find{display:flex;gap:18px;align-items:flex-start;margin-bottom:22px}
+.find b{flex:none;width:126px;text-align:center;font:800 18px Mont;letter-spacing:.06em;color:#fff;background:var(--red);padding:7px 12px;border-radius:8px;margin-top:4px}
+.find b.h{background:#f08a24}
+.find p{font:400 25px/1.38 Pop;color:var(--ink)}
+.find p strong{font-weight:600}
+.box{background:var(--navy);color:#fff;border-radius:26px;padding:38px 40px}
+.box h3{font:800 32px Mont;margin-bottom:22px;color:var(--yellow)}
+.box li{list-style:none;font:400 24px/1.35 Pop;padding:11px 0 11px 40px;position:relative;border-bottom:1px solid rgba(255,255,255,.12)}
+.box li:last-child{border:0}
+.box li::before{content:"✓";position:absolute;left:0;top:10px;color:var(--yellow);font:900 24px Mont}
+.big{display:flex;gap:26px;margin-top:30px}
+.big div{flex:1;background:var(--bg);border-radius:20px;padding:22px 26px;border:2px solid var(--line)}
+.big strong{display:block;font:900 54px/1 Mont;color:var(--navy)}
+.big span{font:400 21px Pop;color:var(--muted)}
+.note{font:400 19px Pop;color:var(--muted);margin-top:18px}
+
+.ga{width:100%;border-collapse:separate;border-spacing:0 10px;margin-top:20px}
+.ga td{padding:16px 24px;font:600 25px Pop}
+.ga td.n{font:800 28px Mont;color:var(--navy);text-align:right}
+.ga td.g{font:600 22px Pop;color:var(--muted);text-align:right}
+.ga tr.hl td{background:var(--navy);color:#fff}
+.ga tr.hl td.n,.ga tr.hl td.g{color:var(--yellow)}
+.bar{height:16px;border-radius:8px;background:var(--line);width:260px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--sky)}
+.ga tr.hl .bar{background:rgba(255,255,255,.2)}.ga tr.hl .bar i{background:var(--yellow)}
+.stat4{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:40px}
+.stat4 div{background:var(--bg);border:2px solid var(--line);border-radius:20px;padding:24px 26px}
+.stat4 strong{display:block;font:900 58px/1 Mont;color:var(--navy)}
+.stat4 span{display:block;font:400 21px/1.3 Pop;color:var(--muted);margin-top:10px}
+.pill{display:flex;justify-content:space-between;align-items:center;gap:16px;background:var(--bg);border:2px solid var(--line);border-radius:18px;padding:20px 24px;margin-bottom:16px;font:600 24px/1.25 Pop;color:var(--ink)}
+.pill b{flex:none;font:900 38px Mont;color:var(--green)}
+.chip{flex-direction:column;align-items:flex-start;gap:10px}
+.box li{font-size:22px;padding:9px 0 9px 36px}
+.ga th:nth-child(2){color:transparent}
+</style></head><body>
+
+<section class="slide" id="s1">
+  <div class="top"></div>
+  <div class="pad">
+    <span class="badge"><i></i>HEALTHCARE (YMYL) SEO · CASE STUDY</span>
+    <h1 style="margin-top:44px">Avg. position<br><em>6.2 · CTR 3.6%</em></h1>
+    <p class="sub" style="margin-top:26px;max-width:860px">Trust-first SEO for Shreeradhey Online Homeopathy, an online homeopathy practice in India, ranking condition and treatment pages in a YMYL health niche.</p>
+    <div class="chips" style="max-width:900px"><div class="chip"><div class="n"><u>1.44K</u></div><div class="l">Google clicks · 3 months</div></div><div class="chip"><div class="n"><u>40K</u></div><div class="l">Impressions · 3 months</div></div><div class="chip"><div class="n"><u>75.7%</u></div><div class="l">Of sessions from search + video</div></div><div class="chip"><div class="n"><u>1m 14s</u></div><div class="l">Organic engagement time</div></div></div>
+  </div>
+  <div class="rightcol" style="top:250px;width:470px"><div style="font:800 24px Mont;color:var(--muted);letter-spacing:.06em;margin-bottom:18px">HOW</div><div class="pill"><span class="k">E-E-A-T: doctor profile &amp; credentials</span><b>✓</b></div><div class="pill"><span class="k">FAQ &amp; schema for AI Overviews</span><b>✓</b></div><div class="pill"><span class="k">Video SEO</span><b>✓</b></div><div class="pill" style="background:var(--navy);color:#fff;border-color:var(--navy)"><span class="k">Organic video sessions</span><b style="color:var(--yellow)">310</b></div></div>
+  <div class="foot"><span><b>1</b>E-E-A-T</span><span><b>2</b>On-Page SEO</span><span><b>3</b>FAQ &amp; Schema</span><span><b>4</b>Video SEO</span></div>
+</section>
+<section class="slide" id="s2">
+  <div class="top"></div>
+  <div class="pad">
+    <span class="badge"><i></i>GOOGLE SEARCH CONSOLE</span>
+    <h2 style="margin-top:34px">Impressions <em>growing steadily</em> since late August</h2>
+    <div class="shot" style="max-width:1420px;margin-top:40px"><img src="assets/gsc.png"></div>
+    <div class="stat4"><div><strong>1.44K</strong><span>Total clicks</span></div><div><strong>40K</strong><span>Impressions</span></div><div><strong>3.6%</strong><span>Average CTR</span></div><div><strong>6.2</strong><span>Average position</span></div></div>
+    <p class="note">Google Search Console · Web · last 3 months (17 Jul – 16 Oct 2026).</p>
+  </div>
+</section>
+<section class="slide" id="s3">
+  <div class="top"></div>
+  <div class="pad">
+    <span class="badge"><i></i>GA4 · TRAFFIC ACQUISITION · LAST 3 MONTHS</span>
+    <h2 style="margin-top:34px">Search + video bring <em>75.7%</em> of visits</h2>
+    <div class="cols" style="grid-template-columns:1.5fr 1fr;margin-top:34px">
+      <div><table class="ga"><tr><th>Channel</th><th>Share</th><th style="text-align:right">Sessions</th><th style="text-align:right">Share</th><th style="text-align:right">Engaged</th><th style="text-align:right">Avg time</th></tr><tr class="hl"><td>Organic Search</td><td><div class="bar"><i style="width:47.1%"></i></div></td><td class="n">511</td><td class="g">47.1%</td><td class="g">62.82%</td><td class="g">1m 14s</td></tr><tr class="hl"><td>Organic Video</td><td><div class="bar"><i style="width:28.6%"></i></div></td><td class="n">310</td><td class="g">28.6%</td><td class="g">46.13%</td><td class="g">24s</td></tr><tr class=""><td>Direct</td><td><div class="bar"><i style="width:10.4%"></i></div></td><td class="n">113</td><td class="g">10.4%</td><td class="g">44.25%</td><td class="g">27s</td></tr><tr class=""><td>Referral</td><td><div class="bar"><i style="width:9.0%"></i></div></td><td class="n">97</td><td class="g">9.0%</td><td class="g">45.36%</td><td class="g">40s</td></tr><tr class=""><td>Organic Social</td><td><div class="bar"><i style="width:4.2%"></i></div></td><td class="n">46</td><td class="g">4.2%</td><td class="g">34.78%</td><td class="g">13s</td></tr></table></div>
+      <div class="box"><h3></h3><ul><li>Keyword research on conditions &amp; treatments</li><li>E-E-A-T: doctor profile, credentials, medical review</li><li>On-page optimisation of treatment &amp; consultation pages</li><li>FAQ content &amp; schema for snippets and AI Overviews</li><li>Video SEO for video results</li><li>GA4 + GSC tracking</li></ul></div>
+    </div>
+  </div>
+  <div class="foot"><span><b>✓</b>YMYL health niche</span><span><b>✓</b>Page-one rankings</span><span><b>✓</b>62.82% organic engagement</span></div>
+</section>
+<script>var n=(location.hash||'#1').slice(1);document.getElementById('s'+n).classList.add('on');</script>
+</body></html>
