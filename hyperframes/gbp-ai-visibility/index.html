@@ -40,18 +40,20 @@
       }
       body {
         font-family: "Poppins", sans-serif;
+        color: #20140e;
       }
-
-      /* Split screen: screen recording on top, speaker below (speaker comes from build.sh). */
-      #panel {
+      .layer {
         position: absolute;
-        left: 0;
-        top: 0;
-        width: 1080px;
-        height: 830px;
-        overflow: hidden;
-        background: #fbf3ee;
+        inset: 0;
         opacity: 0;
+      }
+      .pastel {
+        background:
+          radial-gradient(520px 420px at 12% 18%, rgba(66, 133, 244, 0.22), transparent 70%),
+          radial-gradient(520px 460px at 92% 30%, rgba(16, 163, 127, 0.2), transparent 70%),
+          radial-gradient(560px 460px at 18% 82%, rgba(234, 67, 53, 0.16), transparent 70%),
+          radial-gradient(520px 420px at 88% 88%, rgba(251, 188, 5, 0.2), transparent 70%),
+          #fbfaf8;
       }
       .shot {
         position: absolute;
@@ -67,33 +69,245 @@
         width: 2560px;
         height: 1392px;
       }
-      #divider {
+      .logo {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+        font-weight: 600;
+        font-size: 40px;
+        color: #3c4043;
+      }
+      .logo img {
+        width: 150px;
+        height: 150px;
+      }
+
+      /* ---------- Hook: floating AI answer cards beside the speaker ---------- */
+      .float-card {
+        position: absolute;
+        width: 420px;
+        padding: 26px 26px 28px;
+        border-radius: 30px;
+        background: rgba(255, 255, 255, 0.96);
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.35);
+        opacity: 0;
+      }
+      #card-gpt {
+        left: 36px;
+        top: 930px;
+      }
+      #card-gai {
+        left: 624px;
+        top: 860px;
+      }
+      .fc-head {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        font-weight: 600;
+        font-size: 30px;
+      }
+      .fc-head img {
+        width: 44px;
+        height: 44px;
+      }
+      .fc-q {
+        margin: 18px 0 16px auto;
+        width: fit-content;
+        max-width: 330px;
+        padding: 12px 20px;
+        border-radius: 22px 22px 6px 22px;
+        background: #efeae6;
+        font-size: 28px;
+      }
+      .fc-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 7px 0;
+        font-size: 28px;
+        color: #3d3a38;
+      }
+      .fc-row b {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: #e6f4ea;
+        color: #188038;
+        font-size: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: none;
+      }
+      .fc-miss {
+        margin-top: 14px;
+        padding: 12px 16px;
+        border-radius: 16px;
+        background: #fde8e6;
+        color: #c5221f;
+        font-weight: 600;
+        font-size: 28px;
+      }
+      #tool-pill {
         position: absolute;
         left: 0;
-        top: 826px;
         width: 1080px;
-        height: 8px;
-        background: #f08a24;
-        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+        top: 170px;
+        display: flex;
+        justify-content: center;
+        opacity: 0;
+      }
+      #tool-pill div {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        padding: 18px 34px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.95);
+        box-shadow: 0 18px 50px rgba(0, 0, 0, 0.3);
+        font-weight: 600;
+        font-size: 40px;
+      }
+      #tool-pill img {
+        width: 50px;
+        height: 50px;
+      }
+
+      /* ---------- Split screen: wavy-edged screen panel on top ---------- */
+      #panel {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1080px;
+        height: 880px;
+        overflow: hidden;
+        background: #fbf3ee;
+        clip-path: path("M0 0 H1080 V842 C 930 872 820 806 650 828 C 470 852 360 880 200 846 C 120 830 60 822 0 834 Z");
+        opacity: 0;
+      }
+      #wave {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1080px;
+        height: 900px;
+        opacity: 0;
+      }
+      #glow {
+        position: absolute;
+        border-radius: 34px;
+        box-shadow:
+          0 0 0 6px rgba(140, 92, 255, 0.85),
+          0 0 60px 18px rgba(140, 92, 255, 0.55);
+        opacity: 0;
+      }
+      #click-ring {
+        position: absolute;
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        border: 8px solid #f08a24;
         opacity: 0;
       }
 
-      /* Full-screen "0% visibility" moment. */
-      #zero {
+      /* ---------- Full screen: the tool asks both AIs ---------- */
+      #ask .logo {
         position: absolute;
-        inset: 0;
-        background: #fbf3ee;
-        opacity: 0;
+        top: 300px;
+        width: 540px;
       }
+      #ask-gai {
+        left: 0;
+      }
+      #ask-gpt {
+        left: 540px;
+      }
+      .ask-card {
+        position: absolute;
+        top: 610px;
+        width: 470px;
+        padding: 26px;
+        border-radius: 28px;
+        background: #fff;
+        box-shadow: 0 24px 60px rgba(60, 40, 20, 0.16);
+      }
+      #ask-card-l {
+        left: 35px;
+      }
+      #ask-card-r {
+        left: 575px;
+      }
+      .ask-q {
+        padding: 14px 20px;
+        border-radius: 20px 20px 6px 20px;
+        background: #f1ece8;
+        font-size: 27px;
+        font-weight: 600;
+        margin-bottom: 18px;
+      }
+      .ask-line {
+        height: 18px;
+        border-radius: 9px;
+        background: #ece7e3;
+        margin: 12px 0;
+      }
+      .ask-miss {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 20px;
+        padding: 14px 18px;
+        border-radius: 16px;
+        background: #fde8e6;
+        color: #c5221f;
+        font-weight: 600;
+        font-size: 28px;
+      }
+      #ask-meter {
+        position: absolute;
+        left: 90px;
+        width: 900px;
+        top: 1190px;
+        padding: 30px 36px;
+        border-radius: 28px;
+        background: #fff;
+        box-shadow: 0 24px 60px rgba(60, 40, 20, 0.16);
+      }
+      #ask-meter-top {
+        display: flex;
+        justify-content: space-between;
+        font-weight: 600;
+        font-size: 32px;
+      }
+      #ask-meter-top span:last-child {
+        color: #c5221f;
+      }
+      #ask-bar {
+        margin-top: 20px;
+        height: 22px;
+        border-radius: 11px;
+        background: #f0e8e3;
+        overflow: hidden;
+      }
+      #ask-fill {
+        width: 900px;
+        height: 22px;
+        background: #b8673d;
+        transform-origin: 0 50%;
+      }
+
+      /* ---------- Full screen: 0% ---------- */
       #zero-kicker {
         position: absolute;
         left: 0;
         width: 1080px;
-        top: 560px;
+        top: 520px;
         text-align: center;
         font-family: "Montserrat", sans-serif;
         font-weight: 900;
-        font-size: 150px;
+        font-size: 210px;
         line-height: 1;
         color: #d93a2b;
       }
@@ -101,72 +315,189 @@
         position: absolute;
         left: 0;
         width: 1080px;
-        top: 730px;
-        text-align: center;
+        top: 760px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 18px;
         font-weight: 600;
-        font-size: 46px;
-        color: #2a1a12;
+        font-size: 44px;
+      }
+      #zero-sub img {
+        width: 56px;
+        height: 56px;
       }
       #zero-card {
         position: absolute;
         left: 40px;
-        top: 850px;
+        top: 900px;
         width: 1000px;
         height: 229px;
         border-radius: 28px;
         overflow: hidden;
         background: #fff;
-        box-shadow: 0 30px 70px rgba(80, 40, 20, 0.28);
+        box-shadow: 0 30px 70px rgba(80, 40, 20, 0.22);
       }
       #zero-card .shot {
         transform: scale(1.0417) translate(-790px, -615px);
       }
 
-      /* Ending call to action over the blurred CTA clip. */
-      #cta {
+      /* ---------- Full screen: report band ---------- */
+      #band-title {
         position: absolute;
-        inset: 0;
+        left: 0;
+        width: 1080px;
+        top: 430px;
+        text-align: center;
+        font-family: "Montserrat", sans-serif;
+        font-weight: 800;
+        font-size: 74px;
+      }
+      #band-sub {
+        position: absolute;
+        left: 0;
+        width: 1080px;
+        top: 530px;
+        text-align: center;
+        font-size: 38px;
+        color: #6b5a50;
+      }
+      #band {
+        position: absolute;
+        left: 0;
+        top: 640px;
+        width: 1080px;
+        height: 640px;
+        overflow: hidden;
+        background: #fbf3ee;
+        border-top: 4px solid #1f1a17;
+        border-bottom: 4px solid #1f1a17;
+      }
+
+      /* ---------- Full screen: profile -> AI engines ---------- */
+      #gbp {
+        position: absolute;
+        left: 290px;
+        top: 300px;
+        width: 500px;
+        border-radius: 32px;
+        overflow: hidden;
+        background: #fff;
+        box-shadow: 0 30px 80px rgba(60, 60, 120, 0.22);
+      }
+      #gbp-img {
+        height: 210px;
+        background: linear-gradient(135deg, #b8673d, #f0a35e 60%, #ffd9a8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #gbp-img svg {
+        width: 120px;
+        height: 120px;
+      }
+      #gbp-body {
+        padding: 24px 30px 30px;
+      }
+      #gbp-name {
+        font-weight: 600;
+        font-size: 40px;
+      }
+      #gbp-stars {
+        margin-top: 6px;
+        font-size: 28px;
+        color: #5f6368;
+      }
+      #gbp-stars span {
+        color: #f4b400;
+        letter-spacing: 2px;
+      }
+      #gbp-actions {
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+      }
+      #gbp-actions i {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background: #e8f0fe;
+        display: block;
+      }
+      #arrows {
+        position: absolute;
+        left: 0;
+        top: 900px;
+        width: 1080px;
+        height: 260px;
+      }
+      #engines {
+        position: absolute;
+        left: 0;
+        top: 1170px;
+        width: 1080px;
+        display: flex;
+        justify-content: space-around;
+      }
+      #engines .logo img {
+        width: 120px;
+        height: 120px;
+      }
+      #engines .logo {
+        font-size: 34px;
+        width: 300px;
+      }
+
+      /* ---------- Ending call to action (over the blurred CTA clip) ---------- */
+      #cta {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #cta-box {
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
-        gap: 34px;
+        gap: 6px;
+        padding: 40px 90px 50px;
+        border-radius: 40px;
+        background: rgba(255, 255, 255, 0.14);
+        border: 4px solid rgba(255, 255, 255, 0.75);
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
       }
       #cta-comment {
         font-family: "Montserrat", sans-serif;
         font-weight: 800;
-        font-size: 92px;
-        letter-spacing: 6px;
-        color: #fff;
-        text-shadow: 0 6px 30px rgba(0, 0, 0, 0.45);
-        opacity: 0;
-      }
-      #cta-pill {
-        display: block;
-        padding: 26px 86px 30px;
-        border-radius: 34px;
-        background: #c9561a;
-        border: 6px solid #fff;
-        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
-        font-family: "Montserrat", sans-serif;
-        font-weight: 900;
-        font-size: 190px;
-        line-height: 1;
+        font-size: 80px;
         letter-spacing: 8px;
         color: #fff;
-        opacity: 0;
+      }
+      #cta-tool {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 900;
+        font-size: 230px;
+        line-height: 1;
+        letter-spacing: 6px;
+        color: #ffb347;
       }
       #cta-dm {
+        position: absolute;
+        left: 0;
+        width: 1080px;
+        top: 1330px;
+        display: flex;
+        justify-content: center;
+      }
+      #cta-dm div {
         display: flex;
         align-items: center;
         gap: 22px;
         padding: 22px 40px;
         border-radius: 999px;
-        background: rgba(255, 255, 255, 0.95);
+        background: rgba(255, 255, 255, 0.96);
         font-weight: 600;
         font-size: 44px;
         color: #2a1a12;
-        opacity: 0;
       }
       #cta-dm svg {
         width: 52px;
@@ -177,21 +508,72 @@
   </head>
   <body>
     <div id="root" data-composition-id="main" data-start="0" data-duration="55.55" data-width="1080" data-height="1920">
+      <!-- Hook -->
+      <div class="layer" id="hook">
+        <div class="float-card" id="card-gpt">
+          <div class="fc-head"><img src="assets/logos/openai.svg" alt="" />ChatGPT</div>
+          <div class="fc-q">Best restaurant near me?</div>
+          <div class="fc-row"><b>1</b>The Terrace</div>
+          <div class="fc-row"><b>2</b>Barbeque Nation</div>
+          <div class="fc-row"><b>3</b>Pizza Hut</div>
+          <div class="fc-miss">Your business: not mentioned</div>
+        </div>
+        <div class="float-card" id="card-gai">
+          <div class="fc-head"><img src="assets/logos/google-color.svg" alt="" />Google AI Mode</div>
+          <div class="fc-q">Restaurants near me?</div>
+          <div class="fc-row"><b>1</b>The Namastey Nashik</div>
+          <div class="fc-row"><b>2</b>Veg Aroma</div>
+          <div class="fc-row"><b>3</b>The Food Villa</div>
+          <div class="fc-miss">Your business: not mentioned</div>
+        </div>
+        <div id="tool-pill">
+          <div><img src="assets/logos/google-color.svg" alt="" />GBP AI Visibility Checker</div>
+        </div>
+      </div>
+
+      <!-- Split screen -->
       <div id="panel" data-layout-allow-overflow="true">
         <div class="shot" id="shot-0"><video id="shot-video-0" src="assets/broll_ai_tools.mp4" muted playsinline data-start="10.1" data-duration="5.50" data-media-start="6.0" data-playback-rate="1" data-track-index="2"></video></div>
         <div class="shot" id="shot-1"><video id="shot-video-1" src="assets/broll_ai_tools.mp4" muted playsinline data-start="15.6" data-duration="5.00" data-media-start="17.3" data-playback-rate="1" data-track-index="2"></video></div>
-        <div class="shot" id="shot-2"><video id="shot-video-2" src="assets/broll_ai_tools.mp4" muted playsinline data-start="20.6" data-duration="5.80" data-media-start="22.5" data-playback-rate="2" data-track-index="2"></video></div>
         <div class="shot" id="shot-3"><video id="shot-video-3" src="assets/broll_report.mp4" muted playsinline data-start="26.4" data-duration="3.20" data-media-start="0.3" data-playback-rate="1" data-track-index="2"></video></div>
         <div class="shot" id="shot-4"><video id="shot-video-4" src="assets/broll_report.mp4" muted playsinline data-start="32.6" data-duration="3.00" data-media-start="5.6" data-playback-rate="1" data-track-index="2"></video></div>
         <div class="shot" id="shot-5"><video id="shot-video-5" src="assets/broll_report.mp4" muted playsinline data-start="35.6" data-duration="4.50" data-media-start="9.6" data-playback-rate="0.55" data-track-index="2"></video></div>
-        <div class="shot" id="shot-6"><video id="shot-video-6" src="assets/broll_report.mp4" muted playsinline data-start="40.1" data-duration="3.50" data-media-start="12.0" data-playback-rate="1" data-track-index="2"></video></div>
-        <div class="shot" id="shot-7"><video id="shot-video-7" src="assets/broll_report.mp4" muted playsinline data-start="43.6" data-duration="6.15" data-media-start="15.2" data-playback-rate="0.75" data-track-index="2"></video></div>
+        <div class="shot" id="shot-7"><video id="shot-video-7" src="assets/broll_report.mp4" muted playsinline data-start="43.6" data-duration="3.80" data-media-start="15.2" data-playback-rate="0.75" data-track-index="2"></video></div>
+        <div id="glow"></div>
+        <div id="click-ring"></div>
       </div>
-      <div id="divider"></div>
+      <svg id="wave" viewBox="0 0 1080 900" fill="none">
+        <path d="M0 834 C 60 822 120 830 200 846 C 360 880 470 852 650 828 C 820 806 930 872 1080 842" stroke="#f08a24" stroke-width="8" />
+      </svg>
 
-      <div id="zero">
+      <!-- The tool asks both AIs -->
+      <div class="layer pastel" id="ask">
+        <div class="logo" id="ask-gai"><img src="assets/logos/google-color.svg" alt="" />Google AI Mode</div>
+        <div class="logo" id="ask-gpt"><img src="assets/logos/openai.svg" alt="" />ChatGPT</div>
+        <div class="ask-card" id="ask-card-l">
+          <div class="ask-q">What restaurants are near me?</div>
+          <div class="ask-line" style="width: 92%"></div>
+          <div class="ask-line" style="width: 78%"></div>
+          <div class="ask-line" style="width: 85%"></div>
+          <div class="ask-miss"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#c5221f" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>Not mentioned</div>
+        </div>
+        <div class="ask-card" id="ask-card-r">
+          <div class="ask-q">Which nearby restaurants have the best reviews?</div>
+          <div class="ask-line" style="width: 88%"></div>
+          <div class="ask-line" style="width: 70%"></div>
+          <div class="ask-line" style="width: 82%"></div>
+          <div class="ask-miss"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#c5221f" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg>Not mentioned</div>
+        </div>
+        <div id="ask-meter">
+          <div id="ask-meter-top"><span>Checking your visibility…</span><span>You appeared: 0</span></div>
+          <div id="ask-bar"><div id="ask-fill"></div></div>
+        </div>
+      </div>
+
+      <!-- 0% -->
+      <div class="layer pastel" id="zero">
         <div id="zero-kicker">0%</div>
-        <div id="zero-sub">on Google AI Mode &amp; ChatGPT</div>
+        <div id="zero-sub"><img src="assets/logos/google-color.svg" alt="" />Google AI Mode &amp;<img src="assets/logos/openai.svg" alt="" />ChatGPT</div>
         <div id="zero-card" data-layout-allow-overflow="true">
           <div class="shot">
             <video id="zero-video" src="assets/broll_report.mp4" muted playsinline data-start="29.6" data-duration="3" data-media-start="3.5" data-playback-rate="0.5" data-track-index="3"></video>
@@ -199,69 +581,168 @@
         </div>
       </div>
 
-      <div id="cta">
-        <div id="cta-comment">COMMENT</div>
-        <div id="cta-pill">TOOL</div>
+      <!-- Report band -->
+      <div class="layer pastel" id="band-scene">
+        <div id="band-title">Top referrals</div>
+        <div id="band-sub">The websites AI pulls its answers from</div>
+        <div id="band" data-layout-allow-overflow="true">
+          <div class="shot" id="shot-6"><video id="shot-video-6" src="assets/broll_report.mp4" muted playsinline data-start="40.1" data-duration="3.50" data-media-start="12.0" data-playback-rate="1" data-track-index="3"></video></div>
+        </div>
+      </div>
+
+      <!-- Profile to AI engines -->
+      <div class="layer pastel" id="engines-scene">
+        <div id="gbp">
+          <div id="gbp-img">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9" /><path d="M3 9h18v1.5a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0z" /><path d="M5 13v7h14v-7" /><path d="M10 20v-4h4v4" /></svg>
+          </div>
+          <div id="gbp-body">
+            <div id="gbp-name">Your Business</div>
+            <div id="gbp-stars"><span>★★★★★</span> 4.8 · Google Business Profile</div>
+            <div id="gbp-actions"><i></i><i></i><i></i><i></i><i></i></div>
+          </div>
+        </div>
+        <svg id="arrows" viewBox="0 0 1080 260" fill="none" stroke="#8a8f98" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+          <path class="arrow" d="M540 10 C 540 120 180 110 180 230 M160 205 L180 232 L200 205" />
+          <path class="arrow" d="M540 10 L540 230 M520 205 L540 232 L560 205" />
+          <path class="arrow" d="M540 10 C 540 120 900 110 900 230 M880 205 L900 232 L920 205" />
+        </svg>
+        <div id="engines">
+          <div class="logo"><img src="assets/logos/google-color.svg" alt="" />Google AI Mode</div>
+          <div class="logo"><img src="assets/logos/openai.svg" alt="" />ChatGPT</div>
+          <div class="logo"><img src="assets/logos/gemini-color.svg" alt="" />Gemini</div>
+        </div>
+      </div>
+
+      <!-- Ending CTA -->
+      <div class="layer" id="cta">
+        <div id="cta-box">
+          <div id="cta-comment">COMMENT</div>
+          <div id="cta-tool">TOOL</div>
+        </div>
         <div id="cta-dm">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#f08a24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13" /><path d="M22 2 15 22l-4-9-9-4 20-7z" /></svg>
-          <span>I'll send you the link in your DMs</span>
+          <div>
+            <svg viewBox="0 0 24 24" fill="none" stroke="#f08a24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13" /><path d="M22 2 15 22l-4-9-9-4 20-7z" /></svg>
+            <span>I'll send you the link in your DMs</span>
+          </div>
         </div>
       </div>
     </div>
 
     <script>
       // Output-time constants (seconds). Mirror build.sh.
+      const HOOK_CUT_1 = 4.73; // jump cuts already in the main clip
+      const HOOK_CUT_2 = 7.63;
       const SPLIT_START = 10.1;
-      const ZERO_START = 29.6;
-      const ZERO_END = 32.6;
+      const ASK = [20.6, 26.4];
+      const ZERO = [29.6, 32.6];
+      const BAND = [40.1, 43.6];
+      const ENGINES = [47.4, 49.75];
       const AROLL_END = 49.75;
       const CTA_SECOND_LINE = AROLL_END + 2.68; // "...comment TOOL" second phrase in the CTA clip
 
-      // Each B-roll shot (the #shot-N markup above carries its timing): the crop window (centre x/y and width in source pixels) at the start and
-      // end of the shot. The window keeps the panel's 1080x830 aspect.
+      // Each B-roll shot (the #shot-N markup carries its timing): crop window
+      // as centre x/y and width in source pixels, at the start and end of the
+      // shot. box = the container the shot fills.
+      const PANEL = [1080, 830];
       const SHOTS = [
-        { src: "broll_ai_tools.mp4", start: 10.1, end: 15.6, media: 6.0, rate: 1, from: [1280, 700, 1400], to: [800, 950, 640], moveFor: 2.2 },
-        { src: "broll_ai_tools.mp4", start: 15.6, end: 20.6, media: 17.3, rate: 1, from: [1120, 470, 780], to: [1100, 480, 700] },
-        { src: "broll_ai_tools.mp4", start: 20.6, end: 26.4, media: 22.5, rate: 2, from: [1150, 620, 860], to: [1260, 860, 940] },
-        { src: "broll_report.mp4", start: 26.4, end: 29.6, media: 0.3, rate: 1, from: [1270, 520, 1000], to: [1270, 680, 960] },
-        { src: "broll_report.mp4", start: 32.6, end: 35.6, media: 5.6, rate: 1, from: [1170, 700, 780], to: [1380, 720, 780] },
-        { src: "broll_report.mp4", start: 35.6, end: 40.1, media: 9.6, rate: 0.55, from: [1270, 740, 960], to: [1270, 860, 940] },
-        { src: "broll_report.mp4", start: 40.1, end: 43.6, media: 12.0, rate: 1, from: [1270, 1000, 940], to: [1270, 1040, 880] },
-        { src: "broll_report.mp4", start: 43.6, end: AROLL_END, media: 15.2, rate: 0.75, from: [1220, 880, 880], to: [1220, 980, 840] },
+        { id: 0, start: 10.1, end: 15.6, box: PANEL, from: [1280, 700, 1400], to: [800, 950, 640], moveFor: 2.2 },
+        { id: 1, start: 15.6, end: 20.6, box: PANEL, from: [1120, 470, 780], to: [1100, 480, 700] },
+        { id: 3, start: 26.4, end: 29.6, box: PANEL, from: [1270, 520, 1000], to: [1270, 680, 960] },
+        { id: 4, start: 32.6, end: 35.6, box: PANEL, from: [1170, 700, 780], to: [1380, 720, 780] },
+        { id: 5, start: 35.6, end: 40.1, box: PANEL, from: [1270, 740, 960], to: [1270, 860, 940] },
+        { id: 6, start: 40.1, end: 43.6, box: [1080, 640], from: [1270, 1080, 1000], to: [1270, 1100, 900] },
+        { id: 7, start: 43.6, end: 47.4, box: PANEL, from: [1220, 880, 880], to: [1220, 960, 840] },
       ];
 
-      const PANEL_W = 1080;
-      const PANEL_H = 830;
       const tl = gsap.timeline({ paused: true });
 
-      function framing([cx, cy, w]) {
-        const s = PANEL_W / w;
-        return { scale: s, x: PANEL_W / 2 - cx * s, y: PANEL_H / 2 - cy * s };
+      function framing([cx, cy, w], [bw, bh]) {
+        const s = bw / w;
+        return { scale: s, x: bw / 2 - cx * s, y: bh / 2 - cy * s };
       }
-
-      SHOTS.forEach((shot, i) => {
+      SHOTS.forEach((shot) => {
         const len = shot.end - shot.start;
-        tl.fromTo("#shot-" + i, framing(shot.from), { ...framing(shot.to), duration: shot.moveFor || len, ease: shot.moveFor ? "power2.inOut" : "none" }, shot.start);
+        tl.fromTo("#shot-" + shot.id, framing(shot.from, shot.box), { ...framing(shot.to, shot.box), duration: shot.moveFor || len, ease: shot.moveFor ? "power2.inOut" : "none" }, shot.start);
       });
 
-      // Panel and divider on for the split section, off for the 0% moment and the ending.
-      tl.set(["#panel", "#divider"], { opacity: 1 }, SPLIT_START);
-      tl.set(["#panel", "#divider"], { opacity: 0 }, ZERO_START);
-      tl.set(["#panel", "#divider"], { opacity: 1 }, ZERO_END);
-      tl.set(["#panel", "#divider"], { opacity: 0 }, AROLL_END);
-      tl.fromTo("#divider", { scaleX: 0 }, { scaleX: 1, duration: 0.35, ease: "power2.out" }, SPLIT_START);
+      // Show a full-screen layer for [start, end) with a quick settle-in.
+      function scene(sel, [start, end]) {
+        tl.set(sel, { opacity: 1 }, start);
+        tl.fromTo(sel, { scale: 1.06 }, { scale: 1, duration: 0.35, ease: "power2.out" }, start);
+        tl.set(sel, { opacity: 0 }, end);
+      }
 
-      // 0% moment.
-      tl.set("#zero", { opacity: 1 }, ZERO_START);
-      tl.set("#zero", { opacity: 0 }, ZERO_END);
-      tl.fromTo("#zero-kicker", { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(2)" }, ZERO_START + 0.05);
-      tl.fromTo("#zero-sub", { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: "power2.out" }, ZERO_START + 0.25);
-      tl.fromTo("#zero-card", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "power3.out" }, ZERO_START + 0.4);
+      // ---- Hook ----
+      tl.set("#hook", { opacity: 1 }, 0);
+      tl.set("#hook", { opacity: 0 }, SPLIT_START);
+      tl.fromTo("#card-gpt", { x: -120, rotation: -8, opacity: 0 }, { x: 0, rotation: -4, opacity: 1, duration: 0.55, ease: "back.out(1.6)" }, 0.35);
+      tl.fromTo("#card-gai", { x: 120, rotation: 8, opacity: 0 }, { x: 0, rotation: 4, opacity: 1, duration: 0.55, ease: "back.out(1.6)" }, 0.75);
+      tl.to("#card-gpt", { y: -16, duration: 1.8, ease: "sine.inOut", yoyo: true, repeat: 1 }, 0.9);
+      tl.to("#card-gai", { y: 16, duration: 1.8, ease: "sine.inOut", yoyo: true, repeat: 1 }, 1.3);
+      tl.to("#card-gpt", { x: -500, opacity: 0, duration: 0.3, ease: "power2.in" }, HOOK_CUT_1 - 0.3);
+      tl.to("#card-gai", { x: 500, opacity: 0, duration: 0.3, ease: "power2.in" }, HOOK_CUT_1 - 0.3);
+      tl.fromTo("#tool-pill", { y: -60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "back.out(1.8)" }, HOOK_CUT_2 + 0.1);
 
-      // Ending CTA.
-      tl.fromTo("#cta-comment", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: "power2.out" }, AROLL_END + 0.15);
-      tl.fromTo("#cta-pill", { scale: 0.4, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(2.2)" }, AROLL_END + 0.3);
-      tl.to("#cta-pill", { scale: 1.06, duration: 0.18, yoyo: true, repeat: 1, ease: "power1.inOut" }, CTA_SECOND_LINE);
+      // ---- Split screen ----
+      const splitOn = [
+        [SPLIT_START, ASK[0]],
+        [ASK[1], ZERO[0]],
+        [ZERO[1], BAND[0]],
+        [BAND[1], ENGINES[0]],
+      ];
+      splitOn.forEach(([a, b]) => {
+        tl.set(["#panel", "#wave"], { opacity: 1 }, a);
+        tl.set(["#panel", "#wave"], { opacity: 0 }, b);
+      });
+      tl.fromTo("#panel", { y: -120 }, { y: 0, duration: 0.45, ease: "power3.out" }, SPLIT_START);
+      tl.fromTo("#wave", { y: -120 }, { y: 0, duration: 0.45, ease: "power3.out" }, SPLIT_START);
+
+      // Glow on the GBP AI Visibility Checker card once the zoom lands, then a click ring on its button.
+      // Card in source px: x 640-940, y 840-1050; framed by shot 0's end window.
+      {
+        const f = framing([800, 950, 640], PANEL);
+        const box = (x, y) => [x * f.scale + f.x, y * f.scale + f.y];
+        const [x0, y0] = box(640, 840);
+        const [x1, y1] = box(940, 1050);
+        tl.set("#glow", { left: x0 - 10, top: y0 - 10, width: x1 - x0 + 20, height: y1 - y0 + 20 }, 0);
+        tl.fromTo("#glow", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 12.4);
+        tl.to("#glow", { opacity: 0.45, duration: 0.5, yoyo: true, repeat: 3, ease: "sine.inOut" }, 12.7);
+        tl.set("#glow", { opacity: 0 }, 15.6);
+        const [bx, by] = box(790, 1002);
+        tl.set("#click-ring", { left: bx - 60, top: by - 60 }, 0);
+        tl.fromTo("#click-ring", { scale: 0.3, opacity: 1 }, { scale: 1.6, opacity: 0, duration: 0.6, ease: "power2.out" }, 15.0);
+      }
+
+      // ---- The tool asks both AIs ----
+      scene("#ask", ASK);
+      tl.fromTo(["#ask-gai", "#ask-gpt"], { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, stagger: 0.15, ease: "back.out(1.6)" }, ASK[0] + 0.1);
+      tl.fromTo(["#ask-card-l", "#ask-card-r"], { y: 80, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, stagger: 0.25, ease: "power3.out" }, ASK[0] + 0.6);
+      tl.fromTo("#ask-meter", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "power3.out" }, ASK[0] + 1.1);
+      tl.fromTo("#ask-fill", { scaleX: 0 }, { scaleX: 1, duration: 3.6, ease: "none" }, ASK[0] + 1.4);
+      tl.fromTo(".ask-miss", { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.35, stagger: 0.5, ease: "back.out(2.4)" }, ASK[0] + 2.6);
+
+      // ---- 0% ----
+      scene("#zero", ZERO);
+      tl.fromTo("#zero-kicker", { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.45, ease: "back.out(2)" }, ZERO[0] + 0.05);
+      tl.fromTo("#zero-sub", { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: "power2.out" }, ZERO[0] + 0.3);
+      tl.fromTo("#zero-card", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "power3.out" }, ZERO[0] + 0.5);
+
+      // ---- Report band ----
+      scene("#band-scene", BAND);
+      tl.fromTo("#band", { scaleY: 0 }, { scaleY: 1, duration: 0.4, ease: "power3.out" }, BAND[0]);
+      tl.fromTo(["#band-title", "#band-sub"], { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, stagger: 0.12, ease: "power2.out" }, BAND[0] + 0.15);
+
+      // ---- Profile to AI engines ----
+      scene("#engines-scene", ENGINES);
+      tl.fromTo("#gbp", { y: 60, opacity: 0, scale: 0.9 }, { y: 0, opacity: 1, scale: 1, duration: 0.45, ease: "back.out(1.6)" }, ENGINES[0] + 0.05);
+      tl.fromTo(".arrow", { strokeDasharray: 600, strokeDashoffset: 600 }, { strokeDashoffset: 0, duration: 0.5, stagger: 0.12, ease: "power2.out" }, ENGINES[0] + 0.45);
+      tl.fromTo("#engines .logo", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, stagger: 0.12, ease: "back.out(2)" }, ENGINES[0] + 0.8);
+
+      // ---- Ending CTA ----
+      tl.set("#cta", { opacity: 1 }, AROLL_END);
+      tl.fromTo("#cta-box", { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(2)" }, AROLL_END + 0.2);
+      tl.to("#cta-tool", { scale: 1.08, duration: 0.18, yoyo: true, repeat: 1, ease: "power1.inOut" }, CTA_SECOND_LINE);
       tl.fromTo("#cta-dm", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" }, CTA_SECOND_LINE + 0.2);
 
       window.__timelines["main"] = tl;
