@@ -25,3 +25,4 @@ __pycache__/
 # GBP AI visibility reel sources (large)
 raw/gbp-ai-visibility/
 hyperframes/*/assets/*.mp4
+hyperframes/*/.hyperframes/
