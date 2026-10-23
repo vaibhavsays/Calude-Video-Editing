@@ -26,3 +26,5 @@ __pycache__/
 raw/gbp-ai-visibility/
 hyperframes/*/assets/*.mp4
 hyperframes/*/.hyperframes/
+output/GBP_AI_Visibility_reel.mp4
+output/GBP_AI_Visibility_reel_preview.mp4
