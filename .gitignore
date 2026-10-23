@@ -21,3 +21,7 @@ broll/inserts/
 hyperframes/*/main.mp4
 hyperframes/*/renders/
 __pycache__/
+
+# GBP AI visibility reel sources (large)
+raw/gbp-ai-visibility/
+hyperframes/*/assets/*.mp4
