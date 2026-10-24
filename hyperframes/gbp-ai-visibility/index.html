@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1080, height=1920" />
     <script src="vendor/gsap.min.js"></script>
+    <script src="timing.js"></script>
     <!--
       Graphics layer only. Rendered as a transparent MOV and laid over the
       talking-head footage by build.sh (the footage itself never goes through
@@ -86,20 +87,21 @@
       /* ---------- Hook: floating AI answer cards beside the speaker ---------- */
       .float-card {
         position: absolute;
-        width: 420px;
-        padding: 26px 26px 28px;
+        width: 456px;
+        padding: 22px 24px 24px;
         border-radius: 30px;
         background: rgba(255, 255, 255, 0.96);
         box-shadow: 0 30px 70px rgba(0, 0, 0, 0.35);
         opacity: 0;
       }
+      /* Above the head: the face sits at y 680-1360 in the hook. */
       #card-gpt {
-        left: 36px;
-        top: 930px;
+        left: 34px;
+        top: 96px;
       }
       #card-gai {
-        left: 624px;
-        top: 860px;
+        left: 590px;
+        top: 130px;
       }
       .fc-head {
         display: flex;
@@ -507,7 +509,7 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="55.55" data-width="1080" data-height="1920">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="50.92" data-width="1080" data-height="1920">
       <!-- Hook -->
       <div class="layer" id="hook">
         <div class="float-card" id="card-gpt">
@@ -533,12 +535,12 @@
 
       <!-- Split screen -->
       <div id="panel" data-layout-allow-overflow="true">
-        <div class="shot" id="shot-0"><video id="shot-video-0" src="assets/broll_ai_tools.mp4" muted playsinline data-start="10.1" data-duration="5.50" data-media-start="6.0" data-playback-rate="1" data-track-index="2"></video></div>
-        <div class="shot" id="shot-1"><video id="shot-video-1" src="assets/broll_ai_tools.mp4" muted playsinline data-start="15.6" data-duration="5.00" data-media-start="17.3" data-playback-rate="1" data-track-index="2"></video></div>
-        <div class="shot" id="shot-3"><video id="shot-video-3" src="assets/broll_report.mp4" muted playsinline data-start="26.4" data-duration="3.20" data-media-start="0.3" data-playback-rate="1" data-track-index="2"></video></div>
-        <div class="shot" id="shot-4"><video id="shot-video-4" src="assets/broll_report.mp4" muted playsinline data-start="32.6" data-duration="3.00" data-media-start="5.6" data-playback-rate="1" data-track-index="2"></video></div>
-        <div class="shot" id="shot-5"><video id="shot-video-5" src="assets/broll_report.mp4" muted playsinline data-start="35.6" data-duration="4.50" data-media-start="9.6" data-playback-rate="0.55" data-track-index="2"></video></div>
-        <div class="shot" id="shot-7"><video id="shot-video-7" src="assets/broll_report.mp4" muted playsinline data-start="43.6" data-duration="3.80" data-media-start="15.2" data-playback-rate="0.75" data-track-index="2"></video></div>
+        <div class="shot" id="shot-0"><video id="shot-video-0" src="assets/broll_ai_tools.mp4" muted playsinline data-start="10.01" data-duration="4.72" data-media-start="6.8" data-playback-rate="1" data-track-index="2"></video></div>
+        <div class="shot" id="shot-1"><video id="shot-video-1" src="assets/broll_ai_tools.mp4" muted playsinline data-start="14.73" data-duration="4.6" data-media-start="17.3" data-playback-rate="1" data-track-index="2"></video></div>
+        <div class="shot" id="shot-3"><video id="shot-video-3" src="assets/broll_report.mp4" muted playsinline data-start="24.53" data-duration="2.71" data-media-start="0.3" data-playback-rate="1" data-track-index="2"></video></div>
+        <div class="shot" id="shot-4"><video id="shot-video-4" src="assets/broll_report.mp4" muted playsinline data-start="30.0" data-duration="2.78" data-media-start="5.6" data-playback-rate="1" data-track-index="2"></video></div>
+        <div class="shot" id="shot-5"><video id="shot-video-5" src="assets/broll_report.mp4" muted playsinline data-start="32.78" data-duration="4.18" data-media-start="9.6" data-playback-rate="0.55" data-track-index="2"></video></div>
+        <div class="shot" id="shot-7"><video id="shot-video-7" src="assets/broll_report.mp4" muted playsinline data-start="39.86" data-duration="3.51" data-media-start="15.2" data-playback-rate="0.75" data-track-index="2"></video></div>
         <div id="glow"></div>
         <div id="click-ring"></div>
       </div>
@@ -576,7 +578,7 @@
         <div id="zero-sub"><img src="assets/logos/google-color.svg" alt="" />Google AI Mode &amp;<img src="assets/logos/openai.svg" alt="" />ChatGPT</div>
         <div id="zero-card" data-layout-allow-overflow="true">
           <div class="shot">
-            <video id="zero-video" src="assets/broll_report.mp4" muted playsinline data-start="29.6" data-duration="3" data-media-start="3.5" data-playback-rate="0.5" data-track-index="3"></video>
+            <video id="zero-video" src="assets/broll_report.mp4" muted playsinline data-start="27.24" data-duration="2.76" data-media-start="3.5" data-playback-rate="0.5" data-track-index="3"></video>
           </div>
         </div>
       </div>
@@ -586,7 +588,7 @@
         <div id="band-title">Top referrals</div>
         <div id="band-sub">The websites AI pulls its answers from</div>
         <div id="band" data-layout-allow-overflow="true">
-          <div class="shot" id="shot-6"><video id="shot-video-6" src="assets/broll_report.mp4" muted playsinline data-start="40.1" data-duration="3.50" data-media-start="12.0" data-playback-rate="1" data-track-index="3"></video></div>
+          <div class="shot" id="shot-6"><video id="shot-video-6" src="assets/broll_report.mp4" muted playsinline data-start="36.96" data-duration="2.9" data-media-start="12.0" data-playback-rate="1" data-track-index="3"></video></div>
         </div>
       </div>
 
@@ -630,30 +632,23 @@
     </div>
 
     <script>
-      // Output-time constants (seconds). Mirror build.sh.
-      const HOOK_CUT_1 = 4.73; // jump cuts already in the main clip
-      const HOOK_CUT_2 = 7.63;
-      const SPLIT_START = 10.1;
-      const ASK = [20.6, 26.4];
-      const ZERO = [29.6, 32.6];
-      const BAND = [40.1, 43.6];
-      const ENGINES = [47.4, 49.75];
-      const AROLL_END = 49.75;
-      const CTA_SECOND_LINE = AROLL_END + 2.68; // "...comment TOOL" second phrase in the CTA clip
+      // Output-time constants from timing.js (generated by edit.py, which owns the cut list).
+      const { HOOK_CUT_1, HOOK_CUT_2, SPLIT_START, ASK, ZERO, BAND, ENGINES, GLOW_ON, CLICK, AROLL_END, CTA_SECOND_LINE } = window.EDIT;
+      const T = window.EDIT.SHOTS;
 
       // Each B-roll shot (the #shot-N markup carries its timing): crop window
       // as centre x/y and width in source pixels, at the start and end of the
       // shot. box = the container the shot fills.
       const PANEL = [1080, 830];
       const SHOTS = [
-        { id: 0, start: 10.1, end: 15.6, box: PANEL, from: [1280, 700, 1400], to: [800, 950, 640], moveFor: 2.2 },
-        { id: 1, start: 15.6, end: 20.6, box: PANEL, from: [1120, 470, 780], to: [1100, 480, 700] },
-        { id: 3, start: 26.4, end: 29.6, box: PANEL, from: [1270, 520, 1000], to: [1270, 680, 960] },
-        { id: 4, start: 32.6, end: 35.6, box: PANEL, from: [1170, 700, 780], to: [1380, 720, 780] },
-        { id: 5, start: 35.6, end: 40.1, box: PANEL, from: [1270, 740, 960], to: [1270, 860, 940] },
-        { id: 6, start: 40.1, end: 43.6, box: [1080, 640], from: [1270, 1080, 1000], to: [1270, 1100, 900] },
-        { id: 7, start: 43.6, end: 47.4, box: PANEL, from: [1220, 880, 880], to: [1220, 960, 840] },
-      ];
+        { id: 0, box: PANEL, from: [1280, 700, 1400], to: [800, 950, 640], moveFor: 2.2 },
+        { id: 1, box: PANEL, from: [1120, 470, 780], to: [1100, 480, 700] },
+        { id: 3, box: PANEL, from: [1270, 520, 1000], to: [1270, 680, 960] },
+        { id: 4, box: PANEL, from: [1170, 700, 780], to: [1380, 720, 780] },
+        { id: 5, box: PANEL, from: [1270, 740, 960], to: [1270, 860, 940] },
+        { id: 6, box: [1080, 640], from: [1270, 1080, 1000], to: [1270, 1100, 900] },
+        { id: 7, box: PANEL, from: [1220, 880, 880], to: [1220, 960, 840] },
+      ].map((s) => ({ ...s, start: T["shot-video-" + s.id][0], end: T["shot-video-" + s.id][1] }));
 
       const tl = gsap.timeline({ paused: true });
 
@@ -679,7 +674,7 @@
       tl.fromTo("#card-gpt", { x: -120, rotation: -8, opacity: 0 }, { x: 0, rotation: -4, opacity: 1, duration: 0.55, ease: "back.out(1.6)" }, 0.35);
       tl.fromTo("#card-gai", { x: 120, rotation: 8, opacity: 0 }, { x: 0, rotation: 4, opacity: 1, duration: 0.55, ease: "back.out(1.6)" }, 0.75);
       tl.to("#card-gpt", { y: -16, duration: 1.8, ease: "sine.inOut", yoyo: true, repeat: 1 }, 0.9);
-      tl.to("#card-gai", { y: 16, duration: 1.8, ease: "sine.inOut", yoyo: true, repeat: 1 }, 1.3);
+      tl.to("#card-gai", { y: -12, duration: 1.8, ease: "sine.inOut", yoyo: true, repeat: 1 }, 1.3);
       tl.to("#card-gpt", { x: -500, opacity: 0, duration: 0.3, ease: "power2.in" }, HOOK_CUT_1 - 0.3);
       tl.to("#card-gai", { x: 500, opacity: 0, duration: 0.3, ease: "power2.in" }, HOOK_CUT_1 - 0.3);
       tl.fromTo("#tool-pill", { y: -60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "back.out(1.8)" }, HOOK_CUT_2 + 0.1);
@@ -706,12 +701,12 @@
         const [x0, y0] = box(640, 840);
         const [x1, y1] = box(940, 1050);
         tl.set("#glow", { left: x0 - 10, top: y0 - 10, width: x1 - x0 + 20, height: y1 - y0 + 20 }, 0);
-        tl.fromTo("#glow", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 12.4);
-        tl.to("#glow", { opacity: 0.45, duration: 0.5, yoyo: true, repeat: 3, ease: "sine.inOut" }, 12.7);
-        tl.set("#glow", { opacity: 0 }, 15.6);
+        tl.fromTo("#glow", { opacity: 0 }, { opacity: 1, duration: 0.3 }, GLOW_ON);
+        tl.to("#glow", { opacity: 0.45, duration: 0.5, yoyo: true, repeat: 3, ease: "sine.inOut" }, GLOW_ON + 0.3);
+        tl.set("#glow", { opacity: 0 }, T["shot-video-1"][0]);
         const [bx, by] = box(790, 1002);
         tl.set("#click-ring", { left: bx - 60, top: by - 60 }, 0);
-        tl.fromTo("#click-ring", { scale: 0.3, opacity: 1 }, { scale: 1.6, opacity: 0, duration: 0.6, ease: "power2.out" }, 15.0);
+        tl.fromTo("#click-ring", { scale: 0.3, opacity: 1 }, { scale: 1.6, opacity: 0, duration: 0.6, ease: "power2.out" }, CLICK);
       }
 
       // ---- The tool asks both AIs ----
@@ -719,8 +714,8 @@
       tl.fromTo(["#ask-gai", "#ask-gpt"], { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, stagger: 0.15, ease: "back.out(1.6)" }, ASK[0] + 0.1);
       tl.fromTo(["#ask-card-l", "#ask-card-r"], { y: 80, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, stagger: 0.25, ease: "power3.out" }, ASK[0] + 0.6);
       tl.fromTo("#ask-meter", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "power3.out" }, ASK[0] + 1.1);
-      tl.fromTo("#ask-fill", { scaleX: 0 }, { scaleX: 1, duration: 3.6, ease: "none" }, ASK[0] + 1.4);
-      tl.fromTo(".ask-miss", { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.35, stagger: 0.5, ease: "back.out(2.4)" }, ASK[0] + 2.6);
+      tl.fromTo("#ask-fill", { scaleX: 0 }, { scaleX: 1, duration: ASK[1] - ASK[0] - 1.6, ease: "none" }, ASK[0] + 1.4);
+      tl.fromTo(".ask-miss", { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.35, stagger: 0.5, ease: "back.out(2.4)" }, ASK[0] + 2.2);
 
       // ---- 0% ----
       scene("#zero", ZERO);
