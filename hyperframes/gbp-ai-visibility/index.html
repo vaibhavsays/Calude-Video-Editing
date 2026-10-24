@@ -394,23 +394,19 @@
         opacity: 0;
       }
       .cap span {
+        --on: 0;
         display: block;
         padding: 2px 14px 8px;
         border-radius: 18px;
+        background: rgba(255, 214, 10, var(--on));
         font-family: "Montserrat", sans-serif;
         font-weight: 800;
         font-size: 72px;
         line-height: 1.15;
-        color: #fff;
-        -webkit-text-stroke: 12px #111;
+        color: color-mix(in srgb, #111 calc(var(--on) * 100%), #fff);
+        -webkit-text-stroke: calc((1 - var(--on)) * 12px) #111;
         paint-order: stroke fill;
-        text-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
-      }
-      .cap span.on {
-        background: #ffd60a;
-        color: #111;
-        -webkit-text-stroke: 0;
-        text-shadow: none;
+        text-shadow: 0 6px 16px rgba(0, 0, 0, calc((1 - var(--on)) * 0.45));
       }
 
       /* ---------- Ending call to action (over the blurred CTA clip) ---------- */
@@ -641,7 +637,7 @@
         const [x1, y1] = box(940, 1050);
         tl.set("#glow", { left: x0 - 10, top: y0 - 10, width: x1 - x0 + 20, height: y1 - y0 + 20 }, 0);
         tl.fromTo("#glow", { opacity: 0 }, { opacity: 1, duration: 0.3 }, GLOW_ON);
-        tl.to("#glow", { opacity: 0.45, duration: 0.5, yoyo: true, repeat: 3, ease: "sine.inOut" }, GLOW_ON + 0.3);
+        tl.to("#glow", { opacity: 0.45, duration: 0.4, yoyo: true, repeat: 1, ease: "sine.inOut" }, GLOW_ON + 0.3);
         tl.set("#glow", { opacity: 0 }, T["shot-video-1"][0]);
         const [bx, by] = box(790, 1002);
         tl.set("#click-ring", { left: bx - 60, top: by - 60 }, 0);
@@ -691,8 +687,8 @@
         tl.fromTo(el, { scale: 0.88, y: 10 }, { scale: 1, y: 0, duration: 0.14, ease: "back.out(2)" }, g.s);
         tl.set(el, { opacity: 0 }, end);
         g.words.forEach((w, wi) => {
-          tl.set(`#cap-${gi}-${wi}`, { className: "on" }, w.s);
-          tl.set(`#cap-${gi}-${wi}`, { className: "" }, Math.min(w.e, end));
+          tl.set(`#cap-${gi}-${wi}`, { "--on": 1 }, w.s);
+          tl.set(`#cap-${gi}-${wi}`, { "--on": 0 }, Math.min(w.e, end));
         });
       });
 
