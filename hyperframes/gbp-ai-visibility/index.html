@@ -376,78 +376,41 @@
         border-bottom: 4px solid #1f1a17;
       }
 
-      /* ---------- Full screen: profile -> AI engines ---------- */
-      #gbp {
+      /* ---------- Captions: word by word, the spoken word highlighted ---------- */
+      #captions {
         position: absolute;
-        left: 290px;
-        top: 300px;
-        width: 500px;
-        border-radius: 32px;
-        overflow: hidden;
-        background: #fff;
-        box-shadow: 0 30px 80px rgba(60, 60, 120, 0.22);
+        left: 40px;
+        width: 1000px;
+        top: 1500px;
+        height: 130px;
       }
-      #gbp-img {
-        height: 210px;
-        background: linear-gradient(135deg, #b8673d, #f0a35e 60%, #ffd9a8);
+      .cap {
+        position: absolute;
+        inset: 0;
         display: flex;
-        align-items: center;
         justify-content: center;
+        align-items: center;
+        gap: 4px;
+        opacity: 0;
       }
-      #gbp-img svg {
-        width: 120px;
-        height: 120px;
-      }
-      #gbp-body {
-        padding: 24px 30px 30px;
-      }
-      #gbp-name {
-        font-weight: 600;
-        font-size: 40px;
-      }
-      #gbp-stars {
-        margin-top: 6px;
-        font-size: 28px;
-        color: #5f6368;
-      }
-      #gbp-stars span {
-        color: #f4b400;
-        letter-spacing: 2px;
-      }
-      #gbp-actions {
-        margin-top: 20px;
-        display: flex;
-        justify-content: space-between;
-      }
-      #gbp-actions i {
-        width: 70px;
-        height: 70px;
-        border-radius: 50%;
-        background: #e8f0fe;
+      .cap span {
         display: block;
+        padding: 2px 14px 8px;
+        border-radius: 18px;
+        font-family: "Montserrat", sans-serif;
+        font-weight: 800;
+        font-size: 72px;
+        line-height: 1.15;
+        color: #fff;
+        -webkit-text-stroke: 12px #111;
+        paint-order: stroke fill;
+        text-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
       }
-      #arrows {
-        position: absolute;
-        left: 0;
-        top: 900px;
-        width: 1080px;
-        height: 260px;
-      }
-      #engines {
-        position: absolute;
-        left: 0;
-        top: 1170px;
-        width: 1080px;
-        display: flex;
-        justify-content: space-around;
-      }
-      #engines .logo img {
-        width: 120px;
-        height: 120px;
-      }
-      #engines .logo {
-        font-size: 34px;
-        width: 300px;
+      .cap span.on {
+        background: #ffd60a;
+        color: #111;
+        -webkit-text-stroke: 0;
+        text-shadow: none;
       }
 
       /* ---------- Ending call to action (over the blurred CTA clip) ---------- */
@@ -509,7 +472,7 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="50.92" data-width="1080" data-height="1920">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="48.75" data-width="1080" data-height="1920">
       <!-- Hook -->
       <div class="layer" id="hook">
         <div class="float-card" id="card-gpt">
@@ -535,12 +498,12 @@
 
       <!-- Split screen -->
       <div id="panel" data-layout-allow-overflow="true">
-        <div class="shot" id="shot-0"><video id="shot-video-0" src="assets/broll_ai_tools.mp4" muted playsinline data-start="10.01" data-duration="4.72" data-media-start="6.8" data-playback-rate="1" data-track-index="2"></video></div>
-        <div class="shot" id="shot-1"><video id="shot-video-1" src="assets/broll_ai_tools.mp4" muted playsinline data-start="14.73" data-duration="4.6" data-media-start="17.3" data-playback-rate="1" data-track-index="2"></video></div>
-        <div class="shot" id="shot-3"><video id="shot-video-3" src="assets/broll_report.mp4" muted playsinline data-start="24.53" data-duration="2.71" data-media-start="0.3" data-playback-rate="1" data-track-index="2"></video></div>
-        <div class="shot" id="shot-4"><video id="shot-video-4" src="assets/broll_report.mp4" muted playsinline data-start="30.0" data-duration="2.78" data-media-start="5.6" data-playback-rate="1" data-track-index="2"></video></div>
-        <div class="shot" id="shot-5"><video id="shot-video-5" src="assets/broll_report.mp4" muted playsinline data-start="32.78" data-duration="4.18" data-media-start="9.6" data-playback-rate="0.55" data-track-index="2"></video></div>
-        <div class="shot" id="shot-7"><video id="shot-video-7" src="assets/broll_report.mp4" muted playsinline data-start="39.86" data-duration="3.51" data-media-start="15.2" data-playback-rate="0.75" data-track-index="2"></video></div>
+        <div class="shot" id="shot-0"><video id="shot-video-0" src="assets/broll_ai_tools.mp4" muted playsinline data-start="8.91" data-duration="3.16" data-media-start="6.8" data-playback-rate="1" data-track-index="2"></video></div>
+        <div class="shot" id="shot-1"><video id="shot-video-1" src="assets/broll_ai_tools.mp4" muted playsinline data-start="12.07" data-duration="2.13" data-media-start="17.3" data-playback-rate="1" data-track-index="2"></video></div>
+        <div class="shot" id="shot-3"><video id="shot-video-3" src="assets/broll_report.mp4" muted playsinline data-start="36.83" data-duration="3.3" data-media-start="0.3" data-playback-rate="1" data-track-index="2"></video></div>
+        <div class="shot" id="shot-4"><video id="shot-video-4" src="assets/broll_report.mp4" muted playsinline data-start="19.63" data-duration="3.0" data-media-start="5.6" data-playback-rate="1" data-track-index="2"></video></div>
+        <div class="shot" id="shot-5"><video id="shot-video-5" src="assets/broll_report.mp4" muted playsinline data-start="22.63" data-duration="2.7" data-media-start="9.6" data-playback-rate="0.55" data-track-index="2"></video></div>
+        <div class="shot" id="shot-7"><video id="shot-video-7" src="assets/broll_report.mp4" muted playsinline data-start="29.03" data-duration="7.8" data-media-start="15.2" data-playback-rate="0.75" data-track-index="2"></video></div>
         <div id="glow"></div>
         <div id="click-ring"></div>
       </div>
@@ -578,7 +541,7 @@
         <div id="zero-sub"><img src="assets/logos/google-color.svg" alt="" />Google AI Mode &amp;<img src="assets/logos/openai.svg" alt="" />ChatGPT</div>
         <div id="zero-card" data-layout-allow-overflow="true">
           <div class="shot">
-            <video id="zero-video" src="assets/broll_report.mp4" muted playsinline data-start="27.24" data-duration="2.76" data-media-start="3.5" data-playback-rate="0.5" data-track-index="3"></video>
+            <video id="zero-video" src="assets/broll_report.mp4" muted playsinline data-start="40.13" data-duration="2.82" data-media-start="3.5" data-playback-rate="0.5" data-track-index="3"></video>
           </div>
         </div>
       </div>
@@ -588,31 +551,7 @@
         <div id="band-title">Top referrals</div>
         <div id="band-sub">The websites AI pulls its answers from</div>
         <div id="band" data-layout-allow-overflow="true">
-          <div class="shot" id="shot-6"><video id="shot-video-6" src="assets/broll_report.mp4" muted playsinline data-start="36.96" data-duration="2.9" data-media-start="12.0" data-playback-rate="1" data-track-index="3"></video></div>
-        </div>
-      </div>
-
-      <!-- Profile to AI engines -->
-      <div class="layer pastel" id="engines-scene">
-        <div id="gbp">
-          <div id="gbp-img">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9" /><path d="M3 9h18v1.5a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0z" /><path d="M5 13v7h14v-7" /><path d="M10 20v-4h4v4" /></svg>
-          </div>
-          <div id="gbp-body">
-            <div id="gbp-name">Your Business</div>
-            <div id="gbp-stars"><span>★★★★★</span> 4.8 · Google Business Profile</div>
-            <div id="gbp-actions"><i></i><i></i><i></i><i></i><i></i></div>
-          </div>
-        </div>
-        <svg id="arrows" viewBox="0 0 1080 260" fill="none" stroke="#8a8f98" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
-          <path class="arrow" d="M540 10 C 540 120 180 110 180 230 M160 205 L180 232 L200 205" />
-          <path class="arrow" d="M540 10 L540 230 M520 205 L540 232 L560 205" />
-          <path class="arrow" d="M540 10 C 540 120 900 110 900 230 M880 205 L900 232 L920 205" />
-        </svg>
-        <div id="engines">
-          <div class="logo"><img src="assets/logos/google-color.svg" alt="" />Google AI Mode</div>
-          <div class="logo"><img src="assets/logos/openai.svg" alt="" />ChatGPT</div>
-          <div class="logo"><img src="assets/logos/gemini-color.svg" alt="" />Gemini</div>
+          <div class="shot" id="shot-6"><video id="shot-video-6" src="assets/broll_report.mp4" muted playsinline data-start="25.33" data-duration="3.7" data-media-start="12.0" data-playback-rate="1" data-track-index="3"></video></div>
         </div>
       </div>
 
@@ -629,11 +568,12 @@
           </div>
         </div>
       </div>
+      <div id="captions" data-layout-allow-overflow="true"></div>
     </div>
 
     <script>
       // Output-time constants from timing.js (generated by edit.py, which owns the cut list).
-      const { HOOK_CUT_1, HOOK_CUT_2, SPLIT_START, ASK, ZERO, BAND, ENGINES, GLOW_ON, CLICK, AROLL_END, CTA_SECOND_LINE } = window.EDIT;
+      const { HOOK_CUT_1, HOOK_CUT_2, SPLIT_START, ASK, ZERO, BAND, GLOW_ON, CLICK, AROLL_END, CTA_COMMENT, CTA_TOOL, CTA_DM, CAPTIONS } = window.EDIT;
       const T = window.EDIT.SHOTS;
 
       // Each B-roll shot (the #shot-N markup carries its timing): crop window
@@ -677,14 +617,13 @@
       tl.to("#card-gai", { y: -12, duration: 1.8, ease: "sine.inOut", yoyo: true, repeat: 1 }, 1.3);
       tl.to("#card-gpt", { x: -500, opacity: 0, duration: 0.3, ease: "power2.in" }, HOOK_CUT_1 - 0.3);
       tl.to("#card-gai", { x: 500, opacity: 0, duration: 0.3, ease: "power2.in" }, HOOK_CUT_1 - 0.3);
-      tl.fromTo("#tool-pill", { y: -60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "back.out(1.8)" }, HOOK_CUT_2 + 0.1);
+      tl.fromTo("#tool-pill", { y: -60, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, ease: "back.out(1.8)" }, HOOK_CUT_1 + 0.35);
 
       // ---- Split screen ----
       const splitOn = [
         [SPLIT_START, ASK[0]],
-        [ASK[1], ZERO[0]],
-        [ZERO[1], BAND[0]],
-        [BAND[1], ENGINES[0]],
+        [ASK[1], BAND[0]],
+        [BAND[1], ZERO[0]],
       ];
       splitOn.forEach(([a, b]) => {
         tl.set(["#panel", "#wave"], { opacity: 1 }, a);
@@ -728,17 +667,34 @@
       tl.fromTo("#band", { scaleY: 0 }, { scaleY: 1, duration: 0.4, ease: "power3.out" }, BAND[0]);
       tl.fromTo(["#band-title", "#band-sub"], { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, stagger: 0.12, ease: "power2.out" }, BAND[0] + 0.15);
 
-      // ---- Profile to AI engines ----
-      scene("#engines-scene", ENGINES);
-      tl.fromTo("#gbp", { y: 60, opacity: 0, scale: 0.9 }, { y: 0, opacity: 1, scale: 1, duration: 0.45, ease: "back.out(1.6)" }, ENGINES[0] + 0.05);
-      tl.fromTo(".arrow", { strokeDasharray: 600, strokeDashoffset: 600 }, { strokeDashoffset: 0, duration: 0.5, stagger: 0.12, ease: "power2.out" }, ENGINES[0] + 0.45);
-      tl.fromTo("#engines .logo", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, stagger: 0.12, ease: "back.out(2)" }, ENGINES[0] + 0.8);
-
       // ---- Ending CTA ----
       tl.set("#cta", { opacity: 1 }, AROLL_END);
-      tl.fromTo("#cta-box", { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(2)" }, AROLL_END + 0.2);
-      tl.to("#cta-tool", { scale: 1.08, duration: 0.18, yoyo: true, repeat: 1, ease: "power1.inOut" }, CTA_SECOND_LINE);
-      tl.fromTo("#cta-dm", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" }, CTA_SECOND_LINE + 0.2);
+      tl.fromTo("#cta-box", { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.45, ease: "back.out(2)" }, CTA_COMMENT - 0.15);
+      tl.fromTo("#cta-tool", { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(2.6)" }, CTA_TOOL);
+      tl.fromTo("#cta-dm", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" }, CTA_DM);
+
+      // ---- Captions ----
+      const capRoot = document.getElementById("captions");
+      CAPTIONS.forEach((g, gi) => {
+        const el = document.createElement("div");
+        el.className = "cap";
+        g.words.forEach((w, wi) => {
+          const span = document.createElement("span");
+          span.id = `cap-${gi}-${wi}`;
+          span.textContent = w.w;
+          el.appendChild(span);
+        });
+        capRoot.appendChild(el);
+        const next = CAPTIONS[gi + 1];
+        const end = next ? Math.min(g.e, next.s) : g.e;
+        tl.set(el, { opacity: 1 }, g.s);
+        tl.fromTo(el, { scale: 0.88, y: 10 }, { scale: 1, y: 0, duration: 0.14, ease: "back.out(2)" }, g.s);
+        tl.set(el, { opacity: 0 }, end);
+        g.words.forEach((w, wi) => {
+          tl.set(`#cap-${gi}-${wi}`, { className: "on" }, w.s);
+          tl.set(`#cap-${gi}-${wi}`, { className: "" }, Math.min(w.e, end));
+        });
+      });
 
       window.__timelines["main"] = tl;
     </script>

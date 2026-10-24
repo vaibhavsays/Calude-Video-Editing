@@ -25,44 +25,55 @@ PAUSES = [
     (40.13, 40.46), (40.55, 40.94), (43.37, 43.71), (44.36, 44.75), (47.36, 47.74),
 ]
 KEEP_AROUND = 0.07   # silence kept on each side of a pause
+# Fumbles cut whole (no words in the captions there), source time.
+FUMBLES = [
+    (17.75, 20.10),  # between "like what" and "questions are being asked"
+]
 SRC_END = 49.39      # last word ends ~49.27
 
 CTA_LEN = 5.2 - 0.6  # CTA clip in/out, see build.sh
 CTA_HOLD = 1.2
-CTA_SECOND_LINE = 2.68  # "...comment TOOL" phrase, seconds into the CTA
+# CTA line "Okay, so comment 'TOOL' and I will send the tool link directly in your DMs."
+CTA_COMMENT = 0.68  # "comment", seconds into the CTA
+CTA_TOOL = 1.08     # "'TOOL'"
+CTA_DM = 2.28       # "send the tool link..."
 
-# Events, source time.
-HOOK_CUT_1 = 4.73
+# Events, source time, each on the line it illustrates (see captions.json).
+HOOK_CUT_1 = 4.73    # "If not," - hook cards leave
 HOOK_CUT_2 = 7.63
-SPLIT_START = 10.1
-ASK = (20.6, 26.4)
-ZERO = (29.6, 32.6)
-BAND = (40.1, 43.6)
-ENGINES = (47.4, SRC_END)
-GLOW_ON = 12.4
-CLICK = 15.2  # button click lands near the end of shot 0
+SPLIT_START = 9.0    # "go to the tool."
+ASK = (15.07, 23.67)  # "and it will tell you exactly everything ... in which regions."
+BAND = (30.1, 33.8)  # "Which top referrals are suggesting you."
+ZERO = (46.33, SRC_END)  # "And with such results, you can show this report to anyone."
+GLOW_ON = 11.0
+CLICK = 12.4         # button click lands near the end of shot 0
 
 # B-roll clips: html id -> (source start, source end, media start, rate)
 VIDEOS = {
-    "shot-video-0": (10.1, 15.6, 6.8, 1),
-    "shot-video-1": (15.6, 20.6, 17.3, 1),
-    "shot-video-3": (26.4, 29.6, 0.3, 1),
-    "zero-video": (29.6, 32.6, 3.5, 0.5),
-    "shot-video-4": (32.6, 35.6, 5.6, 1),
-    "shot-video-5": (35.6, 40.1, 9.6, 0.55),
-    "shot-video-6": (40.1, 43.6, 12.0, 1),
-    "shot-video-7": (43.6, 47.4, 15.2, 0.75),
+    "shot-video-0": (9.0, 12.7, 7.9, 1),       # "go to the tool. In the tool, ..."
+    "shot-video-1": (12.7, 15.07, 18.5, 1.4),  # "website. You need to update it,"
+    "shot-video-4": (23.67, 27.16, 5.6, 1),    # "Which keywords ... missing."
+    "shot-video-5": (27.16, 30.1, 9.6, 0.7),   # "Which competitors are ranking above you."
+    "shot-video-6": (30.1, 33.8, 12.0, 0.8),   # "Which top referrals are suggesting you."
+    "shot-video-7": (33.8, 42.58, 15.0, 0.65), # "content gaps ... long-tail keywords ... fill them in."
+    "shot-video-3": (42.58, 46.33, 0.3, 1),    # "export the entire report."
+    "zero-video": (46.33, SRC_END, 3.5, 0.5),  # "with such results ..."
 }
 
 
 def keep_segments():
+    cuts = [(s + KEEP_AROUND, e - KEEP_AROUND) for s, e in PAUSES]
+    cuts = [c for c in cuts if c[1] - c[0] >= 0.08] + list(FUMBLES)
+    merged = []
+    for a, b in sorted(cuts):
+        if merged and a <= merged[-1][1]:
+            merged[-1] = (merged[-1][0], max(merged[-1][1], b))
+        else:
+            merged.append((a, b))
     segs, t = [], 0.0
-    for s, e in PAUSES:
-        cut_from, cut_to = s + KEEP_AROUND, e - KEEP_AROUND
-        if cut_to - cut_from < 0.08:
-            continue
-        segs.append((t, cut_from))
-        t = cut_to
+    for a, b in merged:
+        segs.append((t, a))
+        t = b
     segs.append((t, SRC_END))
     return segs
 
@@ -85,6 +96,23 @@ def out(t):
 AROLL_END = out(SRC_END)
 TOTAL = round(AROLL_END + CTA_LEN + CTA_HOLD, 3)
 
+
+def caption_groups():
+    """Words (read from the Kapwing captions, see captions.json) -> on-screen groups of up to 3 words."""
+    caps = json.loads((HERE / "captions.json").read_text())
+    words = [(w["w"], out(w["src"])) for w in caps["main"]]
+    words += [(w["w"], round(AROLL_END + w["cta"], 3)) for w in caps["cta"]]
+    groups, cur = [], []
+    for i, (w, s) in enumerate(words):
+        nxt = words[i + 1][1] if i + 1 < len(words) else s + 0.6
+        cur.append({"w": w, "s": s, "e": round(min(nxt, s + 0.8), 3)})
+        chars = sum(len(x["w"]) + 1 for x in cur)
+        nxt_len = len(words[i + 1][0]) if i + 1 < len(words) else 0
+        if (w[-1] in ".,?!" and len(cur) >= 2) or len(cur) == 3 or chars + nxt_len > 20 or nxt - s > 0.8 or i + 1 == len(words):
+            groups.append({"s": cur[0]["s"], "e": cur[-1]["e"], "words": cur})
+            cur = []
+    return groups
+
 timing = {
     "HOOK_CUT_1": out(HOOK_CUT_1),
     "HOOK_CUT_2": out(HOOK_CUT_2),
@@ -92,11 +120,13 @@ timing = {
     "ASK": [out(ASK[0]), out(ASK[1])],
     "ZERO": [out(ZERO[0]), out(ZERO[1])],
     "BAND": [out(BAND[0]), out(BAND[1])],
-    "ENGINES": [out(ENGINES[0]), out(ENGINES[1])],
     "GLOW_ON": out(GLOW_ON),
     "CLICK": out(CLICK),
     "AROLL_END": AROLL_END,
-    "CTA_SECOND_LINE": round(AROLL_END + CTA_SECOND_LINE, 3),
+    "CTA_COMMENT": round(AROLL_END + CTA_COMMENT, 3),
+    "CTA_TOOL": round(AROLL_END + CTA_TOOL, 3),
+    "CTA_DM": round(AROLL_END + CTA_DM, 3),
+    "CAPTIONS": caption_groups(),
     "TOTAL": TOTAL,
     "SHOTS": {k: [out(v[0]), out(v[1])] for k, v in VIDEOS.items()},
 }
