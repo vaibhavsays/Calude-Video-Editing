@@ -1,0 +1,11 @@
+{
+  "theme": "mint",
+  "logos": ["google-color.svg", "openai.svg"],
+  "title": "Does AI Pick You?",
+  "subtitle": "GBP AI CHECKER",
+  "big_word": "0%",
+  "big_size": "560px",
+  "photo": "assets/vaibhav_suit_cutout.png",
+  "output": "cover.png",
+  "logo_size": "120px"
+}
