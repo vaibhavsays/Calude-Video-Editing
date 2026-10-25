@@ -1,0 +1,184 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<!-- 6-slide Instagram carousel, 1080x1350 each, stacked vertically. render.sh screenshots the page and cuts it into slide-N.png. -->
+<style>
+  @font-face { font-family: "Playfair Display"; src: url("../../thumbnails/assets/fonts/PlayfairDisplay-var.woff2"); font-weight: 400 900; }
+  @font-face { font-family: "Instrument Serif"; src: url("../../thumbnails/assets/fonts/InstrumentSerif-400.woff2"); }
+  @font-face { font-family: "Montserrat"; src: url("../../thumbnails/assets/fonts/Montserrat-var.woff2"); font-weight: 100 900; }
+  :root { --ink: #1f4a44; --soft: #4e6f6a; --accent: #e8603c; --mint: #e3f5f0; --mint-edge: #b9e3d8; --card: #ffffff; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; }
+  body { font-family: "Montserrat"; color: var(--ink); font-variant-numeric: lining-nums; }
+
+  .slide { position: relative; width: 1080px; height: 1350px; overflow: hidden; padding: 110px 90px 0;
+           background: radial-gradient(ellipse 85% 65% at 50% 45%, var(--mint) 0%, var(--mint-edge) 100%); }
+  .slide.dark { background: radial-gradient(ellipse 85% 65% at 50% 45%, #2a5f58 0%, #173a35 100%); color: #fff; }
+
+  .kicker { font-weight: 700; font-size: 30px; letter-spacing: 5px; text-transform: uppercase; color: var(--accent); }
+  h1 { font-family: "Playfair Display"; font-weight: 800; font-size: 104px; line-height: 1.02; letter-spacing: -1.5px; margin-top: 26px; }
+  h2 { font-family: "Playfair Display"; font-weight: 800; font-size: 80px; line-height: 1.05; letter-spacing: -1px; margin-top: 22px; }
+  h1 em, h2 em { font-style: italic; color: var(--accent); }
+  p.lead { font-size: 38px; line-height: 1.4; margin-top: 34px; color: var(--soft); font-weight: 500; }
+  .dark p.lead { color: #cfe7e1; }
+
+  .foot { position: absolute; left: 90px; right: 90px; bottom: 60px; display: flex; justify-content: space-between; align-items: center;
+          font-weight: 600; font-size: 26px; letter-spacing: 2px; color: var(--soft); }
+  .dark .foot { color: #9cc9bf; }
+  .swipe { display: flex; align-items: center; gap: 14px; font-weight: 700; color: var(--accent); letter-spacing: 3px; }
+  .src { position: absolute; left: 90px; right: 90px; bottom: 112px; font-size: 21px; line-height: 1.4; color: var(--soft); opacity: .85; }
+  .dark .src { color: #9cc9bf; }
+
+  .logos { display: flex; gap: 34px; align-items: center; margin-top: 70px; }
+  .logos img { height: 92px; width: 92px; }
+  .logos .rule { width: 3px; height: 70px; background: var(--ink); opacity: .35; }
+
+  /* Slide 1: search bar -> AI question */
+  .shift { margin-top: 80px; display: flex; flex-direction: column; align-items: center; gap: 22px; }
+  .pill { display: flex; align-items: center; gap: 22px; width: 860px; padding: 26px 34px; border-radius: 999px; background: #fff;
+          box-shadow: 0 20px 50px rgba(31, 74, 68, .14); font-size: 34px; font-weight: 600; color: #333; }
+  .pill img { width: 50px; height: 50px; }
+  .pill.old { opacity: .55; }
+  .pill.old span { text-decoration: line-through; text-decoration-thickness: 4px; text-decoration-color: var(--accent); }
+  .arrow { font-size: 54px; color: var(--accent); font-weight: 700; line-height: 1; }
+  .pill.new { border: 4px solid var(--ink); }
+
+  /* Slide 2: one AI answer instead of ten links */
+  .chat { margin-top: 56px; background: var(--card); border-radius: 36px; padding: 40px 44px; box-shadow: 0 30px 70px rgba(31, 74, 68, .16); }
+  .chat .q { margin-left: auto; width: fit-content; background: #eef3f1; border-radius: 28px 28px 8px 28px; padding: 18px 28px; font-size: 34px; font-weight: 600; }
+  .chat .a { display: flex; gap: 22px; margin-top: 30px; }
+  .chat .a img { width: 58px; height: 58px; flex: none; }
+  .chat .a div { font-size: 31px; line-height: 1.5; color: #333; }
+  .chat .pick { display: flex; align-items: center; gap: 16px; margin-top: 14px; font-weight: 700; font-size: 31px; }
+  .chat .pick b { width: 44px; height: 44px; border-radius: 50%; background: #e6f4ea; color: #188038; display: flex; align-items: center; justify-content: center; font-size: 26px; }
+  .chat .you { margin-top: 26px; padding: 16px 22px; border-radius: 18px; background: #fde8e6; color: #c5221f; font-weight: 700; font-size: 30px; }
+
+  /* Stat blocks */
+  .stats { display: flex; gap: 30px; margin-top: 60px; }
+  .stat { flex: 1; background: var(--card); border-radius: 32px; padding: 38px 36px; box-shadow: 0 24px 60px rgba(31, 74, 68, .14); }
+  .stat .n { font-family: "Playfair Display"; font-weight: 800; font-size: 120px; line-height: 1; color: var(--accent); }
+  .stat .n small { font-size: 60px; }
+  .stat .l { margin-top: 16px; font-size: 29px; line-height: 1.4; font-weight: 500; color: #333; }
+  .bars { margin-top: 56px; background: var(--card); border-radius: 32px; padding: 40px 44px; box-shadow: 0 24px 60px rgba(31, 74, 68, .14); }
+  .bar { margin-top: 26px; }
+  .bar:first-child { margin-top: 0; }
+  .bar .t { display: flex; justify-content: space-between; font-size: 30px; font-weight: 600; color: #333; }
+  .bar .t span:last-child { font-family: "Playfair Display"; font-weight: 800; font-size: 46px; }
+  .bar .track { margin-top: 12px; height: 34px; border-radius: 17px; background: #edf2f0; overflow: hidden; }
+  .bar .fill { height: 34px; border-radius: 17px; }
+
+  .big-num { font-family: "Playfair Display"; font-weight: 800; font-size: 300px; line-height: 1; color: #ffd27a; margin-top: 50px; letter-spacing: -4px; }
+
+  /* Slide 5: podium */
+  .podium { margin-top: 56px; display: flex; flex-direction: column; gap: 20px; }
+  .row { display: flex; align-items: center; gap: 24px; background: var(--card); border-radius: 26px; padding: 26px 32px; font-size: 34px; font-weight: 700;
+         box-shadow: 0 18px 44px rgba(31, 74, 68, .12); }
+  .row b { width: 58px; height: 58px; border-radius: 50%; background: var(--ink); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 30px; flex: none; }
+  .row.out { background: transparent; box-shadow: none; border: 4px dashed #c98f7e; color: #b0533c; }
+  .row.out b { background: #e6b8aa; }
+
+  /* Slide 6: checklist */
+  .list { margin-top: 44px; display: flex; flex-direction: column; gap: 22px; }
+  .item { display: flex; gap: 24px; align-items: flex-start; font-size: 33px; line-height: 1.35; font-weight: 600; }
+  .item i { width: 52px; height: 52px; border-radius: 16px; background: var(--ink); color: #fff; font-style: normal; display: flex; align-items: center; justify-content: center; flex: none; font-size: 30px; margin-top: -2px; }
+  .item span small { display: block; font-size: 26px; font-weight: 500; color: var(--soft); margin-top: 4px; }
+  .cta { margin-top: 46px; padding: 34px 40px; border-radius: 30px; background: var(--ink); color: #fff; font-size: 36px; font-weight: 700; line-height: 1.35; text-align: center; }
+  .cta em { font-style: normal; color: #ffd27a; }
+</style>
+</head>
+<body>
+
+<!-- 1. Hook -->
+<section class="slide">
+  <div class="kicker">For business owners</div>
+  <h1>Your customers stopped <em>Googling.</em></h1>
+  <p class="lead">They ask AI now. Here's how AI search is changing the traffic to your business, and what to do about it.</p>
+  <div class="logos" style="margin-top: 56px">
+    <img src="../../thumbnails/assets/logos/google-color.svg"><span class="rule"></span>
+    <img src="../../thumbnails/assets/logos/openai.svg"><span class="rule"></span>
+    <img src="../../thumbnails/assets/logos/gemini-color.svg"><span class="rule"></span>
+    <img src="../../thumbnails/assets/logos/perplexity-color.svg">
+  </div>
+  <div class="shift">
+    <div class="pill old"><img src="../../thumbnails/assets/logos/google-color.svg"><span>cafe near me</span></div>
+    <div class="arrow">&darr;</div>
+    <div class="pill new"><img src="../../thumbnails/assets/logos/openai.svg"><span>Which cafe near me is best for a date?</span></div>
+  </div>
+  <div class="foot"><span>1 / 6</span><span class="swipe">SWIPE &rarr;</span></div>
+</section>
+
+<!-- 2. The shift -->
+<section class="slide">
+  <div class="kicker">What changed</div>
+  <h2>10 blue links became <em>one answer.</em></h2>
+  <div class="chat">
+    <div class="q">Best dentist near me?</div>
+    <div class="a">
+      <img src="../../thumbnails/assets/logos/openai.svg">
+      <div>
+        Here are the top options nearby:
+        <div class="pick"><b>1</b>Smile Care Clinic</div>
+        <div class="pick"><b>2</b>City Dental Studio</div>
+        <div class="pick"><b>3</b>Bright Teeth Centre</div>
+      </div>
+    </div>
+    <div class="you">Your business: not mentioned</div>
+  </div>
+  <p class="lead">The customer never sees a results page. AI decides who gets shown.</p>
+  <div class="foot"><span>2 / 6</span><span class="swipe">&rarr;</span></div>
+</section>
+
+<!-- 3. Fewer clicks -->
+<section class="slide">
+  <div class="kicker">Change #1</div>
+  <h2>Fewer people <em>click</em> through to websites.</h2>
+  <div class="bars">
+    <div class="bar"><div class="t"><span>Google results, no AI summary</span><span>15%</span></div><div class="track"><div class="fill" style="width: 100%; background: var(--ink)"></div></div></div>
+    <div class="bar"><div class="t"><span>With an AI summary on top</span><span style="color: var(--accent)">8%</span></div><div class="track"><div class="fill" style="width: 53%; background: var(--accent)"></div></div></div>
+  </div>
+  <p class="lead">Share of searches where people clicked a result. When AI answers on the page, clicks almost halve. Ahrefs found the #1 result loses about a third of its clicks.</p>
+  <div class="src">Sources: Pew Research Center, July 2025 (68,879 searches by 900 US adults). Ahrefs, 2025: &minus;34.5% CTR for the top result when an AI Overview shows.</div>
+  <div class="foot"><span>3 / 6</span><span class="swipe">&rarr;</span></div>
+</section>
+
+<!-- 4. Better visitors -->
+<section class="slide dark">
+  <div class="kicker" style="color: #ffd27a">Change #2</div>
+  <h2>But the visitors AI sends are <em style="color: #ffd27a">worth more.</em></h2>
+  <div class="big-num">4.4&times;</div>
+  <p class="lead">An AI search visitor converts at 4.4&times; the rate of a regular Google visitor. They've already compared options, so they show up ready to buy.</p>
+  <div class="src">Source: Semrush AI search study, June 2025 (based on conversion rate).</div>
+  <div class="foot"><span>4 / 6</span><span class="swipe" style="color: #ffd27a">&rarr;</span></div>
+</section>
+
+<!-- 5. Winner takes most -->
+<section class="slide">
+  <div class="kicker">Change #3</div>
+  <h2>AI names 2&ndash;3 businesses. <em>Not ten.</em></h2>
+  <div class="podium">
+    <div class="row"><b>1</b>Gets the customer</div>
+    <div class="row"><b>2</b>Gets the customer</div>
+    <div class="row"><b>3</b>Maybe gets the customer</div>
+    <div class="row out"><b>?</b>Everyone else: invisible</div>
+  </div>
+  <p class="lead">On Google you could still rank #7 and get calls. In AI answers, if you're not named, you don't exist.</p>
+  <div class="foot"><span>5 / 6</span><span class="swipe">&rarr;</span></div>
+</section>
+
+<!-- 6. What to do -->
+<section class="slide">
+  <div class="kicker">What to do now</div>
+  <h2 style="font-size: 72px">Get your business <em>picked by AI.</em></h2>
+  <div class="list">
+    <div class="item"><i>1</i><span>Complete your Google Business Profile<small>Categories, services, hours, photos, Q&amp;A</small></span></div>
+    <div class="item"><i>2</i><span>Get fresh reviews that mention what you do<small>AI reads reviews to decide who to recommend</small></span></div>
+    <div class="item"><i>3</i><span>Answer your customers' real questions on your site<small>Prices, areas served, "best X near me"</small></span></div>
+    <div class="item"><i>4</i><span>Check if ChatGPT &amp; Google AI recommend you<small>Then fix the gaps they show</small></span></div>
+  </div>
+  <div class="cta">Want to know if AI recommends <em>your</em> business? DM me <em>&ldquo;AUDIT&rdquo;</em></div>
+  <div class="foot"><span>6 / 6</span><span>Save this for later</span></div>
+</section>
+
+</body>
+</html>
