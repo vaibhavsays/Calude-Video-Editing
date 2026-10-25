@@ -1,0 +1,11 @@
+{
+  "theme": "mint",
+  "logos": ["google-color.svg", "openai.svg", "gemini-color.svg", "perplexity-color.svg"],
+  "title": "Lost Your Clicks?",
+  "subtitle": "AI SEARCH EXPLAINED",
+  "big_word": "AI",
+  "big_size": "620px",
+  "photo": "assets/vaibhav_suit_cutout.png",
+  "output": "cover.png",
+  "logo_size": "100px"
+}
