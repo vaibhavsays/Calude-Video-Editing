@@ -1,0 +1,17 @@
+{
+  "theme": "peach",
+  "logos": [
+    "openai.svg",
+    "google-color.svg"
+  ],
+  "title": "Why Not You?",
+  "subtitle": "AI PICKS YOUR RIVAL",
+  "big_word": "WHY",
+  "big_size": "560px",
+  "photo": "assets/vaibhav_suit_cutout.png",
+  "output": "cover.png",
+  "logo_size": "110px",
+  "title_size": "124px",
+  "sub_top": "568px",
+  "big_top": "640px"
+}

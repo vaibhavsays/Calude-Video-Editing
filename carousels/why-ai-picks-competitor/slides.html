@@ -1,0 +1,143 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<!-- 5-slide Instagram carousel, 1080x1350 each, stacked vertically. render.sh screenshots the page and cuts it into slide-N.png. -->
+<style>
+  @font-face { font-family: "Playfair Display"; src: url("../../thumbnails/assets/fonts/PlayfairDisplay-var.woff2"); font-weight: 400 900; }
+  @font-face { font-family: "Instrument Serif"; src: url("../../thumbnails/assets/fonts/InstrumentSerif-400.woff2"); }
+  @font-face { font-family: "Montserrat"; src: url("../../thumbnails/assets/fonts/Montserrat-var.woff2"); font-weight: 100 900; }
+  :root { --ink: #4a2a1c; --soft: #7a5a4a; --accent: #d9480f; --bg: #fbe9df; --edge: #f2c9b4; --mark: #ffd27a; --good: #1e7a4c; --bad: #c5221f; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; }
+  body { font-family: "Montserrat"; color: var(--ink); font-variant-numeric: lining-nums; }
+
+  .slide { position: relative; width: 1080px; height: 1350px; overflow: hidden; padding: 100px 90px 0;
+           background: radial-gradient(ellipse 85% 65% at 50% 42%, var(--bg) 0%, var(--edge) 100%); }
+  .slide.dark { background: radial-gradient(ellipse 85% 65% at 50% 42%, #5a3424 0%, #2e1910 100%); color: #fff; }
+
+  .kicker { font-weight: 700; font-size: 30px; letter-spacing: 5px; text-transform: uppercase; color: var(--accent); }
+  h1 { font-family: "Playfair Display"; font-weight: 800; font-size: 100px; line-height: 1.03; letter-spacing: -1.5px; margin-top: 26px; }
+  h2 { font-family: "Playfair Display"; font-weight: 800; font-size: 82px; line-height: 1.08; letter-spacing: -1px; }
+  mark { background: linear-gradient(transparent 58%, var(--mark) 58%, var(--mark) 92%, transparent 92%); color: inherit; padding: 0 6px; }
+  em { font-style: italic; color: var(--accent); }
+  p.lead { font-size: 40px; line-height: 1.42; margin-top: 30px; color: var(--soft); font-weight: 500; }
+  .dark p.lead { color: #f2d6c8; }
+
+  .num { position: absolute; right: 60px; bottom: 40px; font-family: "Instrument Serif"; font-size: 420px; line-height: 1; color: rgba(217, 72, 15, .14); }
+  .reason { margin-top: 18px; }
+
+  .card { position: relative; z-index: 1; margin-top: 44px; border-radius: 30px; padding: 38px 40px; background: #fff; box-shadow: 0 24px 60px rgba(74, 42, 28, .13); }
+  .card .tag { display: inline-flex; align-items: center; gap: 12px; font-weight: 800; font-size: 26px; letter-spacing: 3px; text-transform: uppercase; }
+  .card.bad .tag { color: var(--bad); }
+  .card.good .tag { color: var(--good); }
+  .card .tag i { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-style: normal; color: #fff; font-size: 24px; }
+  .card.bad .tag i { background: var(--bad); }
+  .card.good .tag i { background: var(--good); }
+  .card .body { margin-top: 18px; font-size: 37px; line-height: 1.42; font-weight: 500; color: #3a2a22; }
+  .card.good { border: 4px solid var(--good); }
+
+  /* Slide 3: review comparison */
+  .reviews { position: relative; z-index: 1; display: flex; gap: 26px; margin-top: 34px; }
+  .review { flex: 1; border-radius: 28px; padding: 30px; background: #fff; box-shadow: 0 20px 50px rgba(74, 42, 28, .12); }
+  .review .stars { color: #f4b400; font-size: 32px; letter-spacing: 3px; }
+  .review .txt { margin-top: 14px; font-size: 35px; line-height: 1.4; font-weight: 600; color: #333; }
+  .review .verdict { margin-top: 18px; font-size: 25px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
+  .review.weak .verdict { color: var(--bad); }
+  .review.strong { border: 4px solid var(--good); }
+  .review.strong .verdict { color: var(--good); }
+  .review b { background: #fff1c2; padding: 0 4px; border-radius: 6px; }
+
+  /* Slide 1 */
+  .vs { margin-top: 60px; display: flex; flex-direction: column; gap: 22px; }
+  .ans { display: flex; align-items: center; gap: 22px; background: #fff; border-radius: 26px; padding: 32px 34px; font-size: 38px; font-weight: 700;
+         box-shadow: 0 18px 44px rgba(74, 42, 28, .12); }
+  .ans img { width: 54px; height: 54px; }
+  .ans .ok { margin-left: auto; color: var(--good); font-size: 30px; font-weight: 800; }
+  .ans.you { background: transparent; box-shadow: none; border: 4px dashed #d9a08a; color: #a0533c; }
+  .ans.you .ok { color: var(--bad); }
+
+  /* Slide 5 */
+  .test { margin-top: 60px; background: #fff; border-radius: 30px; padding: 34px 38px; color: #3a2a22; box-shadow: 0 24px 60px rgba(0, 0, 0, .25); }
+  .test .step { font-weight: 800; font-size: 26px; letter-spacing: 3px; color: var(--accent); text-transform: uppercase; }
+  .test .prompt { margin-top: 18px; display: flex; gap: 18px; align-items: center; font-size: 40px; font-weight: 700; }
+  .test .prompt img { width: 52px; height: 52px; }
+  .test .prompt span { background: #f6ece6; border-radius: 18px; padding: 14px 22px; }
+  .test .note { margin-top: 22px; font-size: 34px; line-height: 1.4; color: #6b5146; font-weight: 500; }
+  .cta { margin-top: 60px; padding: 44px 44px; border-radius: 30px; background: var(--mark); color: #2e1910; font-size: 46px; font-weight: 800; line-height: 1.3; text-align: center; }
+
+  .foot { position: absolute; left: 90px; right: 90px; bottom: 60px; display: flex; justify-content: space-between; align-items: center;
+          font-weight: 600; font-size: 26px; letter-spacing: 2px; color: var(--soft); }
+  .dark .foot { color: #d9b4a3; }
+  .swipe { font-weight: 700; color: var(--accent); letter-spacing: 3px; }
+</style>
+</head>
+<body>
+
+<!-- 1. Hook -->
+<section class="slide">
+  <div class="kicker">For business owners</div>
+  <h1>Why ChatGPT recommends your <mark>competitor</mark>, not&nbsp;you.</h1>
+  <div class="vs">
+    <div class="ans"><img src="../../thumbnails/assets/logos/openai.svg">Your competitor<span class="ok">Recommended</span></div>
+    <div class="ans"><img src="../../thumbnails/assets/logos/google-color.svg">Your competitor<span class="ok">Recommended</span></div>
+    <div class="ans you"><span style="width: 54px; text-align: center">?</span>Your business<span class="ok">Not mentioned</span></div>
+  </div>
+  <p class="lead">3 reasons it happens, and how to fix each one.</p>
+  <div class="foot"><span>1 / 5</span><span class="swipe">SWIPE &rarr;</span></div>
+</section>
+
+<!-- 2. Reason 1 -->
+<section class="slide">
+  <div class="num">01</div>
+  <div class="kicker">Reason 1</div>
+  <h2 class="reason">AI can't <em>verify</em> your business.</h2>
+  <div class="card bad"><span class="tag"><i>&#10005;</i>The problem</span>
+    <div class="body">Your name, address, phone or hours are different on Google, your website and listing sites. AI isn't sure the details are right, so it plays safe and names someone else.</div></div>
+  <div class="card good"><span class="tag"><i>&#10003;</i>The fix</span>
+    <div class="body">Use the exact same name, address, phone and hours everywhere. Complete every field of your Google Business Profile.</div></div>
+  <div class="foot"><span>2 / 5</span><span class="swipe">&rarr;</span></div>
+</section>
+
+<!-- 3. Reason 2 -->
+<section class="slide">
+  <div class="num">02</div>
+  <div class="kicker">Reason 2</div>
+  <h2 class="reason">Your reviews don't say <em>what you do.</em></h2>
+  <p class="lead" style="margin-top: 22px">AI reads review text to match you to what people ask.</p>
+  <div class="reviews">
+    <div class="review weak"><div class="stars">★★★★★</div><div class="txt">&ldquo;Great service! Highly recommend.&rdquo;</div><div class="verdict">Tells AI nothing</div></div>
+    <div class="review strong"><div class="stars">★★★★★</div><div class="txt">&ldquo;Best <b>root canal</b> in <b>Nashik</b>. Painless and <b>same-day</b>.&rdquo;</div><div class="verdict">AI can match this</div></div>
+  </div>
+  <div class="card good"><span class="tag"><i>&#10003;</i>The fix</span>
+    <div class="body">When you ask for a review, ask customers to mention the service they got and your area.</div></div>
+  <div class="foot"><span>3 / 5</span><span class="swipe">&rarr;</span></div>
+</section>
+
+<!-- 4. Reason 3 -->
+<section class="slide">
+  <div class="num">03</div>
+  <div class="kicker">Reason 3</div>
+  <h2 class="reason">Your website doesn't <em>answer questions.</em></h2>
+  <div class="card bad"><span class="tag"><i>&#10005;</i>The problem</span>
+    <div class="body">People ask AI full questions: &ldquo;How much does it cost?&rdquo;, &ldquo;Do you deliver to my area?&rdquo;, &ldquo;Are you open Sunday?&rdquo; If your site never answers them, AI quotes a site that does.</div></div>
+  <div class="card good"><span class="tag"><i>&#10003;</i>The fix</span>
+    <div class="body">Add an FAQ page with the real questions customers ask you on calls and WhatsApp, answered in plain words.</div></div>
+  <div class="foot"><span>4 / 5</span><span class="swipe">&rarr;</span></div>
+</section>
+
+<!-- 5. Test + CTA -->
+<section class="slide dark">
+  <div class="kicker" style="color: var(--mark)">Try this today</div>
+  <h2 style="margin-top: 22px">Check if AI knows you, in <em style="color: var(--mark)">30 seconds.</em></h2>
+  <div class="test">
+    <div class="step">Ask ChatGPT</div>
+    <div class="prompt"><img src="../../thumbnails/assets/logos/openai.svg"><span>Best [your service] in [your city]?</span></div>
+    <div class="note">Not in the answer? Then your customers aren't hearing about you either.</div>
+  </div>
+  <div class="cta">Not showing up? DM me &ldquo;AUDIT&rdquo; and I'll show you why.</div>
+  <div class="foot"><span>5 / 5</span><span>Save &amp; share with a business owner</span></div>
+</section>
+
+</body>
+</html>
