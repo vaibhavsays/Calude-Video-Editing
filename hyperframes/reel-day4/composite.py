@@ -10,7 +10,7 @@
      clip so each cut reads as deliberate. Split windows: the speaker sits below the B-roll panel (head below 790 px).
   5. Text behind the speaker for the hook and "Day 4" intro: renders/behind.mov goes over the picture, then the
      speaker cut out with per-frame BiRefNet mattes (renders/masks) goes back on top of it.
-  6. HyperFrames front overlay (renders/overlay.mov: B-roll, chips, captions) on top, SFX under the voice, one encode.
+  6. HyperFrames front overlay (renders/overlay.mov: B-roll, chips, captions) on top, SFX under the voice, one CRF 17 encode (keeps the file under GitHub's 100 MB).
 
     python3 composite.py base     -> renders/base_frames/*.png (picture for the matte window, for tools/matte.py)
     python3 composite.py [out.mp4]
@@ -126,9 +126,9 @@ def main(out_path):
         ms = int(max(0.0, T(t)) * 1000)
         g.append(f"[{idx}:a]aresample=48000,adelay={ms}|{ms},volume={gn * 0.75:.3f}[s{k}]")
         mix.append(f"[s{k}]")
-    g.append("".join(mix) + f"amix=inputs={len(mix)}:normalize=0:duration=first,alimiter=limit=0.89[a]")
+    g.append("".join(mix) + f"amix=inputs={len(mix)}:normalize=0:duration=first,alimiter=limit=0.85[a]")
     cmd = ["ffmpeg", "-y", "-v", "error", *inputs, "-filter_complex", ";\n".join(g), "-map", "[v]", "-map", "[a]",
-           "-t", f"{DUR:.3f}", "-c:v", "libx264", "-preset", "slow", "-crf", "15", "-profile:v", "high", "-pix_fmt", "yuv420p",
+           "-t", f"{DUR:.3f}", "-c:v", "libx264", "-preset", "slow", "-crf", "17", "-profile:v", "high", "-pix_fmt", "yuv420p",
            "-tune", "film", "-r", "30", "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709",
            "-c:a", "aac", "-b:a", "320k", "-movflags", "+faststart", str(out_path)]
     subprocess.run(cmd, check=True)
