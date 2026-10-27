@@ -1,0 +1,151 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<!-- 5-slide Instagram carousel, 1080x1350 each, stacked vertically. render.sh screenshots the page and cuts it into slide-N.png. -->
+<style>
+  @font-face { font-family: "Playfair Display"; src: url("../../thumbnails/assets/fonts/PlayfairDisplay-var.woff2"); font-weight: 400 900; }
+  @font-face { font-family: "Instrument Serif"; src: url("../../thumbnails/assets/fonts/InstrumentSerif-400.woff2"); }
+  @font-face { font-family: "Montserrat"; src: url("../../thumbnails/assets/fonts/Montserrat-var.woff2"); font-weight: 100 900; }
+  :root { --ink: #1d3a63; --soft: #4d6585; --accent: #2563c9; --geo: #7a3fc2; --bg: #e8f0fa; --edge: #b7cfec; --mark: #ffd27a; --good: #1e7a4c; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; }
+  body { font-family: "Montserrat"; color: var(--ink); font-variant-numeric: lining-nums; }
+
+  .slide { position: relative; width: 1080px; height: 1350px; overflow: hidden; padding: 100px 90px 0;
+           background: radial-gradient(ellipse 85% 65% at 50% 42%, var(--bg) 0%, var(--edge) 100%); }
+  .slide.dark { background: radial-gradient(ellipse 85% 65% at 50% 42%, #24426e 0%, #0f1f38 100%); color: #fff; }
+
+  .kicker { font-weight: 700; font-size: 30px; letter-spacing: 5px; text-transform: uppercase; color: var(--accent); }
+  .kicker.geo { color: var(--geo); }
+  h1 { font-family: "Playfair Display"; font-weight: 800; font-size: 104px; line-height: 1.03; letter-spacing: -1.5px; margin-top: 26px; }
+  h2 { font-family: "Playfair Display"; font-weight: 800; font-size: 82px; line-height: 1.08; letter-spacing: -1px; margin-top: 18px; }
+  mark { background: linear-gradient(transparent 58%, var(--mark) 58%, var(--mark) 92%, transparent 92%); color: inherit; padding: 0 6px; }
+  em { font-style: italic; color: var(--accent); }
+  em.geo { color: var(--geo); }
+  p.lead { font-size: 40px; line-height: 1.42; margin-top: 30px; color: var(--soft); font-weight: 500; }
+  .dark p.lead { color: #c9d8ee; }
+
+  .num { position: absolute; right: 50px; bottom: 30px; font-family: "Instrument Serif"; font-size: 400px; line-height: 1; color: rgba(37, 99, 201, .12); }
+  .num.geo { color: rgba(122, 63, 194, .12); }
+
+  /* Slide 1: the two terms */
+  .pair { position: relative; z-index: 1; display: flex; gap: 26px; margin-top: 60px; }
+  .term { flex: 1; background: #fff; border-radius: 30px; padding: 38px 34px; box-shadow: 0 24px 60px rgba(29, 58, 99, .13); border-top: 10px solid var(--accent); }
+  .term.geo { border-top-color: var(--geo); }
+  .term .abbr { font-family: "Playfair Display"; font-weight: 800; font-size: 92px; line-height: 1; color: var(--accent); }
+  .term.geo .abbr { color: var(--geo); }
+  .term .full { margin-top: 16px; font-size: 32px; line-height: 1.3; font-weight: 700; }
+  .term .logos { margin-top: 26px; display: flex; gap: 16px; align-items: center; }
+  .term .logos img { width: 46px; height: 46px; }
+  .term .logos span { font-size: 24px; font-weight: 600; color: var(--soft); }
+
+  /* Slides 2-3: definition cards */
+  .card { position: relative; z-index: 1; margin-top: 36px; border-radius: 30px; padding: 34px 40px; background: #fff; box-shadow: 0 24px 60px rgba(29, 58, 99, .13); }
+  .card .tag { font-weight: 800; font-size: 25px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); }
+  .geo-s .card .tag { color: var(--geo); }
+  .card .body { margin-top: 14px; font-size: 36px; line-height: 1.42; font-weight: 500; color: #24324a; }
+  .card .chips { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 14px; }
+  .chip { display: inline-flex; align-items: center; gap: 12px; padding: 12px 22px; border-radius: 40px; background: #eef3fb; font-size: 28px; font-weight: 700; color: var(--ink); }
+  .geo-s .chip { background: #f3edfb; }
+  .chip img { width: 34px; height: 34px; }
+  ul.how { list-style: none; margin-top: 14px; }
+  ul.how li { position: relative; padding-left: 46px; font-size: 34px; line-height: 1.4; font-weight: 500; color: #24324a; margin-top: 10px; }
+  ul.how li::before { content: "✓"; position: absolute; left: 0; top: 2px; width: 32px; height: 32px; border-radius: 50%; background: var(--good); color: #fff; font-size: 20px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+
+  /* Slide 4: comparison table */
+  table { position: relative; z-index: 1; width: 100%; margin-top: 44px; border-collapse: separate; border-spacing: 0; background: #fff; border-radius: 30px; overflow: hidden; box-shadow: 0 24px 60px rgba(29, 58, 99, .13); }
+  th { padding: 26px 22px; font-family: "Playfair Display"; font-weight: 800; font-size: 52px; color: #fff; text-align: left; }
+  th.a { background: var(--accent); }
+  th.g { background: var(--geo); }
+  th.blank { background: #dbe6f5; width: 230px; }
+  td { padding: 22px 22px; font-size: 29px; line-height: 1.35; font-weight: 500; color: #24324a; border-top: 2px solid #e5ecf6; vertical-align: top; }
+  td.row { font-weight: 800; font-size: 22px; letter-spacing: 2px; text-transform: uppercase; color: var(--soft); background: #f3f7fc; }
+
+  /* Slide 5 */
+  .both { margin-top: 44px; display: flex; flex-direction: column; gap: 20px; }
+  .line { display: flex; gap: 22px; align-items: center; background: rgba(255, 255, 255, .08); border: 2px solid rgba(255, 255, 255, .18); border-radius: 26px; padding: 26px 30px; font-size: 34px; line-height: 1.35; font-weight: 500; color: #e3ecf8; }
+  .line b { flex: none; width: 128px; font-family: "Playfair Display"; font-weight: 800; font-size: 50px; color: #fff; }
+  .line.a b { color: #8fb8ff; }
+  .line.g b { color: #c9a6f5; }
+  .cta { margin-top: 50px; padding: 40px 44px; border-radius: 30px; background: var(--mark); color: #0f1f38; font-size: 44px; font-weight: 800; line-height: 1.3; text-align: center; }
+
+  .foot { position: absolute; left: 90px; right: 90px; bottom: 60px; display: flex; justify-content: space-between; align-items: center;
+          font-weight: 600; font-size: 26px; letter-spacing: 2px; color: var(--soft); }
+  .dark .foot { color: #9fb4d3; }
+  .swipe { font-weight: 700; color: var(--accent); letter-spacing: 3px; }
+</style>
+</head>
+<body>
+
+<!-- 1. Hook -->
+<section class="slide">
+  <div class="kicker">AI search, simply explained</div>
+  <h1>AEO vs GEO: what's the <mark>difference?</mark></h1>
+  <div class="pair">
+    <div class="term"><div class="abbr">AEO</div><div class="full">Answer Engine Optimization</div>
+      <div class="logos"><img src="../../thumbnails/assets/logos/google-color.svg"><span>Snippets &amp; voice</span></div></div>
+    <div class="term geo"><div class="abbr">GEO</div><div class="full">Generative Engine Optimization</div>
+      <div class="logos"><img src="../../thumbnails/assets/logos/openai.svg"><img src="../../thumbnails/assets/logos/perplexity-color.svg"><img src="../../thumbnails/assets/logos/gemini-color.svg"></div></div>
+  </div>
+  <p class="lead">Both help you show up in AI answers. But they're two different jobs.</p>
+  <div class="foot"><span>1 / 5</span><span class="swipe">SWIPE &rarr;</span></div>
+</section>
+
+<!-- 2. AEO -->
+<section class="slide">
+  <div class="num">A</div>
+  <div class="kicker">AEO</div>
+  <h2>Be <em>the answer.</em></h2>
+  <div class="card"><span class="tag">What it is</span>
+    <div class="body">Writing your pages so Google and voice assistants lift your text as the direct answer to a question.</div></div>
+  <div class="card"><span class="tag">Where it shows</span>
+    <div class="chips"><span class="chip"><img src="../../thumbnails/assets/logos/google-color.svg">Featured snippets</span><span class="chip">People Also Ask</span><span class="chip">Siri &amp; Alexa</span></div></div>
+  <div class="card"><span class="tag">How to win it</span>
+    <ul class="how"><li>Use the real question as your heading</li><li>Answer it in the first 40&ndash;60 words</li><li>Add FAQ schema to the page</li></ul></div>
+  <div class="foot"><span>2 / 5</span><span class="swipe">&rarr;</span></div>
+</section>
+
+<!-- 3. GEO -->
+<section class="slide geo-s">
+  <div class="num geo">G</div>
+  <div class="kicker geo">GEO</div>
+  <h2>Be the source <em class="geo">AI trusts.</em></h2>
+  <div class="card"><span class="tag">What it is</span>
+    <div class="body">Getting AI chatbots to mention, recommend or cite your brand when they write an answer.</div></div>
+  <div class="card"><span class="tag">Where it shows</span>
+    <div class="chips"><span class="chip"><img src="../../thumbnails/assets/logos/openai.svg">ChatGPT</span><span class="chip"><img src="../../thumbnails/assets/logos/perplexity-color.svg">Perplexity</span><span class="chip"><img src="../../thumbnails/assets/logos/gemini-color.svg">Gemini</span><span class="chip"><img src="../../thumbnails/assets/logos/google-color.svg">AI Overviews</span></div></div>
+  <div class="card"><span class="tag">How to win it</span>
+    <ul class="how"><li>Get mentioned on sites AI already trusts</li><li>Collect detailed reviews</li><li>Publish your own data, prices and facts</li></ul></div>
+  <div class="foot"><span>3 / 5</span><span class="swipe">&rarr;</span></div>
+</section>
+
+<!-- 4. Side by side -->
+<section class="slide">
+  <div class="kicker">Side by side</div>
+  <h2>Same goal. <em>Different game.</em></h2>
+  <table>
+    <tr><th class="blank"></th><th class="a">AEO</th><th class="g">GEO</th></tr>
+    <tr><td class="row">Works on</td><td>Google snippets, voice assistants</td><td>ChatGPT, Perplexity, Gemini</td></tr>
+    <tr><td class="row">You win when</td><td>Your text <b>is</b> the answer</td><td>AI <b>names or cites</b> you</td></tr>
+    <tr><td class="row">Depends on</td><td>How your page is written</td><td>What the whole web says about you</td></tr>
+    <tr><td class="row">Track it by</td><td>Snippet &amp; PAA spots</td><td>Mentions in AI answers</td></tr>
+  </table>
+  <div class="foot"><span>4 / 5</span><span class="swipe">&rarr;</span></div>
+</section>
+
+<!-- 5. Takeaway + CTA -->
+<section class="slide dark">
+  <div class="kicker" style="color: var(--mark)">So which one?</div>
+  <h2>You need <em style="color: var(--mark)">both.</em></h2>
+  <div class="both">
+    <div class="line a"><b>AEO</b>makes your pages easy to quote.</div>
+    <div class="line g"><b>GEO</b>makes AI trust you enough to quote you.</div>
+  </div>
+  <p class="lead">Start with AEO on your own site this week. GEO builds over months.</p>
+  <div class="cta">Want to know where you stand? DM me &ldquo;AEO&rdquo; for a free check.</div>
+  <div class="foot"><span>5 / 5</span><span>Save &amp; share with a business owner</span></div>
+</section>
+
+</body>
+</html>

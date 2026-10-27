@@ -1,0 +1,14 @@
+{
+  "theme": "blue",
+  "logos": ["google-color.svg", "openai.svg", "perplexity-color.svg", "gemini-color.svg"],
+  "title": "AEO vs GEO",
+  "subtitle": "WHAT'S THE DIFFERENCE?",
+  "big_word": "VS",
+  "big_size": "620px",
+  "photo": "assets/vaibhav_suit_cutout.png",
+  "output": "cover.png",
+  "logo_size": "100px",
+  "title_size": "124px",
+  "sub_top": "568px",
+  "big_top": "620px"
+}
