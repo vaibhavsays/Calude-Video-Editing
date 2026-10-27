@@ -5,19 +5,23 @@
     <meta name="viewport" content="width=1080, height=1920" />
     <script src="vendor/gsap.min.js"></script>
     <script src="edl.js"></script>
+    <script src="layer.js"></script>
     <style>
       @font-face { font-family: "P5"; src: url("assets/fonts/poppins-latin-500-normal.woff2"); font-weight: 500; }
       @font-face { font-family: "P6"; src: url("assets/fonts/poppins-latin-600-normal.woff2"); font-weight: 600; }
       @font-face { font-family: "P7"; src: url("assets/fonts/poppins-latin-700-normal.woff2"); font-weight: 700; }
       @font-face { font-family: "P8"; src: url("assets/fonts/poppins-latin-800-normal.woff2"); font-weight: 800; }
       @font-face { font-family: "Anton"; src: url("assets/fonts/anton-latin-400-normal.woff2"); }
-      :root { --y: #ffd426; --ink: #17151a; --cream: #f7f3ee; --red: #e5383b; --green: #12a150; --blue: #2563eb; }
+      @font-face { font-family: "Mono"; src: url("assets/fonts/jetbrains-mono-latin-600-normal.woff2"); }
+      :root { --y: #ffd426; --ink: #17151a; --cream: #f7f3ee; --red: #e5383b; --green: #12a150; --blue: #2563eb; --code: #1d1a24; }
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html, body { width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
       body { font-family: "P6", sans-serif; color: var(--ink); }
       #root { position: relative; width: 100%; height: 100%; overflow: hidden; }
       .clip { position: absolute; inset: 0; }
       .scene { position: absolute; inset: 0; opacity: 0; }
+      body.behind #front, body.behind #captions, body.behind #flash { display: none; }
+      body.front #behind { display: none; }
 
       /* panels */
       .top { position: absolute; left: 0; right: 0; top: 0; height: 790px; }
@@ -30,33 +34,65 @@
       .el { position: absolute; opacity: 0; }
       .h { left: 50px; right: 50px; text-align: center; font-family: "P8"; font-size: 62px; line-height: 1.12; letter-spacing: -0.5px; }
       .h em { font-style: normal; background: var(--y); padding: 0 14px; border-radius: 12px; }
-      .h em.r { background: var(--red); color: #fff; }
+      .tag { left: 0; right: 0; display: flex; justify-content: center; }
+      .tag span { font-family: "P8"; font-size: 34px; letter-spacing: 4px; color: #fff; background: var(--ink); padding: 8px 26px; border-radius: 40px; }
       .card { background: #fff; border-radius: 34px; box-shadow: 0 20px 56px rgba(40,30,20,.15); }
-      .logo { width: 230px; height: 230px; border-radius: 52px; background: #fff; display: grid; place-items: center; box-shadow: 0 18px 46px rgba(40,30,20,.16); }
-      .logo img { width: 140px; height: 140px; }
-      .logo b { position: absolute; bottom: -54px; left: -40px; right: -40px; text-align: center; font-family: "P7"; font-size: 32px; }
+      .logo { width: 210px; height: 210px; border-radius: 48px; background: #fff; display: grid; place-items: center; box-shadow: 0 18px 46px rgba(40,30,20,.16); }
+      .logo img { width: 124px; height: 124px; }
+      .logo b { position: absolute; bottom: -52px; left: -40px; right: -40px; text-align: center; font-family: "P7"; font-size: 32px; }
       .stamp { font-family: "P8"; font-size: 60px; color: #fff; background: var(--red); padding: 16px 40px; border-radius: 20px; box-shadow: 0 18px 44px rgba(229,56,59,.35); white-space: nowrap; }
-      .line { height: 24px; border-radius: 12px; background: #e9e4dd; margin: 18px 0; transform-origin: left center; }
-      .tile { width: 230px; height: 400px; border-radius: 36px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; color: #fff; box-shadow: 0 20px 50px rgba(40,30,20,.2); }
-      .tile .L { font-family: "Anton"; font-size: 170px; line-height: 1; }
-      .tile .w { font-family: "P7"; font-size: 32px; }
+      .stamp.g { background: var(--green); box-shadow: 0 18px 44px rgba(18,161,80,.35); }
+      .chip { display: flex; align-items: center; gap: 16px; background: #fff; border-radius: 70px; padding: 20px 36px; font-family: "P7"; font-size: 42px; box-shadow: 0 14px 36px rgba(40,30,20,.14); white-space: nowrap; }
+      .chip img { height: 52px; }
       .check { display: flex; align-items: center; gap: 24px; font-family: "P7"; font-size: 52px; white-space: nowrap; }
       .check i { width: 1.4em; height: 1.4em; border-radius: 50%; display: grid; place-items: center; color: #fff; font-style: normal; font-family: "P8"; font-size: 40px; background: var(--green); flex: none; }
       .check.x i { background: var(--red); }
-      .check img { height: 64px; }
-      .chip { display: flex; align-items: center; gap: 16px; background: #fff; border-radius: 70px; padding: 20px 36px; font-family: "P7"; font-size: 42px; box-shadow: 0 14px 36px rgba(40,30,20,.14); white-space: nowrap; }
-      .big { font-family: "Anton"; text-align: center; line-height: .95; }
+
+      /* reason tiles */
+      .num { width: 270px; height: 330px; border-radius: 40px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; box-shadow: 0 20px 50px rgba(40,30,20,.22); }
+      .num .n { font-family: "Anton"; font-size: 190px; line-height: 1; }
+      .num .w { font-family: "P7"; font-size: 30px; text-align: center; line-height: 1.15; padding: 0 16px; }
+      .star { position: absolute; top: -34px; right: -30px; font-family: "P8"; font-size: 30px; background: var(--y); color: var(--ink); padding: 8px 18px; border-radius: 30px; transform: rotate(8deg); box-shadow: 0 10px 24px rgba(0,0,0,.2); white-space: nowrap; }
+
+      /* code card */
+      .code { background: var(--code); border-radius: 30px; box-shadow: 0 24px 60px rgba(20,10,30,.35); padding: 30px 40px; font-family: "Mono"; font-size: 40px; line-height: 1.5; color: #e7e3ef; }
+      .code .bar { display: flex; gap: 12px; margin-bottom: 18px; align-items: center; }
+      .code .bar i { width: 18px; height: 18px; border-radius: 50%; background: #ff5f57; } .code .bar i:nth-child(2) { background: #febc2e; } .code .bar i:nth-child(3) { background: #28c840; }
+      .code .bar span { margin-left: 16px; font-family: "P6"; font-size: 28px; color: #9b95a8; }
+      .code .k { color: #7cc4ff; } .code .c { color: #8b8598; } .code .s { color: #a5e57d; }
+      .code .ln { position: relative; white-space: nowrap; }
+      .code .dis { color: #ff8a8a; }
+      .code .alw { color: #6ee7a0; position: absolute; left: 0; top: 0; opacity: 0; }
 
       /* full-mode chips above the head */
-      .tchip { left: 0; right: 0; top: 170px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
-      .tchip div { font-family: "P8"; font-size: 50px; color: #fff; background: rgba(23,21,26,.88); padding: 14px 34px; border-radius: 20px; box-shadow: 0 14px 40px rgba(0,0,0,.35); white-space: nowrap; }
+      .tchip { left: 0; right: 0; top: 150px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+      .tchip div { font-family: "P8"; font-size: 52px; color: #fff; background: rgba(23,21,26,.88); padding: 14px 34px; border-radius: 20px; box-shadow: 0 14px 40px rgba(0,0,0,.35); white-space: nowrap; }
       .tchip div b { color: var(--y); }
+      .tchip div.yl { background: var(--y); color: var(--ink); }
 
-      /* hook */
-      .hook { left: 70px; right: 70px; top: 200px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-      .hook .a { font-family: "P8"; font-size: 58px; color: #fff; text-shadow: 0 4px 18px rgba(0,0,0,.6); }
-      .hook .b { font-family: "Anton"; font-size: 132px; line-height: 1.02; color: #fff; background: var(--red); padding: 6px 30px 0; border-radius: 16px; transform: rotate(-2deg); display: block; }
-      .hook .c { font-family: "P8"; font-size: 60px; color: var(--ink); background: var(--y); padding: 4px 24px; border-radius: 14px; display: block; }
+      /* hook + intro titles */
+      .ttl { left: 0; right: 0; text-align: center; white-space: nowrap; }
+      .front-line { font-family: "P8"; font-size: 76px; color: #fff; letter-spacing: 1px; text-shadow: 0 4px 0 rgba(0,0,0,.35), 0 6px 26px rgba(0,0,0,.55); }
+      .giant { font-family: "Anton"; color: var(--y); line-height: .9; text-shadow: 0 10px 40px rgba(0,0,0,.35); }
+      .pill { left: 0; right: 0; display: flex; justify-content: center; }
+      .pill span { font-family: "P8"; font-size: 54px; color: #fff; background: var(--red); padding: 10px 34px; border-radius: 18px; transform: rotate(-2deg); box-shadow: 0 14px 40px rgba(0,0,0,.35); white-space: nowrap; }
+      .pill.dk span { background: rgba(23,21,26,.9); transform: none; font-size: 46px; }
+      .pill.dk span b { color: var(--y); }
+
+      /* human vs AI */
+      .pane { width: 400px; height: 560px; border-radius: 30px; overflow: hidden; }
+      .pane .hd { height: 86px; display: flex; align-items: center; justify-content: center; gap: 12px; font-family: "P8"; font-size: 40px; color: #fff; }
+      .line { height: 22px; border-radius: 11px; background: #e9e4dd; margin: 16px 28px; }
+      .img { height: 150px; margin: 20px 28px; border-radius: 18px; background: linear-gradient(135deg, #ffd9a8, #ffb37a); }
+      .json { padding: 18px 22px; font-family: "Mono"; font-size: 25px; line-height: 1.45; color: #e7e3ef; white-space: pre; }
+
+      /* reviews + AI answer */
+      .stars { font-size: 80px; letter-spacing: 6px; color: #ffb400; }
+      .ai { background: #fff; border-radius: 34px; box-shadow: 0 20px 56px rgba(40,30,20,.16); padding: 34px 40px; }
+      .ai .q { font-family: "P6"; font-size: 36px; background: #f1eef8; border-radius: 24px; padding: 16px 26px; display: inline-block; }
+      .ai .a { margin-top: 26px; display: flex; gap: 20px; align-items: flex-start; font-family: "P6"; font-size: 36px; line-height: 1.35; }
+      .ai .a img { width: 64px; height: 64px; flex: none; }
+      .ai .a b { background: var(--y); padding: 0 10px; border-radius: 8px; }
 
       /* captions */
       #captions { position: absolute; left: 50px; right: 50px; top: 0; height: 100%; z-index: 60; }
@@ -67,140 +103,177 @@
       .cap .hl { color: var(--ink); background: var(--y); padding: 0 12px; border-radius: 10px; text-shadow: none; box-shadow: 0 4px 14px rgba(0,0,0,.3); }
       .cap.dark { color: var(--ink); text-shadow: none; }
       .flash { position: absolute; inset: 0; background: #fff; opacity: 0; z-index: 80; }
-    
-      .funnel { width: 400px; }
-      .tier { height: 150px; margin: 0 auto 14px; display: flex; align-items: center; justify-content: center; font-family: "P8"; font-size: 40px; color: #fff; clip-path: polygon(0 0, 100% 0, 88% 100%, 12% 100%); }
-      .tier small { display: block; font-family: "P6"; font-size: 22px; opacity: .9; text-align: center; }
-      .t1 { width: 400px; background: #2563eb; } .t2 { width: 310px; background: #7c3aed; } .t3 { width: 225px; background: #12a150; }
-      .ring { position: absolute; border: 8px solid var(--y); border-radius: 26px; }
-      .stat { text-align: center; }
-      .stat .v { font-family: "Anton"; font-size: 200px; line-height: 1; }
-      .stat .k { font-family: "P7"; font-size: 40px; color: #6b635b; }
-      .bar2 { position: absolute; bottom: 0; width: 90px; border-radius: 16px 16px 6px 6px; transform-origin: bottom center; }
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="114.199" data-width="1080" data-height="1920">
-      <section id="gfx" class="clip" data-start="0" data-duration="114.199" data-track-index="1">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="109.335" data-width="1080" data-height="1920">
 
-        <div class="el hook" id="hook"><div class="a">Paying ₹50K/month for SEO</div><div class="b" id="hk2">ZERO LEADS?</div><div class="c">Watch this 👇</div></div>
-        <div class="el tchip" id="fd1"><div id="fd1a"><b>Day 2</b> of 100 Days of <b>Decoding AI SEO</b></div></div>
-        <div class="el tchip" id="fq"><div id="fqa">Traffic ➜ <b>Leads?</b> 🤔</div><div id="fqb">📞 Calls aa rahe hain?</div></div>
+      <!-- titles that sit BEHIND the speaker (renders/behind.mov; composite.py lays the cut-out speaker over them) -->
+      <section id="behind" class="clip" data-start="0" data-duration="109.335" data-track-index="0">
+        <div class="el ttl giant" id="hkB" style="top:96px;font-size:262px">IGNORES</div>
+        <div class="el ttl giant" id="dyB" style="top:70px;font-size:330px">DAY 4</div>
+      </section>
 
-        <!-- S1: paying agency, zero leads -->
+      <section id="front" class="clip" data-start="0" data-duration="109.335" data-track-index="1">
+        <!-- hook + intro (in front of the speaker) -->
+        <div class="el ttl front-line" id="hk1" style="top:22px">WHY CHATGPT 🤖</div>
+        <div class="el pill" id="hk2" style="top:968px"><span>YOUR BUSINESS?</span></div>
+        <div class="el ttl front-line" id="dy1" style="top:-6px;font-size:66px">Welcome to</div>
+        <div class="el pill dk" id="dy2" style="top:960px"><span>of 100 Days of <b>Decoding AI SEO</b></span></div>
+
+        <!-- full-mode chips above the head -->
+        <div class="el tchip" id="fc1"><div class="yl" id="fc1a">✅ Allow AI crawlers</div><div id="fc1b">in your <b>robots.txt</b> file</div></div>
+        <div class="el tchip" id="fc2"><div class="yl" id="fc2a">REASON 3 ⭐</div><div id="fc2b"><b>Machine readability</b></div></div>
+        <div class="el tchip" id="fc3"><div id="fc3a">📌 Any niche, any website</div><div class="yl" id="fc3b">needs SCHEMA</div></div>
+        <div class="el tchip" id="fc4"><div id="fc4a">❌ No schema</div><div id="fc4b">= <b>not readable</b> for AI</div></div>
+        <div class="el tchip" id="fc5"><div class="yl" id="fc5a">🤖 Allow AI crawlers</div><div id="fc5b">GPTBot · ClaudeBot · PerplexityBot</div></div>
+
+        <!-- S1: 3 reasons -->
         <div class="scene top" id="s1"><div class="bg"><div class="dots"></div></div><svg class="wave" viewBox="0 0 1080 60" preserveAspectRatio="none"><path d="M0 0 H1080 V22 C 900 60, 720 0, 540 26 C 360 52, 180 4, 0 30 Z" fill="#ece4d9"/></svg>
           <div class="inner">
-          <div class="el card" id="inv" style="left:90px;top:110px;width:900px;height:300px;padding:40px 50px">
-            <div style="font-family:P7;font-size:34px;color:#8b8279">🧾 SEO agency invoice</div>
-            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:24px"><span style="font-family:P7;font-size:44px">Monthly retainer</span><span style="font-family:Anton;font-size:110px;color:var(--ink)">₹50,000</span></div>
-          </div>
-          <div class="el card stat" id="z1" style="left:90px;top:450px;width:420px;height:400px;padding-top:40px"><div class="v" style="color:var(--red)">0</div><div class="k">📞 Calls</div></div>
-          <div class="el card stat" id="z2" style="left:570px;top:450px;width:420px;height:400px;padding-top:40px"><div class="v" style="color:var(--red)">0</div><div class="k">🎯 Leads</div></div>
+            <div class="el h" id="s1h" style="top:80px">Why AI <em>ignores</em> you: <b style="font-family:Anton;font-weight:400;font-size:84px">3</b> reasons</div>
+            <div class="el num" id="n1" style="left:75px;top:300px;background:#2563eb"><div class="n">1</div><div class="w">AI crawlers</div></div>
+            <div class="el num" id="n2" style="left:405px;top:300px;background:#7c3aed"><div class="n">2</div><div class="w">3rd-party validation</div></div>
+            <div class="el num" id="n3" style="left:735px;top:300px;background:#12a150"><div class="n">3</div><div class="w">Machine readability</div><div class="el star" id="n3s">⭐ Most important</div></div>
           </div>
         </div>
 
-        <!-- S2: traffic vs leads + funnel -->
+        <!-- S2: reason 1, robots.txt -->
         <div class="scene top" id="s2"><div class="bg"><div class="dots"></div></div><svg class="wave" viewBox="0 0 1080 60" preserveAspectRatio="none"><path d="M0 0 H1080 V22 C 900 60, 720 0, 540 26 C 360 52, 180 4, 0 30 Z" fill="#ece4d9"/></svg>
           <div class="inner">
-          <div class="el h" id="s2h" style="top:70px">Agencies chase <em>traffic</em> 📈</div>
-          <div class="el card" id="tg" style="left:90px;top:230px;width:900px;height:560px;padding:36px 44px">
-            <div style="font-family:P7;font-size:34px;color:#8b8279">Website traffic</div>
-            <div style="position:absolute;left:60px;right:60px;bottom:50px;height:400px">
-              <div class="bar2" id="g1" style="left:0;height:90px;background:#bfdbfe"></div><div class="bar2" id="g2" style="left:150px;height:150px;background:#93c5fd"></div>
-              <div class="bar2" id="g3" style="left:300px;height:220px;background:#60a5fa"></div><div class="bar2" id="g4" style="left:450px;height:300px;background:#3b82f6"></div>
-              <div class="bar2" id="g5" style="left:600px;height:390px;background:#2563eb"></div></div>
-          </div>
-          <div class="el" id="fun" style="left:70px;top:190px"><div class="funnel">
-            <div class="tier t1" id="ft1"><div>TOP<small>learn</small></div></div>
-            <div class="tier t2" id="ft2"><div>MIDDLE<small>compare</small></div></div>
-            <div class="tier t3" id="ft3"><div>BOTTOM<small>buy</small></div></div></div></div>
-          <div class="el ring" id="rg" style="left:58px;top:178px;width:424px;height:176px"></div>
-          <div class="el chip" id="ag" style="left:520px;top:220px;font-size:36px">👈 Agencies target this</div>
-          <div class="el chip" id="q1" style="left:560px;top:340px;font-size:40px">❓ What is SEO?</div>
-          <div class="el chip" id="q2" style="left:560px;top:450px;font-size:40px">❓ How does it work?</div>
-          <div class="el chip" id="q3" style="left:560px;top:560px;font-size:40px">❓ When to post?</div>
-          <div class="el check" id="r1" style="left:560px;top:690px;font-size:44px"><i>✓</i>Traffic</div>
-          <div class="el check x" id="r2" style="left:800px;top:690px;font-size:44px"><i>✕</i>Leads</div>
+            <div class="el tag" id="s2t" style="top:50px"><span>REASON 1</span></div>
+            <div class="el h" id="s2h" style="top:120px">Are <em>AI crawlers</em> blocked?</div>
+            <div class="el code" id="rb" style="left:110px;top:250px;width:860px">
+              <div class="bar"><i></i><i></i><i></i><span>yourwebsite.com/robots.txt</span></div>
+              <div class="ln"><span class="k">User-agent:</span> GPTBot</div>
+              <div class="ln"><span class="dis" id="d1">Disallow: /</span></div>
+              <div class="ln"><span class="k">User-agent:</span> ClaudeBot</div>
+              <div class="ln"><span class="dis" id="d2">Disallow: /</span></div>
+              <div class="ln"><span class="k">User-agent:</span> PerplexityBot</div>
+              <div class="ln"><span class="dis" id="d3">Disallow: /</span></div>
+            </div>
+            <div class="el stamp" id="blk" style="left:600px;top:470px;font-size:50px;transform:rotate(-6deg)">🚫 BLOCKED</div>
+            <div class="el chip" id="cr1" style="left:150px;top:760px;font-size:40px">🤖 Can't read ➜ can't recommend</div>
           </div>
         </div>
 
-        <!-- B1: stop the marketing -->
-        <div class="scene full" id="b1"><div class="bg"><div class="dots"></div></div>
-          <div class="el h" id="b1h" style="top:200px;font-size:80px">Check before you pay 👇</div>
-          <div class="el check" id="c1" style="left:150px;top:460px;font-size:76px"><i>✓</i>Traffic</div>
-          <div class="el check x" id="c2" style="left:150px;top:640px;font-size:76px"><i>✕</i>Leads</div>
-          <div class="el check x" id="c3" style="left:150px;top:820px;font-size:76px"><i>✕</i>Qualified leads</div>
-          <div class="el stamp" id="stop" style="left:90px;top:1080px;font-size:84px;padding:30px 60px">🛑 STOP that marketing</div>
-        </div>
-
-        <!-- S3: funnel + phone example -->
+        <!-- S3: reason 2, third-party validation -->
         <div class="scene top" id="s3"><div class="bg"><div class="dots"></div></div><svg class="wave" viewBox="0 0 1080 60" preserveAspectRatio="none"><path d="M0 0 H1080 V22 C 900 60, 720 0, 540 26 C 360 52, 180 4, 0 30 Z" fill="#ece4d9"/></svg>
           <div class="inner">
-          <div class="el h" id="s3h" style="top:60px;font-size:54px">Which <em>funnel stage</em> are you on?</div>
-          <div class="el" id="fun2" style="left:50px;top:200px"><div class="funnel">
-            <div class="tier t1" id="u1"><div>TOP<small>learn</small></div></div>
-            <div class="tier t2" id="u2"><div>MIDDLE<small>compare</small></div></div>
-            <div class="tier t3" id="u3"><div>BOTTOM<small>buy</small></div></div></div></div>
-          <div class="el ring" id="hl1" style="left:38px;top:188px;width:424px;height:176px"></div>
-          <div class="el ring" id="hl2" style="left:83px;top:352px;width:334px;height:176px"></div>
-          <div class="el ring" id="hl3" style="left:125px;top:516px;width:250px;height:176px"></div>
-          <div class="el" id="ph" style="left:560px;top:220px;font-size:220px;line-height:1">📱</div>
-          <div class="el chip" id="ph1" style="left:520px;top:500px;font-size:38px">🛒 Nobody buys directly</div>
-          <div class="el chip" id="ph2" style="left:520px;top:620px;font-size:38px">🔍 First, enquiry</div>
-          <div class="el chip" id="m1" style="left:500px;top:240px;font-size:38px">⚖️ iPhone vs Samsung</div>
-          <div class="el chip" id="m2" style="left:500px;top:350px;font-size:38px">⚖️ Vivo vs Oppo</div>
-          <div class="el chip" id="m3" style="left:500px;top:460px;font-size:38px">🔋 Battery · 📷 Camera</div>
-          <div class="el chip" id="b1c" style="left:500px;top:600px;font-size:38px">💰 Phone price?</div>
-          <div class="el chip" id="b2c" style="left:500px;top:710px;font-size:38px">📊 Price comparison</div>
-          <div class="el chip" id="b3c" style="left:500px;top:820px;font-size:38px;background:var(--green);color:#fff">✅ Buy now</div>
+            <div class="el tag" id="s3t" style="top:50px"><span>REASON 2</span></div>
+            <div class="el h" id="s3h" style="top:120px"><em>Third-party</em> validation</div>
+            <div class="el card" id="biz" style="left:290px;top:290px;width:500px;height:150px;display:flex;align-items:center;justify-content:center;gap:18px;font-family:P8;font-size:46px">🏢 Your business</div>
+            <div class="el chip" id="bb1" style="left:60px;top:480px;font-size:36px">💬 "Best agency in Indore?"</div>
+            <div class="el chip" id="bb2" style="left:520px;top:580px;font-size:36px">💬 "Has anyone tried them?"</div>
+            <div class="el logo" id="lq" style="left:80px;top:300px"><img src="assets/logos/quora.svg" /><b>Quora</b></div>
+            <div class="el logo" id="lr" style="left:320px;top:300px"><img src="assets/logos/reddit.svg" /><b>Reddit</b></div>
+            <div class="el logo" id="lt" style="left:560px;top:300px"><img src="assets/logos/trustpilot.svg" /><b>Reviews</b></div>
+            <div class="el logo" id="lg" style="left:800px;top:300px"><img src="assets/logos/g2.svg" /><b>G2</b></div>
+            <div class="el chip" id="cm" style="left:250px;top:640px;font-size:40px">👥 Communities</div>
           </div>
         </div>
 
-        <!-- S4: CTA -->
+        <!-- B1: reviews + AI answer (full screen) -->
+        <div class="scene full" id="b1"><div class="bg"><div class="dots"></div></div>
+          <div class="el card" id="rv" style="left:120px;top:230px;width:840px;height:300px;padding:40px 50px;text-align:center">
+            <div class="stars">★★★★★</div>
+            <div style="font-family:Anton;font-size:96px;line-height:1.1">4.8 <span style="font-family:P7;font-size:40px;color:#8b8279">· 1,200+ reviews</span></div>
+          </div>
+          <div class="el stamp g" id="no1" style="left:120px;top:590px;font-size:56px">✅ #1 trust signal for AI</div>
+          <div class="el ai" id="ans" style="left:90px;top:780px;width:900px">
+            <div class="q">Best SEO agency near me?</div>
+            <div class="a"><img src="assets/logos/openai.svg" /><div>Top recommendation: <b>Your Brand</b> ✅ trusted on Reddit, Quora &amp; reviews.</div></div>
+          </div>
+        </div>
+
+        <!-- S4: human vs AI, schema list -->
         <div class="scene top" id="s4"><div class="bg"><div class="dots"></div></div><svg class="wave" viewBox="0 0 1080 60" preserveAspectRatio="none"><path d="M0 0 H1080 V22 C 900 60, 720 0, 540 26 C 360 52, 180 4, 0 30 Z" fill="#ece4d9"/></svg>
           <div class="inner">
-          <div class="el h" id="s4h" style="top:110px">Free <em>keyword research</em> 🔎</div>
-          <div class="el card" id="kr" style="left:140px;top:280px;width:800px;height:340px;padding:40px 50px">
-            <div style="font-family:P8;font-size:30px;letter-spacing:3px;color:#8b8279">PERSONALISED FOR YOUR BRAND</div>
-            <div class="check" style="position:absolute;left:50px;top:110px;font-size:42px"><i>✓</i>Top-funnel keywords</div>
-            <div class="check" style="position:absolute;left:50px;top:190px;font-size:42px"><i>✓</i>Middle-funnel keywords</div>
-            <div class="check" style="position:absolute;left:50px;top:270px;font-size:42px"><i>✓</i>Bottom-funnel keywords</div>
-          </div>
-          <div class="el chip" id="cta" style="left:150px;top:680px;background:var(--ink);color:#fff;font-size:54px;padding:24px 56px">Comment <span style="background:var(--y);color:var(--ink);padding:0 18px;border-radius:14px;margin:0 10px">KEYWORD</span> 👇</div>
+            <div class="el h" id="s4h" style="top:60px">How AI <em>reads</em> your site</div>
+            <div class="el pane card" id="hu" style="left:90px;top:200px">
+              <div class="hd" style="background:#f59e0b">👀 Human</div>
+              <div class="img"></div><div class="line"></div><div class="line" style="width:70%"></div><div class="line"></div><div class="line" style="width:55%"></div>
+            </div>
+            <div class="el pane" id="aiP" style="left:590px;top:200px;background:var(--code);box-shadow:0 24px 60px rgba(20,10,30,.35)">
+              <div class="hd" style="background:#7c3aed">🤖 AI</div>
+              <div class="json"><span style="color:#8b8598">&lt;script ld+json&gt;</span>
+{
+ <span style="color:#7cc4ff">"@type"</span>: <span style="color:#a5e57d">"Organization"</span>,
+ <span style="color:#7cc4ff">"name"</span>: <span style="color:#a5e57d">"Your Brand"</span>,
+ <span style="color:#7cc4ff">"founder"</span>: {
+   <span style="color:#7cc4ff">"@type"</span>: <span style="color:#a5e57d">"Person"</span> },
+ <span style="color:#7cc4ff">"aggregateRating"</span>:
+   <span style="color:#a5e57d">"4.8"</span>
+}</div>
+            </div>
+            <div class="el stamp g" id="sd" style="left:470px;top:700px;font-size:44px;transform:rotate(-3deg)">✅ Structured data</div>
+            <div class="el tag" id="s4t" style="top:120px"><span style="font-size:52px;padding:12px 40px">SCHEMA MARKUP ✅</span></div>
+            <div class="el chip" id="sc1" style="left:110px;top:280px">❓ FAQ schema</div>
+            <div class="el chip" id="sc2" style="left:470px;top:400px">⭐ Review &amp; Rating</div>
+            <div class="el chip" id="sc3" style="left:110px;top:520px">🏢 Organization</div>
+            <div class="el chip" id="sc4" style="left:520px;top:640px">👤 Person</div>
+            <div class="el chip" id="sc5" style="left:160px;top:760px">✍️ Author</div>
           </div>
         </div>
 
+        <!-- B2: every platform (full screen) -->
+        <div class="scene full" id="b2"><div class="bg"><div class="dots"></div></div>
+          <div class="el h" id="b2h" style="top:230px;font-size:74px">Every website needs <em>schema</em></div>
+          <div class="el logo" id="pw" style="left:150px;top:470px"><img src="assets/logos/webflow.svg" /><b>Webflow</b></div>
+          <div class="el logo" id="pp" style="left:720px;top:470px"><img src="assets/logos/wordpress.svg" /><b>WordPress</b></div>
+          <div class="el logo" id="pc" style="left:150px;top:830px"><img src="assets/logos/woocommerce.svg" style="width:180px;height:auto" /><b>WooCommerce</b></div>
+          <div class="el logo" id="ps" style="left:720px;top:830px"><img src="assets/logos/shopify.svg" /><b>Shopify</b></div>
+          <div class="el stamp g" id="zr" style="left:200px;top:1150px;font-size:72px;padding:24px 56px">✅ Schema = zaroori</div>
+        </div>
+
+        <!-- S5: CTA -->
+        <div class="scene top" id="s5"><div class="bg"><div class="dots"></div></div><svg class="wave" viewBox="0 0 1080 60" preserveAspectRatio="none"><path d="M0 0 H1080 V22 C 900 60, 720 0, 540 26 C 360 52, 180 4, 0 30 Z" fill="#ece4d9"/></svg>
+          <div class="inner">
+            <div class="el h" id="s5h" style="top:100px">Get your <em>exact schema</em> 🔎</div>
+            <div class="el card" id="sk" style="left:140px;top:270px;width:800px;height:300px;padding:40px 50px">
+              <div style="font-family:P8;font-size:30px;letter-spacing:3px;color:#8b8279">PERSONALISED FOR YOUR WEBSITE</div>
+              <div class="check" style="position:absolute;left:50px;top:110px;font-size:42px"><i>✓</i>Which schema you need</div>
+              <div class="check" style="position:absolute;left:50px;top:190px;font-size:42px"><i>✓</i>So AI can read &amp; recommend you</div>
+            </div>
+            <div class="el chip" id="cta" style="left:170px;top:640px;background:var(--ink);color:#fff;font-size:56px;padding:24px 56px">Comment <span style="background:var(--y);color:var(--ink);padding:0 18px;border-radius:14px;margin:0 10px">SCHEMA</span> 👇</div>
+          </div>
+        </div>
       </section>
       <div id="captions"></div>
       <div class="flash" id="flash"></div>
     </div>
 
     <script>
+      document.body.classList.add(window.LAYER);
       function T(x) { let acc = 0; for (const [a, b] of KEEP) { if (x < a) return acc; if (x <= b) return acc + x - a; acc += b - a; } return acc; }
       window.T = T;
-      // Layout modes, original clock (composite.py uses the same list): split = B-roll top half / speaker bottom half; broll = full screen.
-      const MODES = [["split", 2.98, 10.95], ["full", 11.0, 14.6], ["split", 14.63, 37.78], ["broll", 90.93, 99.72], ["split", 142.3, 191.99], ["split", 192.1, 202]];
+      // Layout modes, original clock (composite.py SPLIT uses the same split windows): split = B-roll panel on top /
+      // speaker below; broll = full-screen graphic; anything else = full-frame speaker.
+      const MODES = [["intro", 0, 9.21], ["split", 9.21, 14.05], ["split", 14.05, 29.0], ["split", 35.69, 52.9], ["broll", 52.9, 61.44],
+                     ["split", 64.3, 83.3], ["broll", 89.05, 97.5], ["split", 105.77, 111.0]];
       window.MODES = MODES;
       const CUES = window.CUES = [];
       const tl = gsap.timeline({ paused: true });
       const at = (x) => T(x);
       function modeAt(x) { const m = MODES.find(([, a, b]) => x >= a && x < b); return m ? m[0] : "full"; }
+      // caption top per mode: always below the chin, on the chest
+      const CAP_TOP = { intro: 1180, split: 1600, broll: 1560, full: 1400 };
 
       function buildCaptions() {
         const root = document.getElementById("captions");
         CUES.forEach(([start, end, text]) => {
           const el = document.createElement("div");
           el.className = "cap";
-          // CUES are on the new clock; find mode via the inverse lookup on the original clock
           let orig = 0, acc = 0;
           for (const [a, b] of KEEP) { if (start <= acc + (b - a)) { orig = a + start - acc; break; } acc += b - a; }
-          const m = modeAt(orig + 0.05);
-          el.style.top = (m === "full" ? 1590 : m === "split" ? 1610 : 1590) + "px";
+          const md = modeAt(orig + 0.05);
+          el.style.top = CAP_TOP[md] + "px";
+          if (md === "broll") el.classList.add("dark");
           let on = false;
           const words = text.split(" ").map((w) => {
             const hl = on || w.startsWith("*");
             if (w.startsWith("*")) on = true;
-            if (/\*[,?.!]?$/.test(w)) on = false;
+            if (/\*[,?.!:]?$/.test(w)) on = false;
             return { w: w.replace(/\*/g, ""), hl };
           });
           el.innerHTML = words.map((o) => `<span class="w${o.hl ? " hl" : ""}">${o.w}</span>`).join(" ");
@@ -213,7 +286,7 @@
         });
       }
 
-      const flash = (x, p = 0.55) => tl.fromTo("#flash", { opacity: p }, { opacity: 0, duration: 0.2, ease: "power2.out", immediateRender: false }, at(x));
+      const flash = (x, p = 0.5) => tl.fromTo("#flash", { opacity: p }, { opacity: 0, duration: 0.2, ease: "power2.out", immediateRender: false }, at(x));
       function sceneIn(id, x, kind) {
         tl.set(id, { opacity: 1 }, at(x));
         if (kind === "split") tl.fromTo(id, { yPercent: -100 }, { yPercent: 0, duration: 0.38, ease: "power3.out", immediateRender: false }, at(x));
@@ -225,8 +298,8 @@
         else tl.to(id, { scale: 0.92, opacity: 0, duration: 0.22, ease: "power3.in" }, at(x) - 0.22);
         tl.set(id, { opacity: 0 }, at(x));
       }
-      // element in on a word, then a gentle idle float until it leaves (so nothing sits frozen)
-      function show(sel, x, from = { scale: 0.5 }, idle = true) {
+      // element in on its word, then a gentle idle float until it leaves (so nothing sits frozen)
+      function show(sel, x, from = { scale: 0.5 }) {
         tl.fromTo(sel, { opacity: 0, ...from }, { opacity: 1, scale: 1, x: 0, y: 0, rotation: 0, duration: 0.3, ease: "back.out(2)" }, at(x));
       }
       function floatIdle(sel, x0, x1, amp = 8) {
@@ -234,97 +307,114 @@
         if (n > 0) tl.fromTo(sel, { y: 0 }, { y: -amp, duration: d / 2, yoyo: true, repeat: n * 2 - 1, ease: "sine.inOut", immediateRender: false }, at(x0));
       }
       const out = (sel, x) => tl.to(sel, { opacity: 0, scale: 0.85, duration: 0.2, ease: "power2.in" }, at(x));
-
+      function chipIn(id, x, x1) { tl.set(id, { opacity: 1 }, at(x)); show(id + "a", x, { y: -30, scale: 0.8 }); show(id + "b", x + 0.35, { y: 30, scale: 0.8 }); out(id, x1); }
 
       function build() {
         buildCaptions();
-        // hook
-        tl.fromTo("#hook", { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, 0.03);
-        tl.fromTo("#hk2", { scale: 2.4, rotation: -8 }, { scale: 1, rotation: -2, duration: 0.35, ease: "back.out(2)" }, 0.2);
-        tl.to("#hook", { opacity: 0, y: -30, duration: 0.25, ease: "power2.in" }, at(2.8));
 
-        // S1 paying, zero
-        sceneIn("#s1", 2.98, "split");
-        show("#inv", 3.1, { y: 60, scale: 0.9 });
-        tl.fromTo("#inv", { rotation: 0 }, { rotation: -1.5, duration: 0.2, immediateRender: false }, at(5.0));
-        show("#z1", 8.4, { scale: 0.3 });
-        show("#z2", 8.9, { scale: 0.3 });
-        tl.fromTo(["#z1", "#z2"], { x: 0 }, { x: 8, duration: 0.05, repeat: 7, yoyo: true, immediateRender: false }, at(9.4));
-        floatIdle("#inv", 5.2, 10.8, 6);
-        sceneOut("#s1", 10.95, "split");
+        // hook: "WHY CHATGPT / IGNORES (behind the head) / YOUR BUSINESS?"
+        tl.fromTo("#hk1", { opacity: 0, y: -40 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, 0.03);
+        tl.fromTo("#hkB", { opacity: 0, scale: 1.6, y: 40 }, { opacity: 1, scale: 1, y: 0, duration: 0.42, ease: "expo.out" }, 0.18);
+        tl.fromTo("#hkB", { y: 0 }, { y: -10, duration: 1.2, yoyo: true, repeat: 3, ease: "sine.inOut", immediateRender: false }, 0.7);
+        show("#hk2", 2.3, { scale: 2.2, rotation: -8 });
+        tl.to(["#hk1", "#hk2"], { opacity: 0, y: -30, duration: 0.25, ease: "power2.in" }, at(5.62));
+        tl.to("#hkB", { opacity: 0, scale: 0.9, duration: 0.25, ease: "power2.in" }, at(5.62));
 
-        // welcome chip (full)
-        tl.set("#fd1", { opacity: 1 }, at(11.1));
-        show("#fd1a", 11.12, { y: -30, scale: 0.8 });
-        out("#fd1", 14.4);
+        // intro: "Welcome to / DAY 4 (behind) / of 100 Days of Decoding AI SEO"
+        tl.fromTo("#dy1", { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, at(5.95));
+        tl.fromTo("#dyB", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.45, ease: "back.out(1.8)" }, at(6.2));
+        show("#dy2", 6.9, { y: 40, scale: 0.8 });
+        floatIdle("#dyB", 6.8, 9.0, 8);
+        tl.to(["#dy1", "#dy2", "#dyB"], { opacity: 0, duration: 0.2, ease: "power2.in" }, at(9.21) - 0.2);
 
-        // S2 traffic, funnel, questions
-        sceneIn("#s2", 14.63, "split");
-        show("#s2h", 14.75, { y: -30, scale: 1 });
-        show("#tg", 17.6, { y: 60, scale: 0.92 });
-        tl.fromTo(["#g1", "#g2", "#g3", "#g4", "#g5"], { scaleY: 0 }, { scaleY: 1, duration: 0.3, stagger: 0.15, ease: "back.out(1.6)" }, at(18.0));
-        out(["#tg", "#s2h"], 20.55);
-        show("#fun", 20.64, { x: -80, scale: 0.9 });
-        tl.fromTo(["#ft1", "#ft2", "#ft3"], { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.25, stagger: 0.5, immediateRender: true }, at(21.0));
-        show("#rg", 24.4, { scale: 1.2 });
-        show("#ag", 24.6, { x: 60, scale: 0.9 });
-        show("#q1", 28.96, { x: 60, scale: 0.9 });
-        show("#q2", 29.6, { x: 60, scale: 0.9 });
-        show("#q3", 30.2, { x: 60, scale: 0.9 });
-        show("#r1", 32.4, { scale: 0.5 });
-        show("#r2", 34.0, { scale: 0.5 });
-        tl.fromTo("#r2", { scale: 1 }, { scale: 1.15, duration: 0.15, yoyo: true, repeat: 1, immediateRender: false }, at(36.9));
-        floatIdle("#fun", 21.5, 37.6, 6);
-        sceneOut("#s2", 37.78, "split");
+        // S1: 3 reasons
+        sceneIn("#s1", 9.21, "split");
+        show("#s1h", 9.3, { y: -30, scale: 1 });
+        show("#n1", 9.9, { y: 80, scale: 0.6 });
+        show("#n2", 10.6, { y: 80, scale: 0.6 });
+        show("#n3", 11.3, { y: 80, scale: 0.6 });
+        show("#n3s", 12.8, { scale: 2.2, rotation: 20 });
+        tl.fromTo("#n3", { scale: 1 }, { scale: 1.08, duration: 0.3, yoyo: true, repeat: 1, immediateRender: false }, at(13.0));
+        floatIdle(["#n1", "#n2"], 11.6, 13.9, 6);
+        sceneOut("#s1", 14.05, "split");
 
-        // full: the question
-        tl.set("#fq", { opacity: 1 }, at(44.6));
-        show("#fqa", 44.81, { y: -30, scale: 0.8 });
-        show("#fqb", 51.0, { y: 30, scale: 0.8 });
-        out("#fq", 53.3);
+        // S2: reason 1, robots.txt blocks AI crawlers
+        sceneIn("#s2", 14.05, "split");
+        show("#s2t", 14.15, { y: -30, scale: 0.8 });
+        show("#s2h", 14.4, { y: -30, scale: 1 });
+        show("#rb", 17.0, { y: 60, scale: 0.92 });
+        tl.fromTo(["#d1", "#d2", "#d3"], { backgroundColor: "rgba(229,56,59,0)" }, { backgroundColor: "rgba(229,56,59,.28)", duration: 0.2, stagger: 0.18 }, at(20.9));
+        show("#blk", 21.6, { scale: 2.4, rotation: -20 });
+        floatIdle("#rb", 17.5, 28.8, 6);
+        show("#cr1", 26.4, { y: 40, scale: 0.8 });
+        sceneOut("#s2", 29.0, "split");
+        chipIn("#fc1", 29.45, 35.4);
 
-        // B1 stop
-        sceneIn("#b1", 90.93, "broll");
-        show("#b1h", 91.0, { y: -30, scale: 1 });
-        show("#c1", 91.4, { x: -80, scale: 0.9 });
-        show("#c2", 92.6, { x: -80, scale: 0.9 });
-        show("#c3", 94.9, { x: -80, scale: 0.9 });
-        show("#stop", 98.2, { scale: 2.4, rotation: -8 });
-        sceneOut("#b1", 99.72, "broll");
+        // S3: reason 2, third-party validation
+        sceneIn("#s3", 35.69, "split");
+        show("#s3t", 35.8, { y: -30, scale: 0.8 });
+        show("#s3h", 37.6, { y: -30, scale: 1 });
+        show("#biz", 41.4, { scale: 0.5 });
+        show("#bb1", 44.5, { x: -80, scale: 0.8 });
+        show("#bb2", 45.6, { x: 80, scale: 0.8 });
+        floatIdle(["#bb1", "#bb2"], 45.0, 47.2, 6);
+        out(["#biz", "#bb1", "#bb2"], 47.15);
+        show("#lq", 47.4, { y: 60, scale: 0.4 });
+        show("#lr", 48.2, { y: 60, scale: 0.4 });
+        show("#lt", 48.9, { y: 60, scale: 0.4 });
+        show("#lg", 49.4, { y: 60, scale: 0.4 });
+        show("#cm", 50.3, { y: 40, scale: 0.8 });
+        floatIdle(["#lq", "#lr", "#lt", "#lg"], 50.0, 52.7, 8);
+        sceneOut("#s3", 52.9, "split");
 
-        // S3 funnel + phone
-        sceneIn("#s3", 142.3, "split");
-        show("#s3h", 142.4, { y: -30, scale: 1 });
-        show("#fun2", 142.6, { x: -80, scale: 0.9 });
-        show("#hl1", 145.0, { scale: 1.2 }); out("#hl1", 147.8);
-        show("#hl2", 147.89, { scale: 1.2 });
-        show("#hl3", 148.9, { scale: 1.2 });
-        out(["#hl2", "#hl3"], 150.3);
-        show("#ph", 151.0, { scale: 0.3, rotation: -15 });
-        floatIdle("#ph", 151.4, 164.8, 12);
-        show("#ph1", 155.4, { x: 60, scale: 0.9 });
-        show("#ph2", 158.3, { x: 60, scale: 0.9 });
-        show("#hl1", 165.37, { scale: 1.2 });
-        out(["#ph", "#ph1", "#ph2"], 168.95);
-        out("#hl1", 169.0);
-        show("#hl2", 169.1, { scale: 1.2 });
-        show("#m1", 170.8, { x: 60, scale: 0.9 });
-        show("#m2", 173.2, { x: 60, scale: 0.9 });
-        show("#m3", 177.0, { x: 60, scale: 0.9 });
-        out("#hl2", 180.7);
-        show("#hl3", 180.81, { scale: 1.2 });
-        show("#b1c", 182.0, { x: 60, scale: 0.9 });
-        show("#b2c", 183.6, { x: 60, scale: 0.9 });
-        show("#b3c", 186.0, { x: 60, scale: 0.9 });
-        floatIdle("#fun2", 143.2, 191.8, 6);
-        sceneOut("#s3", 191.99, "split");
+        // B1: reviews -> #1 trust signal -> ChatGPT recommends you
+        sceneIn("#b1", 52.9, "broll");
+        show("#rv", 53.2, { y: 60, scale: 0.9 });
+        show("#no1", 55.0, { scale: 2.2, rotation: -10 });
+        show("#ans", 58.4, { y: 80, scale: 0.9 });
+        floatIdle("#rv", 54.0, 61.2, 6);
+        sceneOut("#b1", 61.44, "broll");
 
-        // S4 CTA
-        sceneIn("#s4", 192.1, "split");
-        show("#s4h", 192.4, { y: -30, scale: 1 });
-        show("#kr", 194.5, { y: 60, scale: 0.9 });
-        show("#cta", 197.9, { scale: 0.4 });
-        tl.fromTo("#cta", { scale: 1 }, { scale: 1.07, duration: 0.35, yoyo: true, repeat: 5, ease: "sine.inOut", immediateRender: false }, at(198.4));
+        // reason 3 chip (full)
+        chipIn("#fc2", 61.8, 64.1);
+
+        // S4: human vs AI -> schema list
+        sceneIn("#s4", 64.3, "split");
+        show("#s4h", 64.4, { y: -30, scale: 1 });
+        show("#hu", 65.0, { x: -80, scale: 0.9 });
+        show("#aiP", 67.1, { x: 80, scale: 0.9 });
+        show("#sd", 72.6, { scale: 2.2, rotation: -12 });
+        tl.fromTo("#aiP", { scale: 1 }, { scale: 1.05, duration: 0.3, yoyo: true, repeat: 1, immediateRender: false }, at(70.3));
+        floatIdle(["#hu", "#aiP"], 68.0, 75.0, 6);
+        out(["#s4h", "#hu", "#aiP", "#sd"], 75.17);
+        show("#s4t", 75.4, { y: -30, scale: 0.8 });
+        show("#sc1", 78.2, { x: -60, scale: 0.8 });
+        show("#sc2", 79.3, { x: 60, scale: 0.8 });
+        show("#sc3", 81.0, { x: -60, scale: 0.8 });
+        show("#sc4", 81.9, { x: 60, scale: 0.8 });
+        show("#sc5", 82.6, { x: -60, scale: 0.8 });
+        sceneOut("#s4", 83.3, "split");
+        chipIn("#fc3", 86.3, 88.95);
+
+        // B2: every platform needs schema
+        sceneIn("#b2", 89.05, "broll");
+        show("#b2h", 89.2, { y: -30, scale: 1 });
+        show("#pw", 89.9, { scale: 0.3 });
+        show("#pp", 91.8, { scale: 0.3 });
+        show("#pc", 92.6, { scale: 0.3 });
+        show("#ps", 94.2, { scale: 0.3 });
+        show("#zr", 95.9, { scale: 2.2, rotation: -8 });
+        floatIdle(["#pw", "#pp", "#pc", "#ps"], 94.8, 97.3, 8);
+        sceneOut("#b2", 97.5, "broll");
+        chipIn("#fc4", 97.95, 100.5);
+        chipIn("#fc5", 101.2, 105.6);
+
+        // S5: CTA
+        sceneIn("#s5", 105.77, "split");
+        show("#s5h", 105.9, { y: -30, scale: 1 });
+        show("#cta", 106.1, { scale: 0.4 });
+        show("#sk", 108.2, { y: 60, scale: 0.9 });
+        tl.fromTo("#cta", { scale: 1 }, { scale: 1.07, duration: 0.35, yoyo: true, repeat: 5, ease: "sine.inOut", immediateRender: false }, at(106.6));
 
         window.__timelines["main"] = tl;
       }
