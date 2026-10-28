@@ -1,0 +1,17 @@
+{
+  "theme": "lavender",
+  "logos": ["openai.svg", "perplexity-color.svg"],
+  "logos_top": "140px",
+  "logo_size": "104px",
+  "title": "Why ChatGPT Ignores You?",
+  "title_size": "76px",
+  "title_top": "282px",
+  "subtitle": "3 REASONS · AI SEO",
+  "sub_top": "400px",
+  "big_word": "SCHEMA",
+  "big_size": "330px",
+  "big_top": "490px",
+  "person_width": "1080px",
+  "photo": "assets/vaibhav_suit_cutout.png",
+  "output": "cover.png"
+}
