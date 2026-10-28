@@ -128,6 +128,7 @@
         <div class="scene top" id="s3"><div class="bg"><div class="dots"></div></div><svg class="wave" viewBox="0 0 1080 60" preserveAspectRatio="none"><path d="M0 0 H1080 V22 C 900 60, 720 0, 540 26 C 360 52, 180 4, 0 30 Z" fill="#ece4d9"/></svg>
           <div class="inner">
             <div class="el h" id="s3h" style="top:110px">Get <em>your</em> AI visibility report</div>
+            <div class="el chip" id="us" style="left:170px;top:330px;font-size:50px;padding:26px 50px">🔥 1000s of daily active users</div>
             <div class="el card" id="sc" style="left:200px;top:280px;width:680px;height:300px;display:flex;align-items:center;gap:40px;padding:0 50px">
               <div style="width:190px;height:190px;border-radius:50%;border:20px solid var(--green);display:grid;place-items:center;font-family:Anton;font-size:84px;flex:none">80</div>
               <div><div style="font-family:P8;font-size:40px;line-height:1.15">AI visibility score</div><div style="font-family:P6;font-size:30px;color:#8b8279;margin-top:10px">for your website</div></div>
@@ -257,6 +258,8 @@
         // S3: CTA
         sceneIn("#s3", 93.4);
         show("#s3h", 93.6, { y: -30, scale: 1 });
+        show("#us", 95.7, { scale: 0.5 });
+        out("#us", 98.1);
         show("#sc", 98.2, { y: 60, scale: 0.9 });
         out("#sc", 101.35);
         show("#cta", 101.5, { scale: 0.4 });

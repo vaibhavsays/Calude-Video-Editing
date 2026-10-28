@@ -18,17 +18,17 @@ const SEGMENTS = [
   [52.98, 55.40, "Aur yahaan pe aapko | *30 to 90 seconds* mein | poori report mil jaayegi,"],
   [55.60, 58.21, "jabki *other tools* | *15 se 20 minute* lete hain."],
   [59.42, 62.72, "Aapka *AI crawler access* | hai ya nahi,"],
-  [63.08, 66.71, "*answer-ready content* hai ya nahi, | *structured data* kitna hai,"],
+  [63.08, 66.71, "*answer-ready content* hai ya nahi, | *structured data* sirf *74%* hai,"],
   [67.14, 70.44, "*trust & credibility*, | *technical health*, | *brand entity*:"],
   [70.70, 74.58, "ye cheezein bahut zyada *important* hain | aapki *AI search visibility* | laane mein."],
   [74.95, 77.21, "Inke bina | koi bhi *AI search engine* | aapko recommend nahi karega."],
-  [77.55, 81.79, "Agar aapko *poori report* chahiye, | toh yahaan pe | apni details daal dijiye."],
+  [77.55, 81.79, "Lekin agar aapko *poori report* chahiye, | toh yahaan pe | apni details daal dijiye."],
   [82.16, 87.98, "Koi *sign-up* nahi karna. | Ye information sirf isliye li jaati hai | taaki ye *AI tool* aapki website ko | properly *audit* kar sake"],
   [88.37, 91.65, "aur jo aapka *audit* hai | wo aapko directly | aapke *Gmail* mein send kar sake."],
   [92.10, 93.07, "Bas yahi, | aur kuch nahi."],
-  [93.51, 97.87, "Aur *aap peeche na reh jaayein*, | isliye"],
-  [98.30, 101.40, "aapko bhi apni website ki | *AI visibility report* | generate karni hai"],
-  [101.50, 105.00, "toh comment kijiye *TOOL*, | aur main aapko directly | *DM* mein link bhej dunga."],
+  [93.51, 97.87, "Aur *new tool* hone ke baavjood | isko *thousands of daily active users* | use kar rahe hain."],
+  [98.30, 101.40, "Agar aapko bhi apni website ki | *AI visibility report* | generate karni hai,"],
+  [101.50, 105.00, "toh comment kijiye *TOOL*, | aur main aapko directly | *DM* mein tool bhej dunga."],
 ];
 
 SEGMENTS.forEach(([s, e, text]) => {
