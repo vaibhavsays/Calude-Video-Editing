@@ -45,7 +45,7 @@
       /* chips over full-frame footage (top of frame) */
       .tchip { left: 0; right: 0; top: 150px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
       .tchip div { font-family: "P8"; font-size: 52px; color: #fff; background: rgba(23,21,26,.9); padding: 14px 34px; border-radius: 20px; box-shadow: 0 14px 40px rgba(0,0,0,.35); white-space: nowrap; }
-      .tchip.low { top: 1250px; }
+      .tchip.low { top: 1180px; }
       .tchip div b { color: var(--y); }
       .tchip div.yl { background: var(--y); color: var(--ink); }
       .tchip div.gr { background: var(--green); }
@@ -156,7 +156,7 @@
       const at = (x) => T(x);
       function modeAt(x) { const m = MODES.find(([, a, b]) => x >= a && x < b); return m ? m[0] : "full"; }
       // caption top per mode: always below the chin, on the chest (or the lower screen on the recording)
-      const CAP_TOP = { wide: 1240, split: 1640, desk: 1500, screen: 1560, full: 1440 };
+      const CAP_TOP = { wide: 1240, split: 1640, desk: 1500, screen: 1690, full: 1440 };
 
       function buildCaptions() {
         const root = document.getElementById("captions");
