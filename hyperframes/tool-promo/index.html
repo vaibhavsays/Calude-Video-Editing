@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="vendor/gsap.min.js"></script>
+    <script src="edl.js"></script>
+    <style>
+      @font-face { font-family: "P5"; src: url("assets/fonts/poppins-latin-500-normal.woff2"); font-weight: 500; }
+      @font-face { font-family: "P6"; src: url("assets/fonts/poppins-latin-600-normal.woff2"); font-weight: 600; }
+      @font-face { font-family: "P7"; src: url("assets/fonts/poppins-latin-700-normal.woff2"); font-weight: 700; }
+      @font-face { font-family: "P8"; src: url("assets/fonts/poppins-latin-800-normal.woff2"); font-weight: 800; }
+      @font-face { font-family: "Anton"; src: url("assets/fonts/anton-latin-400-normal.woff2"); }
+      :root { --y: #ffd426; --ink: #17151a; --cream: #f7f3ee; --red: #e5383b; --green: #12a150; --blue: #2563eb; --orange: #f5a623; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
+      body { font-family: "P6", sans-serif; color: var(--ink); }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; }
+      .clip { position: absolute; inset: 0; }
+      .scene { position: absolute; inset: 0; opacity: 0; }
+
+      /* split panel */
+      .top { position: absolute; left: 0; right: 0; top: 0; height: 790px; }
+      .inner { position: absolute; left: 0; top: 0; width: 1080px; height: 960px; transform: scale(0.8); transform-origin: 50% 0; }
+      .top .bg { position: absolute; inset: 0 0 30px 0; background: radial-gradient(ellipse 90% 70% at 50% 40%, #ffffff 0%, var(--cream) 68%, #ece4d9 100%); }
+      .dots { position: absolute; inset: 0; background-image: radial-gradient(rgba(23,21,26,.07) 2px, transparent 2px); background-size: 36px 36px; }
+      .top svg.wave { position: absolute; left: 0; bottom: 0; width: 1080px; height: 60px; filter: drop-shadow(0 8px 10px rgba(0,0,0,.18)); }
+      .el { position: absolute; opacity: 0; }
+      .h { left: 50px; right: 50px; text-align: center; font-family: "P8"; font-size: 62px; line-height: 1.12; letter-spacing: -0.5px; }
+      .h em { font-style: normal; background: var(--y); padding: 0 14px; border-radius: 12px; }
+      .card { background: #fff; border-radius: 34px; box-shadow: 0 20px 56px rgba(40,30,20,.15); }
+      .logo { width: 220px; height: 220px; border-radius: 50px; background: #fff; display: grid; place-items: center; box-shadow: 0 18px 46px rgba(40,30,20,.16); }
+      .logo img { width: 58%; height: 58%; }
+      .logo .word { font-family: "P8"; font-size: 78px; color: #ff8800; letter-spacing: -1px; }
+      .logo b { position: absolute; bottom: -52px; left: -40px; right: -40px; text-align: center; font-family: "P7"; font-size: 32px; }
+      .tagx { position: absolute; top: -26px; right: -26px; font-family: "P8"; font-size: 30px; color: #fff; background: var(--red); padding: 8px 18px; border-radius: 26px; transform: rotate(8deg); box-shadow: 0 10px 24px rgba(229,56,59,.35); white-space: nowrap; }
+      .row { display: flex; align-items: center; gap: 24px; font-family: "P7"; font-size: 48px; white-space: nowrap; }
+      .row i { width: 1.35em; height: 1.35em; border-radius: 50%; display: grid; place-items: center; color: #fff; font-style: normal; font-family: "P8"; font-size: 38px; background: var(--green); flex: none; }
+      .row.x i { background: var(--red); }
+      .chip { display: flex; align-items: center; gap: 16px; background: #fff; border-radius: 70px; padding: 20px 36px; font-family: "P7"; font-size: 42px; box-shadow: 0 14px 36px rgba(40,30,20,.14); white-space: nowrap; }
+      .field { height: 96px; border-radius: 22px; border: 3px solid #e7e1d8; background: #faf8f5; display: flex; align-items: center; padding: 0 30px; gap: 18px; font-family: "P6"; font-size: 38px; color: #6b635b; margin-bottom: 22px; }
+      .btn { height: 100px; border-radius: 26px; background: var(--orange); color: #fff; display: flex; align-items: center; justify-content: center; font-family: "P8"; font-size: 42px; box-shadow: 0 14px 30px rgba(245,166,35,.4); }
+      .free { font-family: "Anton"; font-size: 210px; line-height: .9; color: var(--green); text-align: center; letter-spacing: 2px; }
+
+      /* chips over full-frame footage (top of frame) */
+      .tchip { left: 0; right: 0; top: 150px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+      .tchip div { font-family: "P8"; font-size: 52px; color: #fff; background: rgba(23,21,26,.9); padding: 14px 34px; border-radius: 20px; box-shadow: 0 14px 40px rgba(0,0,0,.35); white-space: nowrap; }
+      .tchip div b { color: var(--y); }
+      .tchip div.yl { background: var(--y); color: var(--ink); }
+      .tchip div.gr { background: var(--green); }
+      .step { font-size: 30px !important; letter-spacing: 4px; padding: 8px 22px !important; background: #fff !important; color: var(--ink) !important; }
+
+      /* hook */
+      .hook { left: 40px; right: 40px; top: 120px; display: flex; flex-direction: column; align-items: center; gap: 22px; }
+      .hook .a { font-family: "P8"; font-size: 60px; white-space: nowrap; color: #fff; text-shadow: 0 4px 0 rgba(0,0,0,.35), 0 6px 26px rgba(0,0,0,.55); }
+      .hook .logos { display: flex; gap: 22px; }
+      .hook .logos div { width: 128px; height: 128px; border-radius: 32px; background: #fff; display: grid; place-items: center; box-shadow: 0 14px 34px rgba(0,0,0,.3); }
+      .hook .logos img { width: 78px; height: 78px; }
+      .hook .c { font-family: "P8"; font-size: 64px; color: var(--ink); background: var(--y); padding: 6px 28px; border-radius: 16px; }
+
+      /* captions */
+      #captions { position: absolute; left: 50px; right: 50px; top: 0; height: 100%; z-index: 60; }
+      .cap { position: absolute; left: 0; right: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 14px; opacity: 0;
+             font-family: "P7"; font-size: 56px; line-height: 1.22; text-align: center; color: #fff;
+             text-shadow: 0 3px 0 rgba(0,0,0,.45), 0 4px 16px rgba(0,0,0,.6), 2px 2px 0 #000, -2px 2px 0 #000, 2px -2px 0 #000, -2px -2px 0 #000; }
+      .cap .w { display: inline-block; }
+      .cap .hl { color: var(--ink); background: var(--y); padding: 0 12px; border-radius: 10px; text-shadow: none; box-shadow: 0 4px 14px rgba(0,0,0,.3); }
+      .cap.box { left: 40px; right: 40px; }
+      .cap.box .w { background: rgba(17,15,20,.82); padding: 2px 10px; border-radius: 10px; text-shadow: none; }
+      .cap.box .hl { background: var(--y); }
+      .flash { position: absolute; inset: 0; background: #fff; opacity: 0; z-index: 80; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="102.642" data-width="1080" data-height="1920">
+      <section id="gfx" class="clip" data-start="0" data-duration="102.642" data-track-index="1">
+
+        <!-- hook (wide shot, above the head) -->
+        <div class="el hook" id="hook">
+          <div class="a" id="hk1">Kya aapka business dikhta hai</div>
+          <div class="logos" id="hkl">
+            <div><img src="assets/logos/openai.svg" /></div><div><img src="assets/logos/google-color.svg" /></div>
+            <div><img src="assets/logos/gemini-color.svg" /></div><div><img src="assets/logos/perplexity-color.svg" /></div>
+          </div>
+          <div class="c" id="hk3">AI search mein? 🤔</div>
+        </div>
+
+        <!-- full-frame chips -->
+        <div class="el tchip" id="fc2"><div class="step" id="fc2a">STEP 1</div><div id="fc2b">Open the free tool</div></div>
+        <div class="el tchip" id="fc3"><div class="step" id="fc3a">STEP 2</div><div id="fc3b">Paste your website ➜ <b>Audit</b></div></div>
+        <div class="el tchip" id="fc4"><div class="gr" id="fc4a">⏱ 30–90 seconds</div><div id="fc4b">Other tools: 15–20 min</div></div>
+        <div class="el tchip" id="fc5"><div class="yl" id="fc5a">AI visibility score</div><div id="fc5b">+ <b>12 problems</b> found</div></div>
+        <div class="el tchip" id="fc6"><div id="fc6a">🤖 AI crawler access</div><div id="fc6b">💬 Answer-ready content</div><div id="fc6c">🧩 Structured data</div></div>
+        <div class="el tchip" id="fc7"><div id="fc7a">🛡 Trust &amp; credibility</div><div id="fc7b">⚙️ Technical health</div><div id="fc7c">🏷 Brand entity</div></div>
+        <div class="el tchip" id="fc8"><div class="gr" id="fc8a">✅ No sign-up · No payment</div><div id="fc8b">📩 Full audit in your <b>Gmail</b></div></div>
+
+        <!-- S1: existing tools, and their problems -->
+        <div class="scene top" id="s1"><div class="bg"><div class="dots"></div></div><svg class="wave" viewBox="0 0 1080 60" preserveAspectRatio="none"><path d="M0 0 H1080 V22 C 900 60, 720 0, 540 26 C 360 52, 180 4, 0 30 Z" fill="#ece4d9"/></svg>
+          <div class="inner">
+            <div class="el h" id="s1h" style="top:90px">Already in the market 👇</div>
+            <div class="el logo" id="lsem" style="left:150px;top:250px;transform-origin:50% 50%;width:300px;height:300px"><img src="assets/logos/semrush.svg" /><b>Semrush</b><div class="el tagx" id="t1">💸 PAID</div></div>
+            <div class="el logo" id="lahr" style="left:630px;top:250px;width:300px;height:300px"><span class="word">ahrefs</span><b>Ahrefs</b><div class="el tagx" id="t2">💸 PAID</div></div>
+            <div class="el card" id="prob" style="left:110px;top:200px;width:860px;height:560px;padding:50px 56px">
+              <div style="font-family:P8;font-size:34px;letter-spacing:3px;color:#8b8279;margin-bottom:34px">THE PROBLEM WITH THEM</div>
+              <div class="el row x" id="p1" style="position:relative;margin-bottom:40px"><i>✕</i>Paid tools</div>
+              <div class="el row x" id="p2" style="position:relative;margin-bottom:40px"><i>✕</i>Sign-up = data shared</div>
+              <div class="el row x" id="p3" style="position:relative"><i>✕</i>Slow &amp; complicated</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- S2: the free tool -->
+        <div class="scene top" id="s2"><div class="bg"><div class="dots"></div></div><svg class="wave" viewBox="0 0 1080 60" preserveAspectRatio="none"><path d="M0 0 H1080 V22 C 900 60, 720 0, 540 26 C 360 52, 180 4, 0 30 Z" fill="#ece4d9"/></svg>
+          <div class="inner">
+            <div class="el free" id="fr" style="left:0;right:0;top:60px">FREE</div>
+            <div class="el h" id="s2h" style="top:270px;font-size:56px">AI visibility audit tool 🎁</div>
+            <div class="el row" id="g1" style="left:170px;top:420px"><i>✓</i>No sign-up</div>
+            <div class="el row" id="g2" style="left:170px;top:530px"><i>✓</i>No payment</div>
+            <div class="el row" id="g3" style="left:170px;top:640px"><i>✓</i>Full report in ~2 min</div>
+            <div class="el card" id="form" style="left:150px;top:380px;width:780px;padding:40px 44px">
+              <div class="field">🌐 yourwebsite.com</div>
+              <div class="btn">Audit my website ➜</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- S3: CTA -->
+        <div class="scene top" id="s3"><div class="bg"><div class="dots"></div></div><svg class="wave" viewBox="0 0 1080 60" preserveAspectRatio="none"><path d="M0 0 H1080 V22 C 900 60, 720 0, 540 26 C 360 52, 180 4, 0 30 Z" fill="#ece4d9"/></svg>
+          <div class="inner">
+            <div class="el h" id="s3h" style="top:110px">Get <em>your</em> AI visibility report</div>
+            <div class="el card" id="sc" style="left:200px;top:280px;width:680px;height:300px;display:flex;align-items:center;gap:40px;padding:0 50px">
+              <div style="width:190px;height:190px;border-radius:50%;border:20px solid var(--green);display:grid;place-items:center;font-family:Anton;font-size:84px;flex:none">80</div>
+              <div><div style="font-family:P8;font-size:40px;line-height:1.15">AI visibility score</div><div style="font-family:P6;font-size:30px;color:#8b8279;margin-top:10px">for your website</div></div>
+            </div>
+            <div class="el chip" id="cta" style="left:200px;top:300px;background:var(--ink);color:#fff;font-size:66px;padding:30px 64px">Comment <span style="background:var(--y);color:var(--ink);padding:0 20px;border-radius:14px;margin:0 12px">TOOL</span> 👇</div>
+            <div class="el chip" id="dm" style="left:250px;top:500px;font-size:46px">📩 Link directly in your DM</div>
+          </div>
+        </div>
+
+      </section>
+      <div id="captions"></div>
+      <div class="flash" id="flash"></div>
+    </div>
+
+    <script>
+      function T(x) { let acc = 0; for (const [a, b] of KEEP) { if (x < a) return acc; if (x <= b) return acc + x - a; acc += b - a; } return acc; }
+      window.T = T;
+      // Layout modes, original clock (composite.py SPLIT uses the same split windows):
+      // wide = hook shot; split = B-roll panel on top / speaker below; screen = recording of the tool; anything else = full speaker.
+      const MODES = [["wide", 0, 9.76], ["split", 14.4, 31.0], ["split", 32.3, 44.68], ["desk", 44.68, 51.44], ["screen", 51.44, 93.4], ["split", 93.4, 106]];
+      window.MODES = MODES;
+      const CUES = window.CUES = [];
+      const tl = gsap.timeline({ paused: true });
+      const at = (x) => T(x);
+      function modeAt(x) { const m = MODES.find(([, a, b]) => x >= a && x < b); return m ? m[0] : "full"; }
+      // caption top per mode: always below the chin, on the chest (or the lower screen on the recording)
+      const CAP_TOP = { wide: 1240, split: 1640, desk: 1500, screen: 1560, full: 1440 };
+
+      function buildCaptions() {
+        const root = document.getElementById("captions");
+        CUES.forEach(([start, end, text]) => {
+          const el = document.createElement("div");
+          el.className = "cap";
+          let orig = 0, acc = 0;
+          for (const [a, b] of KEEP) { if (start <= acc + (b - a)) { orig = a + start - acc; break; } acc += b - a; }
+          const md = modeAt(orig + 0.05);
+          el.style.top = CAP_TOP[md] + "px";
+          if (md === "screen") el.classList.add("box");
+          let on = false;
+          const words = text.split(" ").map((w) => {
+            const hl = on || w.startsWith("*");
+            if (w.startsWith("*")) on = true;
+            if (/\*[,?.!:]?$/.test(w)) on = false;
+            return { w: w.replace(/\*/g, ""), hl };
+          });
+          el.innerHTML = words.map((o) => `<span class="w${o.hl ? " hl" : ""}">${o.w}</span>`).join(" ");
+          root.appendChild(el);
+          tl.set(el, { opacity: 1 }, start);
+          tl.set(el, { opacity: 0 }, end);
+          const ws = [...el.querySelectorAll(".w")];
+          const span = Math.min(0.7, (end - start) * 0.55);
+          ws.forEach((w, k) => tl.fromTo(w, { opacity: 0, y: 16, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.15, ease: "back.out(2)" }, start + span * k / ws.length));
+        });
+      }
+
+      const flash = (x, p = 0.35) => tl.fromTo("#flash", { opacity: p }, { opacity: 0, duration: 0.2, ease: "power2.out", immediateRender: false }, at(x));
+      function sceneIn(id, x) {
+        tl.set(id, { opacity: 1 }, at(x));
+        tl.fromTo(id, { yPercent: -100 }, { yPercent: 0, duration: 0.42, ease: "power3.out", immediateRender: false }, at(x));
+      }
+      function sceneOut(id, x) {
+        tl.to(id, { yPercent: -100, duration: 0.28, ease: "power3.in" }, at(x) - 0.28);
+        tl.set(id, { opacity: 0 }, at(x));
+      }
+      function show(sel, x, from = { scale: 0.6 }) {
+        tl.fromTo(sel, { opacity: 0, ...from }, { opacity: 1, scale: 1, x: 0, y: 0, rotation: 0, duration: 0.32, ease: "back.out(1.7)" }, at(x));
+      }
+      function floatIdle(sel, x0, x1, amp = 6) {
+        const d = 1.6, n = Math.max(0, Math.floor((at(x1) - at(x0)) / d) - 1);
+        if (n > 0) tl.fromTo(sel, { y: 0 }, { y: -amp, duration: d / 2, yoyo: true, repeat: n * 2 - 1, ease: "sine.inOut", immediateRender: false }, at(x0));
+      }
+      const out = (sel, x) => tl.to(sel, { opacity: 0, scale: 0.9, duration: 0.2, ease: "power2.in" }, at(x));
+      function chipIn(id, x, x1, parts = ["a", "b"]) {
+        tl.set(id, { opacity: 1 }, at(x));
+        parts.forEach((p, k) => show(id + p, x + k * 0.35, { y: -24, scale: 0.85 }));
+        out(id, x1);
+      }
+
+      function build() {
+        buildCaptions();
+
+        // hook
+        tl.set("#hook", { opacity: 1 }, 0);
+        show("#hk1", 0.5, { y: -30, scale: 0.9 });
+        tl.fromTo("#hkl > div", { opacity: 0, scale: 0.3, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.3, stagger: 0.18, ease: "back.out(2)" }, at(1.2));
+        show("#hk3", 3.4, { scale: 1.6 });
+        floatIdle("#hkl", 2.5, 9.4, 5);
+        tl.to("#hook", { opacity: 0, y: -30, duration: 0.25, ease: "power2.in" }, at(9.55));
+
+        // S1: Semrush / Ahrefs, then their problems
+        sceneIn("#s1", 14.4);
+        show("#s1h", 14.5, { y: -30, scale: 1 });
+        show("#lsem", 15.0, { y: 60, scale: 0.5 });
+        show("#lahr", 15.6, { y: 60, scale: 0.5 });
+        show("#t1", 18.6, { scale: 2, rotation: 20 });
+        show("#t2", 18.9, { scale: 2, rotation: 20 });
+        floatIdle(["#lsem", "#lahr"], 16.2, 20.3, 6);
+        out(["#s1h", "#lsem", "#lahr"], 20.35);
+        show("#prob", 20.5, { y: 40, scale: 0.95 });
+        show("#p1", 20.7, { x: -60, scale: 0.9 });
+        show("#p2", 21.2, { x: -60, scale: 0.9 });
+        show("#p3", 25.5, { x: -60, scale: 0.9 });
+        sceneOut("#s1", 31.0);
+
+        // S2: the free tool
+        sceneIn("#s2", 32.3);
+        show("#fr", 32.9, { scale: 2.2 });
+        show("#s2h", 33.4, { y: 30, scale: 1 });
+        show("#g1", 36.1, { x: -60, scale: 0.9 });
+        show("#g2", 37.6, { x: -60, scale: 0.9 });
+        show("#g3", 39.5, { x: -60, scale: 0.9 });
+        out(["#g1", "#g2", "#g3"], 42.0);
+        show("#form", 42.15, { y: 60, scale: 0.9 });
+        tl.fromTo("#form .btn", { scale: 1 }, { scale: 1.05, duration: 0.3, yoyo: true, repeat: 3, ease: "sine.inOut", immediateRender: false }, at(42.8));
+        floatIdle("#fr", 34.0, 44.4, 5);
+        sceneOut("#s2", 44.68);
+
+        // desk + screen recording
+        chipIn("#fc2", 45.1, 49.4);
+        chipIn("#fc3", 49.6, 52.6);
+        chipIn("#fc4", 52.9, 58.2);
+        chipIn("#fc5", 58.4, 60.5);
+        chipIn("#fc6", 60.6, 66.8, ["a", "b", "c"]);
+        chipIn("#fc7", 66.95, 74.6, ["a", "b", "c"]);
+        chipIn("#fc8", 79.1, 92.9);
+
+        // S3: CTA
+        sceneIn("#s3", 93.4);
+        show("#s3h", 93.6, { y: -30, scale: 1 });
+        show("#sc", 98.2, { y: 60, scale: 0.9 });
+        out("#sc", 101.35);
+        show("#cta", 101.5, { scale: 0.4 });
+        show("#dm", 102.4, { y: 40, scale: 0.8 });
+        tl.fromTo("#cta", { scale: 1 }, { scale: 1.06, duration: 0.35, yoyo: true, repeat: 3, ease: "sine.inOut", immediateRender: false }, at(102.2));
+
+        window.__timelines["main"] = tl;
+      }
+    </script>
+    <script src="captions.js"></script>
+    <script>document.fonts.ready.then(build);</script>
+  </body>
+</html>
