@@ -45,6 +45,7 @@
       /* chips over full-frame footage (top of frame) */
       .tchip { left: 0; right: 0; top: 150px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
       .tchip div { font-family: "P8"; font-size: 52px; color: #fff; background: rgba(23,21,26,.9); padding: 14px 34px; border-radius: 20px; box-shadow: 0 14px 40px rgba(0,0,0,.35); white-space: nowrap; }
+      .tchip.low { top: 1250px; }
       .tchip div b { color: var(--y); }
       .tchip div.yl { background: var(--y); color: var(--ink); }
       .tchip div.gr { background: var(--green); }
@@ -87,12 +88,12 @@
 
         <!-- full-frame chips -->
         <div class="el tchip" id="fc2"><div class="step" id="fc2a">STEP 1</div><div id="fc2b">Open the free tool</div></div>
-        <div class="el tchip" id="fc3"><div class="step" id="fc3a">STEP 2</div><div id="fc3b">Paste your website ➜ <b>Audit</b></div></div>
-        <div class="el tchip" id="fc4"><div class="gr" id="fc4a">⏱ 30–90 seconds</div><div id="fc4b">Other tools: 15–20 min</div></div>
-        <div class="el tchip" id="fc5"><div class="yl" id="fc5a">AI visibility score</div><div id="fc5b">+ <b>12 problems</b> found</div></div>
-        <div class="el tchip" id="fc6"><div id="fc6a">🤖 AI crawler access</div><div id="fc6b">💬 Answer-ready content</div><div id="fc6c">🧩 Structured data</div></div>
-        <div class="el tchip" id="fc7"><div id="fc7a">🛡 Trust &amp; credibility</div><div id="fc7b">⚙️ Technical health</div><div id="fc7c">🏷 Brand entity</div></div>
-        <div class="el tchip" id="fc8"><div class="gr" id="fc8a">✅ No sign-up · No payment</div><div id="fc8b">📩 Full audit in your <b>Gmail</b></div></div>
+        <div class="el tchip low" id="fc3"><div class="step" id="fc3a">STEP 2</div><div id="fc3b">Paste your website ➜ <b>Audit</b></div></div>
+        <div class="el tchip low" id="fc4"><div class="gr" id="fc4a">⏱ 30–90 seconds</div><div id="fc4b">Other tools: 15–20 min</div></div>
+        <div class="el tchip low" id="fc5"><div class="yl" id="fc5a">AI visibility score</div><div id="fc5b">+ <b>12 problems</b> found</div></div>
+        <div class="el tchip low" id="fc6"><div id="fc6a">🤖 AI crawler access</div><div id="fc6b">💬 Answer-ready content</div><div id="fc6c">🧩 Structured data</div></div>
+        <div class="el tchip low" id="fc7"><div id="fc7a">🛡 Trust &amp; credibility</div><div id="fc7b">⚙️ Technical health</div><div id="fc7c">🏷 Brand entity</div></div>
+        <div class="el tchip low" id="fc8"><div class="gr" id="fc8a">✅ No sign-up · No payment</div><div id="fc8b">📩 Full audit in your <b>Gmail</b></div></div>
 
         <!-- S1: existing tools, and their problems -->
         <div class="scene top" id="s1"><div class="bg"><div class="dots"></div></div><svg class="wave" viewBox="0 0 1080 60" preserveAspectRatio="none"><path d="M0 0 H1080 V22 C 900 60, 720 0, 540 26 C 360 52, 180 4, 0 30 Z" fill="#ece4d9"/></svg>

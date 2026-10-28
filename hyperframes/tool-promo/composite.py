@@ -8,7 +8,8 @@
   4. Camera: slow push-ins on the talking shots, an eased punch at every hard cut, and on the screen recording
      keyframed punch-ins that follow the tool (URL box, audit progress, score, categories, the fixes form).
   5. Split windows: the speaker sits below the B-roll panel (head below 790 px).
-  6. HyperFrames overlay (renders/overlay.mov: B-roll, callouts, captions) on top, one encode.
+  6. HyperFrames overlay (renders/overlay.mov: B-roll, callouts, captions) on top, one CRF 18 encode (the screen
+     recording is detail-heavy; this keeps the file under GitHub's 100 MB).
 
     python3 composite.py [out.mp4]
 """
@@ -109,7 +110,7 @@ def main(out_path):
              "acompressor=threshold=0.09:ratio=2.5:attack=8:release=160:makeup=1.6,volume=4dB,alimiter=limit=0.85[a]")
     cmd = ["ffmpeg", "-y", "-v", "error", "-i", str(SRC), "-i", str(HERE / "renders/overlay.mov"),
            "-filter_complex", ";\n".join(g), "-map", "[v]", "-map", "[a]",
-           "-t", f"{DUR:.3f}", "-c:v", "libx264", "-preset", "slow", "-crf", "15", "-profile:v", "high", "-pix_fmt", "yuv420p",
+           "-t", f"{DUR:.3f}", "-c:v", "libx264", "-preset", "slow", "-crf", "18", "-profile:v", "high", "-pix_fmt", "yuv420p",
            "-tune", "film", "-r", "30", "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709",
            "-c:a", "aac", "-b:a", "256k", "-ar", "44100", "-movflags", "+faststart", str(out_path)]
     subprocess.run(cmd, check=True)
