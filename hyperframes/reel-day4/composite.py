@@ -130,7 +130,7 @@ def main(out_path):
     cmd = ["ffmpeg", "-y", "-v", "error", *inputs, "-filter_complex", ";\n".join(g), "-map", "[v]", "-map", "[a]",
            "-t", f"{DUR:.3f}", "-c:v", "libx264", "-preset", "slow", "-crf", "17", "-profile:v", "high", "-pix_fmt", "yuv420p",
            "-tune", "film", "-r", "30", "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709",
-           "-c:a", "aac", "-b:a", "320k", "-movflags", "+faststart", str(out_path)]
+           "-c:a", "aac", "-b:a", "256k", "-ar", "44100", "-movflags", "+faststart", str(out_path)]
     subprocess.run(cmd, check=True)
     print("Wrote", Path(out_path).resolve())
 
