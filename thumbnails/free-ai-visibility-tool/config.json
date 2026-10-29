@@ -1,0 +1,17 @@
+{
+  "theme": "mint",
+  "logos": ["openai.svg", "google-color.svg"],
+  "logos_top": "140px",
+  "logo_size": "104px",
+  "title": "Free AI Visibility Audit",
+  "title_size": "80px",
+  "title_top": "282px",
+  "subtitle": "NO SIGN-UP · 2 MINUTES",
+  "sub_top": "400px",
+  "big_word": "FREE",
+  "big_size": "400px",
+  "big_top": "470px",
+  "person_width": "1080px",
+  "photo": "assets/vaibhav_suit_cutout.png",
+  "output": "cover.png"
+}
