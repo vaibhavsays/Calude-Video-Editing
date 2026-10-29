@@ -33,7 +33,7 @@ def T(x):
 # Hard cuts in the upload (original clock) and per-clip voice gain in dB
 CLIPS = [(0.0, 0.0), (2.96, -2.4), (6.54, 1.5), (56.25, 1.7)]
 # Split windows (original clock) with the source crop top for the speaker; same windows as MODES in index.html
-SPLIT = [(14.4, 31.0, 460), (32.3, 44.68, 460), (93.40, 105.8, 520)]
+SPLIT = [(16.39, 25.58, 490), (41.78, 47.87, 490), (56.15, 66.2, 385)]
 
 GRADE = ("deblock=filter=weak:block=8,hqdn3d=2:1.5:3:3,unsharp=5:5:0.45:5:5:0,"
          "eq=contrast=1.06:saturation=1.08,vibrance=intensity=0.10,"

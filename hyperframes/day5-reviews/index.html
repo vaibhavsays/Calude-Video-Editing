@@ -11,7 +11,7 @@
       @font-face { font-family: "P7"; src: url("assets/fonts/poppins-latin-700-normal.woff2"); font-weight: 700; }
       @font-face { font-family: "P8"; src: url("assets/fonts/poppins-latin-800-normal.woff2"); font-weight: 800; }
       @font-face { font-family: "Anton"; src: url("assets/fonts/anton-latin-400-normal.woff2"); }
-      :root { --y: #ffd426; --ink: #17151a; --cream: #f7f3ee; --red: #e5383b; --green: #12a150; --blue: #2563eb; --orange: #f5a623; }
+      :root { --y: #ffd426; --ink: #17151a; --cream: #f7f3ee; --red: #e5383b; --green: #12a150; --blue: #2563eb; --star: #fbbc04; }
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html, body { width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
       body { font-family: "P6", sans-serif; color: var(--ink); }
@@ -19,45 +19,66 @@
       .clip { position: absolute; inset: 0; }
       .scene { position: absolute; inset: 0; opacity: 0; }
 
-      /* split panel */
+      /* panels */
       .top { position: absolute; left: 0; right: 0; top: 0; height: 790px; }
       .inner { position: absolute; left: 0; top: 0; width: 1080px; height: 960px; transform: scale(0.8); transform-origin: 50% 0; }
-      .top .bg { position: absolute; inset: 0 0 30px 0; background: radial-gradient(ellipse 90% 70% at 50% 40%, #ffffff 0%, var(--cream) 68%, #ece4d9 100%); }
+      .top .bg, .full .bg { position: absolute; inset: 0 0 30px 0; background: radial-gradient(ellipse 90% 70% at 50% 40%, #ffffff 0%, var(--cream) 68%, #ece4d9 100%); }
+      .full .bg { inset: 0; }
       .dots { position: absolute; inset: 0; background-image: radial-gradient(rgba(23,21,26,.07) 2px, transparent 2px); background-size: 36px 36px; }
       .top svg.wave { position: absolute; left: 0; bottom: 0; width: 1080px; height: 60px; filter: drop-shadow(0 8px 10px rgba(0,0,0,.18)); }
+      .full { position: absolute; inset: 0; }
       .el { position: absolute; opacity: 0; }
       .h { left: 50px; right: 50px; text-align: center; font-family: "P8"; font-size: 62px; line-height: 1.12; letter-spacing: -0.5px; }
       .h em { font-style: normal; background: var(--y); padding: 0 14px; border-radius: 12px; }
+      .h em.r { background: var(--red); color: #fff; }
       .card { background: #fff; border-radius: 34px; box-shadow: 0 20px 56px rgba(40,30,20,.15); }
-      .logo { width: 220px; height: 220px; border-radius: 50px; background: #fff; display: grid; place-items: center; box-shadow: 0 18px 46px rgba(40,30,20,.16); }
-      .logo img { width: 58%; height: 58%; }
-      .logo .word { font-family: "P8"; font-size: 78px; color: #ff8800; letter-spacing: -1px; }
-      .logo b { position: absolute; bottom: -52px; left: -40px; right: -40px; text-align: center; font-family: "P7"; font-size: 32px; }
-      .tagx { position: absolute; top: -26px; right: -26px; font-family: "P8"; font-size: 30px; color: #fff; background: var(--red); padding: 8px 18px; border-radius: 26px; transform: rotate(8deg); box-shadow: 0 10px 24px rgba(229,56,59,.35); white-space: nowrap; }
-      .row { display: flex; align-items: center; gap: 24px; font-family: "P7"; font-size: 48px; white-space: nowrap; }
-      .row i { width: 1.35em; height: 1.35em; border-radius: 50%; display: grid; place-items: center; color: #fff; font-style: normal; font-family: "P8"; font-size: 38px; background: var(--green); flex: none; }
-      .row.x i { background: var(--red); }
       .chip { display: flex; align-items: center; gap: 16px; background: #fff; border-radius: 70px; padding: 20px 36px; font-family: "P7"; font-size: 42px; box-shadow: 0 14px 36px rgba(40,30,20,.14); white-space: nowrap; }
-      .field { height: 96px; border-radius: 22px; border: 3px solid #e7e1d8; background: #faf8f5; display: flex; align-items: center; padding: 0 30px; gap: 18px; font-family: "P6"; font-size: 38px; color: #6b635b; margin-bottom: 22px; }
-      .btn { height: 100px; border-radius: 26px; background: var(--orange); color: #fff; display: flex; align-items: center; justify-content: center; font-family: "P8"; font-size: 42px; box-shadow: 0 14px 30px rgba(245,166,35,.4); }
-      .free { font-family: "Anton"; font-size: 210px; line-height: .9; color: var(--green); text-align: center; letter-spacing: 2px; }
+      .chip img { height: 54px; }
+      .logo { width: 200px; height: 200px; border-radius: 46px; background: #fff; display: grid; place-items: center; box-shadow: 0 18px 46px rgba(40,30,20,.16); }
+      .logo img { width: 58%; height: 58%; object-fit: contain; }
+      .logo b { position: absolute; bottom: -50px; left: -40px; right: -40px; text-align: center; font-family: "P7"; font-size: 30px; }
+      .stamp { font-family: "P8"; font-size: 60px; color: #fff; background: var(--red); padding: 16px 40px; border-radius: 20px; box-shadow: 0 18px 44px rgba(229,56,59,.35); white-space: nowrap; }
+      .stamp.g { background: var(--green); box-shadow: 0 18px 44px rgba(18,161,80,.35); }
 
-      /* chips over full-frame footage (top of frame) */
+      /* review cards */
+      .rev { width: 860px; padding: 30px 36px; display: flex; gap: 24px; align-items: flex-start; }
+      .rev .av { width: 84px; height: 84px; border-radius: 50%; flex: none; display: grid; place-items: center; font-family: "P8"; font-size: 40px; color: #fff; }
+      .rev .nm { font-family: "P7"; font-size: 34px; }
+      .rev .st { font-size: 40px; letter-spacing: 3px; color: var(--star); line-height: 1.2; }
+      .rev .st span { color: #d9d4cc; }
+      .rev .tx { font-family: "P5"; font-size: 34px; color: #4a4450; margin-top: 4px; }
+      .gm { width: 900px; padding: 36px 44px; }
+      .gm .t { font-family: "P8"; font-size: 50px; }
+      .gm .r { display: flex; align-items: center; gap: 16px; font-family: "P7"; font-size: 44px; margin-top: 8px; }
+      .gm .r .st { color: var(--star); letter-spacing: 3px; } .gm .r .st span { color: #d9d4cc; }
+      .gm .r small { font-family: "P6"; font-size: 32px; color: #8b8279; }
+
+      /* AI answer */
+      .ai { background: #fff; border-radius: 34px; box-shadow: 0 20px 56px rgba(40,30,20,.16); padding: 36px 42px; width: 920px; }
+      .ai .q { font-family: "P6"; font-size: 38px; background: #f1eef8; border-radius: 24px; padding: 16px 28px; display: inline-block; }
+      .ai .a { margin-top: 28px; display: flex; gap: 22px; align-items: flex-start; }
+      .ai .a > img { width: 70px; height: 70px; flex: none; }
+      .ai .li { font-family: "P7"; font-size: 38px; line-height: 1.25; margin-bottom: 18px; display: flex; align-items: center; gap: 14px; }
+      .ai .li .s { color: var(--star); font-size: 32px; }
+      .ai .li.no { color: #a49c94; text-decoration: line-through; text-decoration-color: var(--red); text-decoration-thickness: 5px; }
+
+      /* hub */
+      .hub { width: 260px; height: 260px; border-radius: 50%; background: var(--ink); display: grid; place-items: center; box-shadow: 0 24px 60px rgba(0,0,0,.3); }
+      .hub img { width: 140px; filter: invert(1); }
+      .src { width: 230px; height: 150px; border-radius: 30px; background: #fff; box-shadow: 0 14px 36px rgba(40,30,20,.14); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; font-family: "P7"; font-size: 28px; }
+      .src img { height: 64px; }
+      svg.links { position: absolute; inset: 0; }
+
+      /* chips over the speaker */
       .tchip { left: 0; right: 0; top: 150px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
       .tchip div { font-family: "P8"; font-size: 52px; color: #fff; background: rgba(23,21,26,.9); padding: 14px 34px; border-radius: 20px; box-shadow: 0 14px 40px rgba(0,0,0,.35); white-space: nowrap; }
-      .tchip.low { top: 1180px; }
       .tchip div b { color: var(--y); }
       .tchip div.yl { background: var(--y); color: var(--ink); }
-      .tchip div.gr { background: var(--green); }
-      .step { font-size: 30px !important; letter-spacing: 4px; padding: 8px 22px !important; background: #fff !important; color: var(--ink) !important; }
 
       /* hook */
-      .hook { left: 40px; right: 40px; top: 120px; display: flex; flex-direction: column; align-items: center; gap: 22px; }
-      .hook .a { font-family: "P8"; font-size: 60px; white-space: nowrap; color: #fff; text-shadow: 0 4px 0 rgba(0,0,0,.35), 0 6px 26px rgba(0,0,0,.55); }
-      .hook .logos { display: flex; gap: 22px; }
-      .hook .logos div { width: 128px; height: 128px; border-radius: 32px; background: #fff; display: grid; place-items: center; box-shadow: 0 14px 34px rgba(0,0,0,.3); }
-      .hook .logos img { width: 78px; height: 78px; }
-      .hook .c { font-family: "P8"; font-size: 64px; color: var(--ink); background: var(--y); padding: 6px 28px; border-radius: 16px; }
+      .hook { left: 40px; right: 40px; top: 70px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+      .hook .a { font-family: "P8"; font-size: 64px; color: #fff; background: var(--red); padding: 8px 30px; border-radius: 18px; transform: rotate(-2deg); box-shadow: 0 14px 40px rgba(0,0,0,.35); }
+      .hook .b { font-family: "P8"; font-size: 62px; color: #fff; text-shadow: 0 4px 0 rgba(0,0,0,.35), 0 6px 26px rgba(0,0,0,.6); white-space: nowrap; }
 
       /* captions */
       #captions { position: absolute; left: 50px; right: 50px; top: 0; height: 100%; z-index: 60; }
@@ -66,76 +87,97 @@
              text-shadow: 0 3px 0 rgba(0,0,0,.45), 0 4px 16px rgba(0,0,0,.6), 2px 2px 0 #000, -2px 2px 0 #000, 2px -2px 0 #000, -2px -2px 0 #000; }
       .cap .w { display: inline-block; }
       .cap .hl { color: var(--ink); background: var(--y); padding: 0 12px; border-radius: 10px; text-shadow: none; box-shadow: 0 4px 14px rgba(0,0,0,.3); }
-      .cap.box { left: 40px; right: 40px; }
-      .cap.box .w { background: rgba(17,15,20,.82); padding: 2px 10px; border-radius: 10px; text-shadow: none; }
-      .cap.box .hl { background: var(--y); }
+      .cap.dark { color: var(--ink); text-shadow: none; }
       .flash { position: absolute; inset: 0; background: #fff; opacity: 0; z-index: 80; }
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="102.642" data-width="1080" data-height="1920">
-      <section id="gfx" class="clip" data-start="0" data-duration="102.642" data-track-index="1">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="66.2" data-width="1080" data-height="1920">
+      <section id="gfx" class="clip" data-start="0" data-duration="66.2" data-track-index="1">
 
-        <!-- hook (wide shot, above the head) -->
-        <div class="el hook" id="hook">
-          <div class="a" id="hk1">Kya aapka business dikhta hai</div>
-          <div class="logos" id="hkl">
-            <div><img src="assets/logos/openai.svg" /></div><div><img src="assets/logos/google-color.svg" /></div>
-            <div><img src="assets/logos/gemini-color.svg" /></div><div><img src="assets/logos/perplexity-color.svg" /></div>
-          </div>
-          <div class="c" id="hk3">AI search mein? 🤔</div>
+        <!-- hook (close shot, above the head) -->
+        <div class="el hook" id="hook"><div class="a" id="hk1">Negative reviews ⚠️</div><div class="b" id="hk2">are killing your AI score</div></div>
+        <div class="el tchip" id="fd"><div id="fda"><b>Day 5</b> of 100 Days of <b>Decoding AI SEO</b></div></div>
+        <div class="el tchip" id="fr"><div class="yl" id="fra">Last videos ✅</div><div id="frb">Schema · Third-party validation</div><div id="frc">Parasite SEO ➜ <b>next video 👀</b></div></div>
+
+        <!-- B0 (full): 2 bad reviews push you out of AI answers -->
+        <div class="scene full" id="b0"><div class="bg"><div class="dots"></div></div>
+          <div class="el h" id="b0h" style="top:180px;font-size:72px">Sirf <em class="r">2 bad reviews</em></div>
+          <div class="el card rev" id="r1" style="left:110px;top:380px"><div class="av" style="background:#8e7cc3">R</div><div><div class="nm">Rahul S.</div><div class="st">★<span>★★★★</span></div><div class="tx">"Worst service, never again."</div></div></div>
+          <div class="el card rev" id="r2" style="left:110px;top:640px"><div class="av" style="background:#e69138">P</div><div><div class="nm">Priya K.</div><div class="st">★★<span>★★★</span></div><div class="tx">"Rude staff, no reply to calls."</div></div></div>
+          <div class="el stamp" id="out" style="left:110px;top:960px;font-size:52px;transform:rotate(-4deg)">❌ Out of AI recommendations</div>
         </div>
 
-        <!-- full-frame chips -->
-        <div class="el tchip" id="fc2"><div class="step" id="fc2a">STEP 1</div><div id="fc2b">Open the free tool</div></div>
-        <div class="el tchip low" id="fc3"><div class="step" id="fc3a">STEP 2</div><div id="fc3b">Paste your website ➜ <b>Audit</b></div></div>
-        <div class="el tchip low" id="fc4"><div class="gr" id="fc4a">⏱ 30–90 seconds</div><div id="fc4b">Other tools: 15–20 min</div></div>
-        <div class="el tchip low" id="fc5"><div class="yl" id="fc5a">AI visibility score</div><div id="fc5b">+ <b>12 problems</b> found</div></div>
-        <div class="el tchip low" id="fc6"><div id="fc6a">🤖 AI crawler access</div><div id="fc6b">💬 Answer-ready content</div><div id="fc6c">🧩 Structured data</div></div>
-        <div class="el tchip low" id="fc7"><div id="fc7a">🛡 Trust &amp; credibility</div><div id="fc7b">⚙️ Technical health</div><div id="fc7c">🏷 Brand entity</div></div>
-        <div class="el tchip low" id="fc8"><div class="gr" id="fc8a">✅ No sign-up · No payment</div><div id="fc8b">📩 Full audit in your <b>Gmail</b></div></div>
+        <!-- B1 (full): AI reads the whole internet -->
+        <div class="scene full" id="b1"><div class="bg"><div class="dots"></div></div>
+          <div class="el h" id="b1h" style="top:160px;font-size:66px">AI reads the <em>whole internet</em></div>
+          <svg class="links" viewBox="0 0 1080 1920"><g stroke="#c9c0b4" stroke-width="5" stroke-dasharray="14 12" fill="none">
+            <path id="k1" d="M540 760 L235 470"/><path id="k2" d="M540 760 L845 470"/><path id="k3" d="M540 760 L200 1060"/><path id="k4" d="M540 760 L880 1060"/><path id="k5" d="M540 760 L540 1220"/></g></svg>
+          <div class="el hub" id="hub" style="left:410px;top:630px"><img src="assets/logos/openai.svg" /></div>
+          <div class="el src" id="sw" style="left:120px;top:395px">🌐<span>Your website</span></div>
+          <div class="el src" id="sg" style="left:730px;top:395px"><img src="assets/logos/googlemaps.svg" />Google Maps</div>
+          <div class="el src" id="st" style="left:85px;top:985px"><img src="assets/logos/trustpilot.svg" />Trustpilot</div>
+          <div class="el src" id="sr" style="left:765px;top:985px"><img src="assets/logos/reddit.svg" />Reddit</div>
+          <div class="el src" id="sq" style="left:425px;top:1145px"><img src="assets/logos/quora.svg" />Quora</div>
+        </div>
 
-        <!-- S1: existing tools, and their problems -->
+        <!-- S1 (split): third-party validation, what people say about you -->
         <div class="scene top" id="s1"><div class="bg"><div class="dots"></div></div><svg class="wave" viewBox="0 0 1080 60" preserveAspectRatio="none"><path d="M0 0 H1080 V22 C 900 60, 720 0, 540 26 C 360 52, 180 4, 0 30 Z" fill="#ece4d9"/></svg>
           <div class="inner">
-            <div class="el h" id="s1h" style="top:90px">Already in the market 👇</div>
-            <div class="el logo" id="lsem" style="left:150px;top:250px;transform-origin:50% 50%;width:300px;height:300px"><img src="assets/logos/semrush.svg" /><b>Semrush</b><div class="el tagx" id="t1">💸 PAID</div></div>
-            <div class="el logo" id="lahr" style="left:630px;top:250px;width:300px;height:300px"><span class="word">ahrefs</span><b>Ahrefs</b><div class="el tagx" id="t2">💸 PAID</div></div>
-            <div class="el card" id="prob" style="left:110px;top:200px;width:860px;height:560px;padding:50px 56px">
-              <div style="font-family:P8;font-size:34px;letter-spacing:3px;color:#8b8279;margin-bottom:34px">THE PROBLEM WITH THEM</div>
-              <div class="el row x" id="p1" style="position:relative;margin-bottom:40px"><i>✕</i>Paid tools</div>
-              <div class="el row x" id="p2" style="position:relative;margin-bottom:40px"><i>✕</i>Sign-up = data shared</div>
-              <div class="el row x" id="p3" style="position:relative"><i>✕</i>Slow &amp; complicated</div>
-            </div>
+            <div class="el h" id="s1h" style="top:70px"><em>Third-party</em> validation</div>
+            <div class="el logo" id="lr" style="left:200px;top:220px"><img src="assets/logos/reddit.svg" /><b>Reddit</b></div>
+            <div class="el logo" id="lq" style="left:440px;top:220px"><img src="assets/logos/quora.svg" /><b>Quora</b></div>
+            <div class="el logo" id="lt" style="left:680px;top:220px"><img src="assets/logos/trustpilot.svg" /><b>Reviews</b></div>
+            <div class="el chip" id="q1" style="left:90px;top:540px;font-size:38px">💬 "Is this business legit?"</div>
+            <div class="el chip" id="q2" style="left:420px;top:660px;font-size:38px">💬 "How was your experience?"</div>
           </div>
         </div>
 
-        <!-- S2: the free tool -->
+        <!-- B2 (full): Google Maps listing with bad reviews -->
+        <div class="scene full" id="b2"><div class="bg"><div class="dots"></div></div>
+          <div class="el card gm" id="gm" style="left:90px;top:230px">
+            <div style="display:flex;align-items:center;gap:18px"><img src="assets/logos/googlemaps.svg" style="height:70px" /><div class="t">Your Business</div></div>
+            <div class="r"><span id="gmv">4.6</span><span class="st">★★<span>★★★</span></span><small>(48 reviews)</small></div>
+          </div>
+          <div class="el card rev" id="r3" style="left:110px;top:560px"><div class="av" style="background:#6aa84f">A</div><div><div class="nm">Amit V.</div><div class="st">★<span>★★★★</span></div><div class="tx">"Paid in advance, no delivery."</div></div></div>
+          <div class="el card rev" id="r4" style="left:110px;top:820px"><div class="av" style="background:#cc4125">N</div><div><div class="nm">Neha J.</div><div class="st">★<span>★★★★</span></div><div class="tx">"Don't trust them."</div></div></div>
+          <div class="el stamp" id="bad" style="left:270px;top:1120px;font-size:66px">⚠️ Bad reviews</div>
+        </div>
+
+        <!-- S2 (split): third-party validation = reviews + more -->
         <div class="scene top" id="s2"><div class="bg"><div class="dots"></div></div><svg class="wave" viewBox="0 0 1080 60" preserveAspectRatio="none"><path d="M0 0 H1080 V22 C 900 60, 720 0, 540 26 C 360 52, 180 4, 0 30 Z" fill="#ece4d9"/></svg>
           <div class="inner">
-            <div class="el free" id="fr" style="left:0;right:0;top:60px">FREE</div>
-            <div class="el h" id="s2h" style="top:270px;font-size:56px">AI visibility audit tool 🎁</div>
-            <div class="el row" id="g1" style="left:170px;top:420px"><i>✓</i>No sign-up</div>
-            <div class="el row" id="g2" style="left:170px;top:530px"><i>✓</i>No payment</div>
-            <div class="el row" id="g3" style="left:170px;top:640px"><i>✓</i>Full report in ~2 min</div>
-            <div class="el card" id="form" style="left:150px;top:380px;width:780px;padding:40px 44px">
-              <div class="field">🌐 yourwebsite.com</div>
-              <div class="btn">Audit my website ➜</div>
-            </div>
+            <div class="el h" id="s2h" style="top:70px">Third-party validation =</div>
+            <div class="el chip" id="t1" style="left:120px;top:240px">⭐ Reviews</div>
+            <div class="el chip" id="t2" style="left:480px;top:360px">🛠 Review management</div>
+            <div class="el chip" id="t3" style="left:120px;top:480px">📰 Parasite SEO</div>
+            <div class="el chip" id="t4" style="left:440px;top:600px">👥 Community forums</div>
           </div>
         </div>
 
-        <!-- S3: CTA -->
+        <!-- B3 (full): AI builds one answer and decides -->
+        <div class="scene full" id="b3"><div class="bg"><div class="dots"></div></div>
+          <div class="el h" id="b3h" style="top:200px;font-size:66px">AI makes <em>one answer</em></div>
+          <div class="el ai" id="ans" style="left:80px;top:400px">
+            <div class="q">Best digital agency near me?</div>
+            <div class="a"><img src="assets/logos/openai.svg" /><div>
+              <div class="el li" id="a1" style="position:relative">1. Competitor A <span class="s">★ 4.8</span></div>
+              <div class="el li" id="a2" style="position:relative">2. Competitor B <span class="s">★ 4.7</span></div>
+              <div class="el li no" id="a3" style="position:relative">Your Business <span class="s">★ 2.9</span></div>
+            </div></div>
+          </div>
+          <div class="el stamp" id="nr" style="left:170px;top:1010px;font-size:60px;transform:rotate(-3deg)">❌ Not recommended</div>
+        </div>
+
+        <!-- S3 (split): reviews are the deciding call -->
         <div class="scene top" id="s3"><div class="bg"><div class="dots"></div></div><svg class="wave" viewBox="0 0 1080 60" preserveAspectRatio="none"><path d="M0 0 H1080 V22 C 900 60, 720 0, 540 26 C 360 52, 180 4, 0 30 Z" fill="#ece4d9"/></svg>
           <div class="inner">
-            <div class="el h" id="s3h" style="top:110px">Get <em>your</em> AI visibility report</div>
-            <div class="el chip" id="us" style="left:170px;top:330px;font-size:50px;padding:26px 50px">🔥 1000s of daily active users</div>
-            <div class="el card" id="sc" style="left:200px;top:280px;width:680px;height:300px;display:flex;align-items:center;gap:40px;padding:0 50px">
-              <div style="width:190px;height:190px;border-radius:50%;border:20px solid var(--green);display:grid;place-items:center;font-family:Anton;font-size:84px;flex:none">80</div>
-              <div><div style="font-family:P8;font-size:40px;line-height:1.15">AI visibility score</div><div style="font-family:P6;font-size:30px;color:#8b8279;margin-top:10px">for your website</div></div>
+            <div class="el h" id="s3h" style="top:80px">Reviews are the <em>deciding call</em></div>
+            <div class="el card" id="good" style="left:190px;top:260px;width:700px;padding:36px 44px;text-align:center">
+              <div style="font-size:84px;color:var(--star);letter-spacing:8px">★★★★★</div>
+              <div style="font-family:Anton;font-size:110px;line-height:1">4.8</div>
             </div>
-            <div class="el chip" id="cta" style="left:200px;top:300px;background:var(--ink);color:#fff;font-size:66px;padding:30px 64px">Comment <span style="background:var(--y);color:var(--ink);padding:0 20px;border-radius:14px;margin:0 12px">TOOL</span> 👇</div>
-            <div class="el chip" id="dm" style="left:250px;top:500px;font-size:46px">📩 Link directly in your DM</div>
+            <div class="el stamp g" id="rec" style="left:150px;top:640px;font-size:56px">✅ Recommended by AI</div>
           </div>
         </div>
 
@@ -148,15 +190,17 @@
       function T(x) { let acc = 0; for (const [a, b] of KEEP) { if (x < a) return acc; if (x <= b) return acc + x - a; acc += b - a; } return acc; }
       window.T = T;
       // Layout modes, original clock (composite.py SPLIT uses the same split windows):
-      // wide = hook shot; split = B-roll panel on top / speaker below; screen = recording of the tool; anything else = full speaker.
-      const MODES = [["wide", 0, 9.76], ["split", 14.4, 31.0], ["split", 32.3, 44.68], ["desk", 44.68, 51.44], ["screen", 51.44, 93.4], ["split", 93.4, 106]];
+      // broll = full-screen graphics (speaker hidden, voice continues); split = B-roll panel / speaker below;
+      // close = close-up shots; anything else = full-frame wide shot.
+      const MODES = [["close", 0, 2.96], ["broll", 2.96, 6.54], ["broll", 9.84, 16.39], ["split", 16.39, 25.58], ["broll", 25.58, 30.75],
+                     ["split", 41.78, 47.87], ["broll", 47.87, 56.15], ["split", 56.15, 66.2]];
       window.MODES = MODES;
       const CUES = window.CUES = [];
       const tl = gsap.timeline({ paused: true });
       const at = (x) => T(x);
       function modeAt(x) { const m = MODES.find(([, a, b]) => x >= a && x < b); return m ? m[0] : "full"; }
-      // caption top per mode: always below the chin, on the chest (or the lower screen on the recording)
-      const CAP_TOP = { wide: 1240, split: 1640, desk: 1500, screen: 1690, full: 1440 };
+      // caption top per mode: below the chin, on the chest; on full-screen B-roll near the bottom, dark text
+      const CAP_TOP = { close: 1140, split: 1620, broll: 1560, full: 1260 };
 
       function buildCaptions() {
         const root = document.getElementById("captions");
@@ -167,7 +211,7 @@
           for (const [a, b] of KEEP) { if (start <= acc + (b - a)) { orig = a + start - acc; break; } acc += b - a; }
           const md = modeAt(orig + 0.05);
           el.style.top = CAP_TOP[md] + "px";
-          if (md === "screen") el.classList.add("box");
+          if (md === "broll") el.classList.add("dark");
           let on = false;
           const words = text.split(" ").map((w) => {
             const hl = on || w.startsWith("*");
@@ -185,13 +229,14 @@
         });
       }
 
-      const flash = (x, p = 0.35) => tl.fromTo("#flash", { opacity: p }, { opacity: 0, duration: 0.2, ease: "power2.out", immediateRender: false }, at(x));
-      function sceneIn(id, x) {
+      function sceneIn(id, x, kind) {
         tl.set(id, { opacity: 1 }, at(x));
-        tl.fromTo(id, { yPercent: -100 }, { yPercent: 0, duration: 0.42, ease: "power3.out", immediateRender: false }, at(x));
+        if (kind === "split") tl.fromTo(id, { yPercent: -100 }, { yPercent: 0, duration: 0.42, ease: "power3.out", immediateRender: false }, at(x));
+        else tl.fromTo(id, { opacity: 0, scale: 1.06 }, { opacity: 1, scale: 1, duration: 0.35, ease: "power2.out", immediateRender: false }, at(x));
       }
-      function sceneOut(id, x) {
-        tl.to(id, { yPercent: -100, duration: 0.28, ease: "power3.in" }, at(x) - 0.28);
+      function sceneOut(id, x, kind) {
+        if (kind === "split") tl.to(id, { yPercent: -100, duration: 0.28, ease: "power3.in" }, at(x) - 0.28);
+        else tl.to(id, { opacity: 0, scale: 0.97, duration: 0.25, ease: "power2.in" }, at(x) - 0.25);
         tl.set(id, { opacity: 0 }, at(x));
       }
       function show(sel, x, from = { scale: 0.6 }) {
@@ -211,61 +256,84 @@
       function build() {
         buildCaptions();
 
-        // hook
+        // hook (close)
         tl.set("#hook", { opacity: 1 }, 0);
-        show("#hk1", 0.5, { y: -30, scale: 0.9 });
-        tl.fromTo("#hkl > div", { opacity: 0, scale: 0.3, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.3, stagger: 0.18, ease: "back.out(2)" }, at(1.2));
-        show("#hk3", 3.4, { scale: 1.6 });
-        floatIdle("#hkl", 2.5, 9.4, 5);
-        tl.to("#hook", { opacity: 0, y: -30, duration: 0.25, ease: "power2.in" }, at(9.55));
+        show("#hk1", 0.05, { scale: 1.8, rotation: -8 });
+        show("#hk2", 0.6, { y: 30, scale: 0.9 });
+        out("#hook", 2.85);
 
-        // S1: Semrush / Ahrefs, then their problems
-        sceneIn("#s1", 14.4);
-        show("#s1h", 14.5, { y: -30, scale: 1 });
-        show("#lsem", 15.0, { y: 60, scale: 0.5 });
-        show("#lahr", 15.6, { y: 60, scale: 0.5 });
-        show("#t1", 18.6, { scale: 2, rotation: 20 });
-        show("#t2", 18.9, { scale: 2, rotation: 20 });
-        floatIdle(["#lsem", "#lahr"], 16.2, 20.3, 6);
-        out(["#s1h", "#lsem", "#lahr"], 20.35);
-        show("#prob", 20.5, { y: 40, scale: 0.95 });
-        show("#p1", 20.7, { x: -60, scale: 0.9 });
-        show("#p2", 21.2, { x: -60, scale: 0.9 });
-        show("#p3", 25.5, { x: -60, scale: 0.9 });
-        sceneOut("#s1", 31.0);
+        // B0: two bad reviews -> out
+        sceneIn("#b0", 2.96, "broll");
+        show("#b0h", 3.05, { y: -30, scale: 1 });
+        show("#r1", 3.4, { x: -120, scale: 0.9 });
+        show("#r2", 4.0, { x: 120, scale: 0.9 });
+        show("#out", 5.0, { scale: 2, rotation: -12 });
+        sceneOut("#b0", 6.54, "broll");
 
-        // S2: the free tool
-        sceneIn("#s2", 32.3);
-        show("#fr", 32.9, { scale: 2.2 });
-        show("#s2h", 33.4, { y: 30, scale: 1 });
-        show("#g1", 36.1, { x: -60, scale: 0.9 });
-        show("#g2", 37.6, { x: -60, scale: 0.9 });
-        show("#g3", 39.5, { x: -60, scale: 0.9 });
-        out(["#g1", "#g2", "#g3"], 42.0);
-        show("#form", 42.15, { y: 60, scale: 0.9 });
-        tl.fromTo("#form .btn", { scale: 1 }, { scale: 1.05, duration: 0.3, yoyo: true, repeat: 3, ease: "sine.inOut", immediateRender: false }, at(42.8));
-        floatIdle("#fr", 34.0, 44.4, 5);
-        sceneOut("#s2", 44.68);
+        // Day 5
+        chipIn("#fd", 6.75, 9.6, ["a"]);
 
-        // desk + screen recording
-        chipIn("#fc2", 45.1, 49.4);
-        chipIn("#fc3", 49.6, 52.6);
-        chipIn("#fc4", 52.9, 58.2);
-        chipIn("#fc5", 58.4, 60.5);
-        chipIn("#fc6", 60.6, 66.8, ["a", "b", "c"]);
-        chipIn("#fc7", 66.95, 74.6, ["a", "b", "c"]);
-        chipIn("#fc8", 79.1, 92.9);
+        // B1: AI reads the whole internet
+        sceneIn("#b1", 9.84, "broll");
+        show("#b1h", 9.95, { y: -30, scale: 1 });
+        show("#hub", 10.2, { scale: 0.3 });
+        tl.fromTo("#k1, #k2, #k3, #k4, #k5", { opacity: 0 }, { opacity: 1, duration: 0.25, stagger: 0.25 }, at(10.6));
+        show("#sw", 10.7, { scale: 0.4 });
+        show("#sg", 13.2, { scale: 0.4 });
+        show("#st", 13.7, { scale: 0.4 });
+        show("#sr", 14.2, { scale: 0.4 });
+        show("#sq", 14.7, { scale: 0.4 });
+        tl.fromTo("#hub", { scale: 1 }, { scale: 1.08, duration: 0.6, yoyo: true, repeat: 3, ease: "sine.inOut", immediateRender: false }, at(13.4));
+        sceneOut("#b1", 16.39, "broll");
 
-        // S3: CTA
-        sceneIn("#s3", 93.4);
-        show("#s3h", 93.6, { y: -30, scale: 1 });
-        show("#us", 95.7, { scale: 0.5 });
-        out("#us", 98.1);
-        show("#sc", 98.2, { y: 60, scale: 0.9 });
-        out("#sc", 101.35);
-        show("#cta", 101.5, { scale: 0.4 });
-        show("#dm", 102.4, { y: 40, scale: 0.8 });
-        tl.fromTo("#cta", { scale: 1 }, { scale: 1.06, duration: 0.35, yoyo: true, repeat: 3, ease: "sine.inOut", immediateRender: false }, at(102.2));
+        // S1: third-party validation
+        sceneIn("#s1", 16.39, "split");
+        show("#s1h", 16.5, { y: -30, scale: 1 });
+        show("#lr", 17.6, { y: 60, scale: 0.4 });
+        show("#lq", 18.3, { y: 60, scale: 0.4 });
+        show("#lt", 19.6, { y: 60, scale: 0.4 });
+        show("#q1", 21.3, { x: -60, scale: 0.8 });
+        show("#q2", 22.6, { x: 60, scale: 0.8 });
+        floatIdle(["#lr", "#lq", "#lt"], 20.2, 25.3, 6);
+        sceneOut("#s1", 25.58, "split");
+
+        // B2: Google Maps, bad reviews
+        sceneIn("#b2", 25.58, "broll");
+        show("#gm", 25.7, { y: -40, scale: 0.95 });
+        tl.fromTo("#gmv", { innerText: 4.6 }, { innerText: 2.9, duration: 1.4, snap: { innerText: 0.1 }, ease: "power2.inOut", immediateRender: false }, at(26.4));
+        show("#r3", 26.6, { x: -120, scale: 0.9 });
+        show("#r4", 27.4, { x: 120, scale: 0.9 });
+        show("#bad", 28.6, { scale: 2, rotation: -10 });
+        sceneOut("#b2", 30.75, "broll");
+
+        // recap chips (full wide shot)
+        chipIn("#fr", 31.4, 41.5, ["a", "b", "c"]);
+
+        // S2: third-party validation = ...
+        sceneIn("#s2", 41.78, "split");
+        show("#s2h", 41.9, { y: -30, scale: 1 });
+        show("#t1", 43.0, { x: -60, scale: 0.8 });
+        show("#t2", 44.3, { x: 60, scale: 0.8 });
+        show("#t3", 45.3, { x: -60, scale: 0.8 });
+        show("#t4", 46.6, { x: 60, scale: 0.8 });
+        sceneOut("#s2", 47.87, "split");
+
+        // B3: AI decides
+        sceneIn("#b3", 47.87, "broll");
+        show("#b3h", 48.0, { y: -30, scale: 1 });
+        show("#ans", 48.6, { y: 60, scale: 0.92 });
+        show("#a1", 50.2, { x: 40, scale: 1 });
+        show("#a2", 50.9, { x: 40, scale: 1 });
+        show("#a3", 52.2, { x: 40, scale: 1 });
+        show("#nr", 54.0, { scale: 2, rotation: -10 });
+        sceneOut("#b3", 56.15, "broll");
+
+        // S3: deciding call
+        sceneIn("#s3", 56.15, "split");
+        show("#s3h", 56.3, { y: -30, scale: 1 });
+        show("#good", 57.6, { y: 60, scale: 0.9 });
+        show("#rec", 63.9, { scale: 2, rotation: -8 });
+        floatIdle("#good", 58.2, 66.0, 6);
 
         window.__timelines["main"] = tl;
       }
