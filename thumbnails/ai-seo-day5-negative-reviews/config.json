@@ -1,0 +1,17 @@
+{
+  "theme": "pink",
+  "logos": ["googlemaps.svg", "trustpilot.svg", "openai.svg"],
+  "logos_top": "140px",
+  "logo_size": "100px",
+  "title": "Bad Reviews Kill Your AI Score",
+  "title_size": "68px",
+  "title_top": "286px",
+  "subtitle": "DAY 5 · AI SEO",
+  "sub_top": "400px",
+  "big_word": "REVIEWS",
+  "big_size": "300px",
+  "big_top": "500px",
+  "person_width": "1080px",
+  "photo": "assets/vaibhav_suit_cutout.png",
+  "output": "cover.png"
+}
