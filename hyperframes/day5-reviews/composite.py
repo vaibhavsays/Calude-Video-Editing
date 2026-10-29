@@ -98,7 +98,7 @@ def main(out_path):
         g.append(f"[as{i}]atrim={a}:{b},asetpts=PTS-STARTPTS,afade=t=in:d=0.01,afade=t=out:st={max(0, d - 0.012):.3f}:d=0.012[ac{i}]")
     g.append("".join(f"[ac{i}]" for i in range(n)) + f"concat=n={n}:v=0:a=1,afftdn=nr=8:nf=-45,highpass=f=75,"
              "equalizer=f=3200:t=q:w=1.2:g=2.5,equalizer=f=220:t=q:w=1:g=-1.5,"
-             "acompressor=threshold=0.09:ratio=2.5:attack=8:release=160:makeup=1.6,volume=4dB,alimiter=limit=0.85[a]")
+             "acompressor=threshold=0.09:ratio=2.5:attack=8:release=160:makeup=1.6,volume=1.5dB,alimiter=limit=0.85[a]")
     cmd = ["ffmpeg", "-y", "-v", "error", "-i", str(SRC), "-i", str(HERE / "renders/overlay.mov"),
            "-filter_complex", ";\n".join(g), "-map", "[v]", "-map", "[a]",
            "-t", f"{DUR:.3f}", "-c:v", "libx264", "-preset", "slow", "-crf", "15", "-profile:v", "high", "-pix_fmt", "yuv420p",
