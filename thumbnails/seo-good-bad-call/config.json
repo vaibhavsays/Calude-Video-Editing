@@ -1,0 +1,17 @@
+{
+  "theme": "blue",
+  "logos": ["google-color.svg", "openai.svg"],
+  "logos_top": "140px",
+  "logo_size": "104px",
+  "title": "SEO: Good Call or Bad Call?",
+  "title_size": "70px",
+  "title_top": "286px",
+  "subtitle": "7 SEO TACTICS RATED",
+  "sub_top": "400px",
+  "big_word": "RATED",
+  "big_size": "370px",
+  "big_top": "480px",
+  "person_width": "1080px",
+  "photo": "assets/vaibhav_suit_cutout.png",
+  "output": "cover.png"
+}
