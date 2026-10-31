@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="vendor/gsap.min.js"></script>
+    <script src="edl.js"></script>
+    <script src="beats.js"></script>
+    <style>
+      @font-face { font-family: "P5"; src: url("assets/fonts/poppins-latin-500-normal.woff2"); font-weight: 500; }
+      @font-face { font-family: "P6"; src: url("assets/fonts/poppins-latin-600-normal.woff2"); font-weight: 600; }
+      @font-face { font-family: "P7"; src: url("assets/fonts/poppins-latin-700-normal.woff2"); font-weight: 700; }
+      @font-face { font-family: "P8"; src: url("assets/fonts/poppins-latin-800-normal.woff2"); font-weight: 800; }
+      @font-face { font-family: "Anton"; src: url("assets/fonts/anton-latin-400-normal.woff2"); }
+      @font-face { font-family: "Mono"; src: url("assets/fonts/jetbrains-mono-latin-600-normal.woff2"); }
+      :root { --y: #ffd426; --ink: #17151a; --cream: #f7f3ee; --red: #e5383b; --green: #12a150; --blue: #2563eb; --star: #fbbc04; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
+      body { font-family: "P6", sans-serif; color: var(--ink); }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; }
+      .clip { position: absolute; inset: 0; }
+      .scene { position: absolute; inset: 0; opacity: 0; }
+
+      .top { position: absolute; left: 0; right: 0; top: 0; height: 790px; }
+      .inner { position: absolute; left: 0; top: 0; width: 1080px; height: 960px; transform: scale(0.8); transform-origin: 50% 0; }
+      .top .bg, .full .bg { position: absolute; inset: 0 0 30px 0; background: radial-gradient(ellipse 90% 70% at 50% 40%, #ffffff 0%, var(--cream) 68%, #ece4d9 100%); }
+      .full .bg { inset: 0; }
+      .dots { position: absolute; inset: 0; background-image: radial-gradient(rgba(23,21,26,.07) 2px, transparent 2px); background-size: 36px 36px; }
+      .top svg.wave { position: absolute; left: 0; bottom: 0; width: 1080px; height: 60px; filter: drop-shadow(0 8px 10px rgba(0,0,0,.18)); }
+      .full { position: absolute; inset: 0; }
+      .el { position: absolute; opacity: 0; }
+      .h { left: 50px; right: 50px; text-align: center; font-family: "P8"; font-size: 62px; line-height: 1.12; letter-spacing: -0.5px; }
+      .h em { font-style: normal; background: var(--y); padding: 0 14px; border-radius: 12px; }
+      .h em.r { background: var(--red); color: #fff; } .h em.g { background: var(--green); color: #fff; }
+      .card { background: #fff; border-radius: 30px; box-shadow: 0 20px 56px rgba(40,30,20,.15); }
+      .chip { display: flex; align-items: center; gap: 16px; background: #fff; border-radius: 70px; padding: 18px 34px; font-family: "P7"; font-size: 40px; box-shadow: 0 14px 36px rgba(40,30,20,.14); white-space: nowrap; }
+      .stamp { font-family: "P8"; font-size: 60px; color: #fff; background: var(--red); padding: 16px 40px; border-radius: 20px; box-shadow: 0 18px 44px rgba(229,56,59,.35); white-space: nowrap; }
+      .stamp.g { background: var(--green); box-shadow: 0 18px 44px rgba(18,161,80,.35); }
+      .logo { width: 180px; height: 180px; border-radius: 42px; background: #fff; display: grid; place-items: center; box-shadow: 0 18px 46px rgba(40,30,20,.16); }
+      .logo img { width: 58%; height: 58%; object-fit: contain; }
+
+      /* the board */
+      .col { position: absolute; top: 40px; width: 470px; height: 880px; border-radius: 36px; }
+      .col.good { left: 50px; background: rgba(18,161,80,.10); border: 4px solid rgba(18,161,80,.45); }
+      .col.bad { left: 560px; background: rgba(229,56,59,.08); border: 4px solid rgba(229,56,59,.45); }
+      .col .hd { margin: 24px auto 0; width: 400px; height: 96px; border-radius: 24px; display: flex; align-items: center; justify-content: center; gap: 14px; font-family: "Anton"; font-size: 62px; letter-spacing: 2px; color: #fff; }
+      .col.good .hd { background: var(--green); } .col.bad .hd { background: var(--red); }
+      .item { position: absolute; left: 0; top: 0; width: 420px; height: 112px; border-radius: 24px; background: #fff; box-shadow: 0 14px 34px rgba(40,30,20,.16);
+              display: flex; align-items: center; gap: 16px; padding: 0 26px; font-family: "P7"; font-size: 36px; line-height: 1.1; opacity: 0; }
+      .item i { width: 56px; height: 56px; border-radius: 50%; flex: none; display: grid; place-items: center; font-style: normal; font-family: "P8"; color: #fff; font-size: 32px; background: #b9b2a9; }
+      .item i { position: relative; } .item i span { position: absolute; inset: 0; display: grid; place-items: center; }
+      .q { position: absolute; left: 0; right: 0; top: 380px; text-align: center; font-family: "P8"; font-size: 120px; color: var(--ink); opacity: 0; }
+
+      /* B-roll bits */
+      .grid30 { display: grid; grid-template-columns: repeat(6, 110px); gap: 16px; }
+      .grid30 div { height: 110px; border-radius: 20px; background: #fff; box-shadow: 0 8px 18px rgba(40,30,20,.12); display: grid; place-items: center; font-size: 46px; }
+      .page { width: 280px; height: 360px; border-radius: 24px; background: #fff; box-shadow: 0 16px 40px rgba(40,30,20,.15); padding: 22px; }
+      .page .t { font-family: "P8"; font-size: 28px; margin-bottom: 14px; line-height: 1.15; }
+      .page .ln { height: 16px; border-radius: 8px; background: #e9e4dd; margin: 12px 0; }
+      .page .sec { height: 46px; border-radius: 12px; margin: 10px 0; display: flex; align-items: center; padding: 0 14px; font-family: "P7"; font-size: 22px; color: #fff; }
+      .pin { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+      .pin .p { font-size: 110px; line-height: 1; }
+      .pin .c { font-family: "P8"; font-size: 40px; background: #fff; border-radius: 40px; padding: 10px 30px; box-shadow: 0 12px 30px rgba(40,30,20,.14); }
+      .pin .u { font-family: "Mono"; font-size: 26px; color: var(--blue); }
+      .node { width: 210px; height: 120px; border-radius: 24px; background: #fff; box-shadow: 0 14px 34px rgba(40,30,20,.14); display: grid; place-items: center; font-family: "P7"; font-size: 30px; text-align: center; line-height: 1.15; }
+      svg.links { position: absolute; inset: 0; }
+
+      /* chips over the speaker */
+      .tchip { left: 0; right: 0; top: 150px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+      .tchip div { font-family: "P8"; font-size: 50px; color: #fff; background: rgba(23,21,26,.9); padding: 14px 34px; border-radius: 20px; box-shadow: 0 14px 40px rgba(0,0,0,.35); white-space: nowrap; }
+      .tchip div b { color: var(--y); }
+      .tchip div.yl { background: var(--y); color: var(--ink); }
+      .tchip div.gr { background: var(--green); }
+
+      /* captions */
+      #captions { position: absolute; left: 50px; right: 50px; top: 0; height: 100%; z-index: 60; }
+      .cap { position: absolute; left: 0; right: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 14px; opacity: 0;
+             font-family: "P7"; font-size: 56px; line-height: 1.22; text-align: center; color: #fff;
+             text-shadow: 0 3px 0 rgba(0,0,0,.45), 0 4px 16px rgba(0,0,0,.6), 2px 2px 0 #000, -2px 2px 0 #000, 2px -2px 0 #000, -2px -2px 0 #000; }
+      .cap .w { display: inline-block; }
+      .cap .hl { color: var(--ink); background: var(--y); padding: 0 12px; border-radius: 10px; text-shadow: none; box-shadow: 0 4px 14px rgba(0,0,0,.3); }
+      .cap.dark { color: var(--ink); text-shadow: none; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="135.976" data-width="1080" data-height="1920">
+      <section id="gfx" class="clip" data-start="0" data-duration="135.976" data-track-index="1">
+
+        <!-- THE BOARD (split panel; items fly to their side on the verdict and stay there) -->
+        <div class="scene top" id="board"><div class="bg"><div class="dots"></div></div><svg class="wave" viewBox="0 0 1080 60" preserveAspectRatio="none"><path d="M0 0 H1080 V22 C 900 60, 720 0, 540 26 C 360 52, 180 4, 0 30 Z" fill="#ece4d9"/></svg>
+          <div class="inner" id="bin">
+            <div class="col good"><div class="hd">✅ GOOD CALL</div></div>
+            <div class="col bad"><div class="hd">❌ BAD CALL</div></div>
+            <div class="q" id="qm">?</div>
+            <div class="item" id="i1"><i>?</i><span>Publishing daily content</span></div>
+            <div class="item" id="i2"><i>?</i><span>Service pages</span></div>
+            <div class="item" id="i3"><i>?</i><span>Location pages</span></div>
+            <div class="item" id="i4"><i>?</i><span>Programmatic SEO</span></div>
+            <div class="item" id="i5"><i>?</i><span>AI content</span></div>
+            <div class="item" id="i6"><i>?</i><span>Internal linking</span></div>
+            <div class="item" id="i7"><i>?</i><span>Backlinks</span></div>
+          </div>
+        </div>
+
+        <!-- B1: daily content, quality compromised -->
+        <div class="scene full" id="b1"><div class="bg"><div class="dots"></div></div>
+          <div class="el h" id="b1h" style="top:170px;font-size:68px"><em class="r">Daily</em> posts = low quality</div>
+          <div class="el grid30" id="cal" style="left:115px;top:360px">
+            <div>📝</div><div>📝</div><div>📝</div><div>📝</div><div>📝</div><div>📝</div>
+            <div>📝</div><div>📝</div><div>📝</div><div>📝</div><div>📝</div><div>📝</div>
+            <div>📝</div><div>📝</div><div>📝</div><div>📝</div><div>📝</div><div>📝</div>
+            <div>📝</div><div>📝</div><div>📝</div><div>📝</div><div>📝</div><div>📝</div>
+          </div>
+          <div class="el stamp" id="qc" style="left:140px;top:560px;font-size:56px;transform:rotate(-6deg)">⚠️ Quality compromised</div>
+          <div class="el card" id="srch" style="left:110px;top:950px;width:860px;padding:34px 40px">
+            <div style="font-family:P6;font-size:34px;background:#f1eef8;border-radius:40px;padding:14px 28px">🔍 User's search query</div>
+            <div style="font-family:P8;font-size:44px;margin-top:24px">Do you show up? <span style="color:var(--red)">❌</span></div>
+          </div>
+        </div>
+
+        <!-- B2: service pages -->
+        <div class="scene full" id="b2"><div class="bg"><div class="dots"></div></div>
+          <div class="el h" id="b2h" style="top:160px;font-size:64px">One page, many services?</div>
+          <div class="el page" id="one" style="left:400px;top:320px">
+            <div class="t">Our Services</div>
+            <div class="sec" style="background:#2563eb">SEO</div><div class="sec" style="background:#7c3aed">Web design</div>
+            <div class="sec" style="background:#f59e0b">Ads</div><div class="sec" style="background:#12a150">Social media</div>
+          </div>
+          <div class="el stamp" id="gc" style="left:180px;top:720px;font-size:54px;transform:rotate(-4deg)">🤔 Google is confused</div>
+          <div class="el page" id="sp1" style="left:70px;top:900px;height:250px"><div class="t" style="color:#2563eb">/seo-services</div><div class="ln"></div><div class="ln" style="width:70%"></div></div>
+          <div class="el page" id="sp2" style="left:400px;top:900px;height:250px"><div class="t" style="color:#7c3aed">/web-design</div><div class="ln"></div><div class="ln" style="width:70%"></div></div>
+          <div class="el page" id="sp3" style="left:730px;top:900px;height:250px"><div class="t" style="color:#f59e0b">/google-ads</div><div class="ln"></div><div class="ln" style="width:70%"></div></div>
+          <div class="el stamp g" id="sep" style="left:150px;top:1200px;font-size:54px">✅ One service = one page</div>
+        </div>
+
+        <!-- B3: location pages -->
+        <div class="scene full" id="b3"><div class="bg"><div class="dots"></div></div>
+          <div class="el h" id="b3h" style="top:170px;font-size:64px">One page per <em class="g">location</em></div>
+          <div class="el pin" id="l1" style="left:80px;top:420px"><div class="p">📍</div><div class="c">Hyderabad</div><div class="u">/hyderabad</div></div>
+          <div class="el pin" id="l2" style="left:400px;top:560px"><div class="p">📍</div><div class="c">Chennai</div><div class="u">/chennai</div></div>
+          <div class="el pin" id="l3" style="left:700px;top:420px"><div class="p">📍</div><div class="c">Mumbai</div><div class="u">/mumbai</div></div>
+          <div class="el stamp g" id="loc" style="left:110px;top:1000px;font-size:52px">🎯 Target each city's audience</div>
+        </div>
+
+        <!-- B4: programmatic SEO, same template order on every page -->
+        <div class="scene full" id="b4"><div class="bg"><div class="dots"></div></div>
+          <div class="el h" id="b4h" style="top:150px;font-size:54px">Programmatic SEO = <em class="r">same template</em></div>
+          <div class="el page" id="pg1" style="left:70px;top:330px"><div class="t">keyword-1</div><div class="sec" style="background:#2563eb">Hero</div><div class="sec" style="background:#7c3aed">Features</div><div class="sec" style="background:#f59e0b">FAQ</div><div class="sec" style="background:#12a150">CTA</div></div>
+          <div class="el page" id="pg2" style="left:400px;top:330px"><div class="t">keyword-2</div><div class="sec" style="background:#2563eb">Hero</div><div class="sec" style="background:#7c3aed">Features</div><div class="sec" style="background:#f59e0b">FAQ</div><div class="sec" style="background:#12a150">CTA</div></div>
+          <div class="el page" id="pg3" style="left:730px;top:330px"><div class="t">keyword-3</div><div class="sec" style="background:#2563eb">Hero</div><div class="sec" style="background:#7c3aed">Features</div><div class="sec" style="background:#f59e0b">FAQ</div><div class="sec" style="background:#12a150">CTA</div></div>
+          <div class="el chip" id="intent" style="left:150px;top:760px;font-size:42px">🎯 Different intent ➜ different page</div>
+          <div class="el page" id="fx" style="left:400px;top:880px"><div class="t">keyword-2</div><div class="sec" style="background:#f59e0b">FAQ</div><div class="sec" style="background:#2563eb">Hero</div><div class="sec" style="background:#12a150">CTA</div><div class="sec" style="background:#7c3aed">Features</div></div>
+          <div class="el stamp" id="nf" style="left:200px;top:1280px;font-size:50px;transform:rotate(-3deg)">❌ Not flexible in programmatic</div>
+        </div>
+
+        <!-- B5: AI content -->
+        <div class="scene full" id="b5"><div class="bg"><div class="dots"></div></div>
+          <div class="el h" id="b5h" style="top:170px;font-size:64px">Copy-paste <em class="r">AI content</em></div>
+          <div class="el logo" id="gpt" style="left:450px;top:350px"><img src="assets/logos/openai.svg" /></div>
+          <div class="el card" id="cp" style="left:140px;top:600px;width:800px;padding:30px 40px">
+            <div style="font-family:Mono;font-size:30px;color:#8b8279">Ctrl+C ➜ Ctrl+V</div>
+            <div class="ln" style="height:18px;border-radius:9px;background:#e9e4dd;margin:16px 0"></div>
+            <div class="ln" style="height:18px;border-radius:9px;background:#e9e4dd;margin:16px 0;width:80%"></div>
+            <div class="ln" style="height:18px;border-radius:9px;background:#e9e4dd;margin:16px 0;width:60%"></div>
+          </div>
+          <div class="el stamp" id="ni" style="left:220px;top:930px;font-size:58px;transform:rotate(-4deg)">❌ Not indexed</div>
+          <div class="el stamp" id="nr" style="left:220px;top:1080px;font-size:58px;transform:rotate(3deg)">❌ Never recommended</div>
+        </div>
+
+        <!-- B6: internal linking -->
+        <div class="scene full" id="b6"><div class="bg"><div class="dots"></div></div>
+          <div class="el h" id="b6h" style="top:160px;font-size:64px"><em class="g">Internal linking</em></div>
+          <svg class="links" viewBox="0 0 1080 1920"><g stroke="#12a150" stroke-width="6" fill="none" stroke-linecap="round">
+            <path id="w1" d="M540 470 L255 720"/><path id="w2" d="M540 470 L825 720"/><path id="w3" d="M255 780 L540 1010"/><path id="w4" d="M825 780 L540 1010"/><path id="w5" d="M300 720 L780 720"/></g></svg>
+          <div class="el node" id="n1" style="left:435px;top:400px">🏠 Home</div>
+          <div class="el node" id="n2" style="left:150px;top:690px">Service</div>
+          <div class="el node" id="n3" style="left:720px;top:690px">Blog</div>
+          <div class="el node" id="n4" style="left:435px;top:950px">Location</div>
+          <div class="el node" id="orph" style="left:760px;top:1150px;border:4px dashed var(--red)">Orphan page</div>
+          <div class="el stamp" id="oi" style="left:330px;top:1330px;font-size:46px">❌ Not indexed</div>
+        </div>
+
+        <!-- B7: backlinks tiers -->
+        <div class="scene full" id="b7"><div class="bg"><div class="dots"></div></div>
+          <div class="el h" id="b7h" style="top:170px;font-size:64px">Tier 1 &amp; Tier 2 <em class="g">backlinks</em></div>
+          <div class="el chip" id="k1" style="left:120px;top:380px">✍️ Guest posting</div>
+          <div class="el chip" id="k2" style="left:520px;top:510px">📰 PR submission</div>
+          <div class="el chip" id="k3" style="left:120px;top:640px">🌐 Digital PR</div>
+          <div class="el chip" id="k4" style="left:520px;top:770px">📋 Listings</div>
+          <div class="el chip" id="k5" style="left:120px;top:900px">📂 Directories</div>
+          <div class="el stamp g" id="bk" style="left:260px;top:1110px;font-size:60px">✅ Good call</div>
+        </div>
+
+      </section>
+      <div id="captions"></div>
+    </div>
+
+    <script>
+      function T(x) { let acc = 0; for (const [a, b] of KEEP) { if (x < a) return acc; if (x <= b) return acc + x - a; acc += b - a; } return acc; }
+      window.T = T;
+      const B = window.BEATS;
+      // Layout modes (original clock), from beats.js; composite.py SPLIT uses the same split (board) windows.
+      const MODES = window.MODES = B.modes;
+      const CUES = window.CUES = [];
+      const tl = gsap.timeline({ paused: true });
+      const at = (x) => T(x);
+      function modeAt(x) { const m = MODES.find(([, a, b]) => x >= a && x < b); return m ? m[0] : "full"; }
+      const CAP_TOP = { split: 1640, broll: 1580, full: 1360 };
+
+      function buildCaptions() {
+        const root = document.getElementById("captions");
+        CUES.forEach(([start, end, text]) => {
+          const el = document.createElement("div");
+          el.className = "cap";
+          let orig = 0, acc = 0;
+          for (const [a, b] of KEEP) { if (start <= acc + (b - a)) { orig = a + start - acc; break; } acc += b - a; }
+          const md = modeAt(orig + 0.05);
+          el.style.top = CAP_TOP[md] + "px";
+          if (md === "broll") el.classList.add("dark");
+          let on = false;
+          const words = text.split(" ").map((w) => {
+            const hl = on || w.startsWith("*");
+            if (w.startsWith("*")) on = true;
+            if (/\*[,?.!:]?$/.test(w)) on = false;
+            return { w: w.replace(/\*/g, ""), hl };
+          });
+          el.innerHTML = words.map((o) => `<span class="w${o.hl ? " hl" : ""}">${o.w}</span>`).join(" ");
+          root.appendChild(el);
+          tl.set(el, { opacity: 1 }, start);
+          tl.set(el, { opacity: 0 }, end);
+          const ws = [...el.querySelectorAll(".w")];
+          const span = Math.min(0.7, (end - start) * 0.55);
+          ws.forEach((w, k) => tl.fromTo(w, { opacity: 0, y: 16, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.15, ease: "back.out(2)" }, start + span * k / ws.length));
+        });
+      }
+
+      function sceneIn(id, x, kind) {
+        tl.set(id, { opacity: 1 }, at(x));
+        if (kind === "split") tl.fromTo(id, { yPercent: -100 }, { yPercent: 0, duration: 0.42, ease: "power3.out", immediateRender: false }, at(x));
+        else tl.fromTo(id, { opacity: 0, scale: 1.06 }, { opacity: 1, scale: 1, duration: 0.35, ease: "power2.out", immediateRender: false }, at(x));
+      }
+      function sceneOut(id, x, kind) {
+        if (kind === "split") tl.to(id, { yPercent: -100, duration: 0.28, ease: "power3.in" }, at(x) - 0.28);
+        else tl.to(id, { opacity: 0, scale: 0.97, duration: 0.25, ease: "power2.in" }, at(x) - 0.25);
+        tl.set(id, { opacity: 0 }, at(x));
+      }
+      function show(sel, x, from = { scale: 0.6 }) {
+        tl.fromTo(sel, { opacity: 0, ...from }, { opacity: 1, scale: 1, x: 0, y: 0, rotation: 0, duration: 0.32, ease: "back.out(1.7)" }, at(x));
+      }
+      const out = (sel, x) => tl.to(sel, { opacity: 0, scale: 0.9, duration: 0.2, ease: "power2.in" }, at(x));
+
+      // board: an item pops in the middle as a big card, then flies to the next free slot on its side on the verdict
+      const slots = { g: 0, b: 0 };
+      function rate(id, xIn, xVerdict, side) {
+        const el = document.querySelector(id);
+        const n = slots[side]++;
+        const tx = side === "g" ? 75 : 585, ty = 150 + n * 132;
+        tl.set(el, { x: 120, y: 330, scale: 1.75, opacity: 0, transformOrigin: "0 0" }, at(xIn));
+        tl.to(el, { opacity: 1, duration: 0.25, ease: "power2.out" }, at(xIn));
+        tl.to(el, { x: tx, y: ty, scale: 1, duration: 0.55, ease: "power3.inOut" }, at(xVerdict));
+        const i = el.querySelector("i");
+        i.innerHTML = `<span class="u">?</span><span class="v">${side === "g" ? "✓" : "✕"}</span>`;
+        tl.set(i.querySelector(".v"), { opacity: 0 }, 0);
+        tl.to(i, { backgroundColor: side === "g" ? "#12a150" : "#e5383b", duration: 0.2 }, at(xVerdict) + 0.35);
+        tl.to(i.querySelector(".u"), { opacity: 0, duration: 0.1 }, at(xVerdict) + 0.35);
+        tl.to(i.querySelector(".v"), { opacity: 1, duration: 0.1 }, at(xVerdict) + 0.4);
+        tl.fromTo(el, { scale: 1 }, { scale: 1.08, duration: 0.14, yoyo: true, repeat: 1, immediateRender: false }, at(xVerdict) + 0.55);
+      }
+
+      function build() {
+        buildCaptions();
+        // board windows and verdicts
+        B.board.forEach(([a, b]) => { sceneIn("#board", a, "split"); sceneOut("#board", b, "split"); });
+        B.items.forEach(([id, xIn, xV, side]) => rate(id, xIn, xV, side));
+
+        const s = B.scenes;
+        // B1 daily content
+        sceneIn("#b1", s.b1[0], "broll");
+        show("#b1h", s.b1[0] + 0.1, { y: -30, scale: 1 });
+        tl.fromTo("#cal", { opacity: 0 }, { opacity: 1, duration: 0.2 }, at(s.b1[0] + 0.3));
+        tl.fromTo("#cal div", { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: 0.18, stagger: 0.04, ease: "back.out(2)" }, at(s.b1[0] + 0.3));
+        show("#qc", s.b1[1], { scale: 2, rotation: -14 });
+        show("#srch", s.b1[2], { y: 60, scale: 0.92 });
+        sceneOut("#b1", s.b1[3], "broll");
+        // B2 service pages
+        sceneIn("#b2", s.b2[0], "broll");
+        show("#b2h", s.b2[0] + 0.1, { y: -30, scale: 1 });
+        show("#one", s.b2[0] + 0.4, { y: 60, scale: 0.9 });
+        show("#gc", s.b2[1], { scale: 2, rotation: -12 });
+        show("#sp1", s.b2[2], { y: 60, scale: 0.8 }); show("#sp2", s.b2[2] + 0.3, { y: 60, scale: 0.8 }); show("#sp3", s.b2[2] + 0.6, { y: 60, scale: 0.8 });
+        show("#sep", s.b2[2] + 1.0, { scale: 1.8 });
+        sceneOut("#b2", s.b2[3], "broll");
+        // B3 location pages
+        sceneIn("#b3", s.b3[0], "broll");
+        show("#b3h", s.b3[0] + 0.1, { y: -30, scale: 1 });
+        show("#l1", s.b3[1], { y: -80, scale: 0.6 }); show("#l2", s.b3[1] + 0.5, { y: -80, scale: 0.6 }); show("#l3", s.b3[1] + 1.0, { y: -80, scale: 0.6 });
+        show("#loc", s.b3[2], { scale: 1.8 });
+        sceneOut("#b3", s.b3[3], "broll");
+        // B4 programmatic SEO
+        sceneIn("#b4", s.b4[0], "broll");
+        show("#b4h", s.b4[0] + 0.1, { y: -30, scale: 1 });
+        show("#pg1", s.b4[0] + 0.5, { y: 60, scale: 0.8 }); show("#pg2", s.b4[0] + 0.8, { y: 60, scale: 0.8 }); show("#pg3", s.b4[0] + 1.1, { y: 60, scale: 0.8 });
+        show("#intent", s.b4[1], { scale: 0.6 });
+        show("#fx", s.b4[2], { y: 60, scale: 0.8 });
+        show("#nf", s.b4[3], { scale: 2, rotation: -10 });
+        sceneOut("#b4", s.b4[4], "broll");
+        // B5 AI content
+        sceneIn("#b5", s.b5[0], "broll");
+        show("#b5h", s.b5[0] + 0.1, { y: -30, scale: 1 });
+        show("#gpt", s.b5[0] + 0.4, { scale: 0.3 });
+        show("#cp", s.b5[1], { y: 60, scale: 0.9 });
+        show("#ni", s.b5[2], { scale: 2, rotation: -12 });
+        show("#nr", s.b5[3], { scale: 2, rotation: 12 });
+        sceneOut("#b5", s.b5[4], "broll");
+        // B6 internal linking
+        sceneIn("#b6", s.b6[0], "broll");
+        show("#b6h", s.b6[0] + 0.1, { y: -30, scale: 1 });
+        show("#n1", s.b6[0] + 0.4, { scale: 0.4 }); show("#n2", s.b6[0] + 0.7, { scale: 0.4 }); show("#n3", s.b6[0] + 1.0, { scale: 0.4 }); show("#n4", s.b6[0] + 1.3, { scale: 0.4 });
+        tl.fromTo("#w1, #w2, #w3, #w4, #w5", { opacity: 0 }, { opacity: 1, duration: 0.2, stagger: 0.2 }, at(s.b6[0] + 1.5));
+        show("#orph", s.b6[1], { scale: 0.4 });
+        show("#oi", s.b6[2], { scale: 2, rotation: -10 });
+        sceneOut("#b6", s.b6[3], "broll");
+        // B7 backlinks
+        sceneIn("#b7", s.b7[0], "broll");
+        show("#b7h", s.b7[0] + 0.1, { y: -30, scale: 1 });
+        s.b7[1].forEach((x, k) => show("#k" + (k + 1), x, { x: k % 2 ? 80 : -80, scale: 0.8 }));
+        show("#bk", s.b7[2], { scale: 2, rotation: -8 });
+        sceneOut("#b7", s.b7[3], "broll");
+
+        window.__timelines["main"] = tl;
+      }
+    </script>
+    <script src="captions.js"></script>
+    <script>document.fonts.ready.then(build);</script>
+  </body>
+</html>
