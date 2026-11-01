@@ -34,9 +34,9 @@
       /* the item being rated */
       .pop { position: absolute; left: 0; top: 0; width: 240px; height: 240px; border-radius: 50%; background: #fff; display: grid; place-items: center; font-size: 130px;
              box-shadow: 0 24px 60px rgba(0,0,0,.4); opacity: 0; }
-      .label { left: 380px; right: 20px; top: 1010px; text-align: center; font-family: "P8"; font-size: 66px; color: #fff;
+      .label { left: 380px; right: 20px; top: 1135px; text-align: center; font-family: "P8"; font-size: 66px; color: #fff;
                text-shadow: 0 4px 0 rgba(0,0,0,.4), 0 6px 24px rgba(0,0,0,.6), 3px 3px 0 #000, -3px 3px 0 #000, 3px -3px 0 #000, -3px -3px 0 #000; }
-      .rank { left: 380px; right: 20px; top: 1080px; text-align: center; font-family: "Anton"; font-size: 220px; line-height: 1; color: var(--y);
+      .rank { left: 380px; right: 20px; top: 1150px; text-align: center; font-family: "Anton"; font-size: 220px; line-height: 1; color: var(--y);
               text-shadow: 0 10px 30px rgba(0,0,0,.55), 4px 4px 0 #000, -4px 4px 0 #000, 4px -4px 0 #000, -4px -4px 0 #000; }
       .flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
     </style>
@@ -72,7 +72,7 @@
         ["Domain authority", "🏆", 42.27, 43.90, 2],
       ];
       // spoken asides that get their own caption (no new item): [from, to, text]
-      const ASIDES = [[12.45, 15.0, "Hmm… AI content"], [19.12, 19.9, "Internal linking"], [29.65, 31.3, "Fresh content: 1"]];
+      const ASIDES = [[29.65, 31.3, "Fresh content: 1"]];
       const COLORS = ["#ff7b7b", "#ffb36b", "#ffe36b", "#c6f06b", "#7be0a0", "#6bd6e8", "#7ba7ff", "#a98bff", "#e58bff", "#ff8bc4"];
       const tl = gsap.timeline({ paused: true });
 
@@ -94,7 +94,7 @@
           const pop = document.createElement("div");
           pop.className = "pop"; pop.textContent = icon; pops.appendChild(pop);
           // centre position (chest), then the slot in its row
-          const cx = 715 - 120, cy = 760;
+          const cx = 715 - 120, cy = 880;
           const sx = L.x + L.slotX + (n - 1) * 62, sy = L.y + (r - 1) * L.rowH + 13;
           const s1 = at(tIn), s2 = at(tRank);
           tl.set(pop, { x: cx, y: cy, scale: 0.2, opacity: 0, transformOrigin: "0 0" }, s1);
