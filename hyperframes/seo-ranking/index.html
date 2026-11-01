@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="vendor/gsap.min.js"></script>
+    <script src="edl.js"></script>
+    <style>
+      @font-face { font-family: "P6"; src: url("assets/fonts/poppins-latin-600-normal.woff2"); font-weight: 600; }
+      @font-face { font-family: "P7"; src: url("assets/fonts/poppins-latin-700-normal.woff2"); font-weight: 700; }
+      @font-face { font-family: "P8"; src: url("assets/fonts/poppins-latin-800-normal.woff2"); font-weight: 800; }
+      @font-face { font-family: "Anton"; src: url("assets/fonts/anton-latin-400-normal.woff2"); }
+      :root { --y: #ffd426; --ink: #17151a; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
+      body { font-family: "P7", sans-serif; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; }
+      .clip { position: absolute; inset: 0; }
+      .el { position: absolute; opacity: 0; }
+
+      /* title */
+      .title { left: 0; right: 0; top: 70px; display: flex; justify-content: center; }
+      .title div { font-family: "P8"; font-size: 50px; line-height: 1.12; text-align: center; color: #fff; background: rgba(12,10,14,.92); padding: 16px 36px; border-radius: 22px; box-shadow: 0 14px 40px rgba(0,0,0,.35); }
+      .title div b { color: var(--y); }
+
+      /* ladder */
+      #ladder { left: 34px; top: 300px; width: 330px; }
+      .row { position: relative; height: 90px; margin-bottom: 8px; display: flex; align-items: center; }
+      .row .n { width: 64px; height: 90px; border-radius: 14px 0 0 14px; display: grid; place-items: center; font-family: "Anton"; font-size: 46px; color: var(--ink); }
+      .row .slot { flex: 1; height: 90px; border-radius: 0 14px 14px 0; background: rgba(12,10,14,.72); backdrop-filter: blur(3px); }
+      .row.hit .slot { box-shadow: inset 0 0 0 4px var(--y); }
+      .ico { position: absolute; width: 64px; height: 64px; border-radius: 50%; background: #fff; display: grid; place-items: center; font-size: 36px; box-shadow: 0 6px 16px rgba(0,0,0,.35); }
+
+      /* the item being rated */
+      .pop { position: absolute; left: 0; top: 0; width: 240px; height: 240px; border-radius: 50%; background: #fff; display: grid; place-items: center; font-size: 130px;
+             box-shadow: 0 24px 60px rgba(0,0,0,.4); opacity: 0; }
+      .label { left: 380px; right: 20px; top: 1010px; text-align: center; font-family: "P8"; font-size: 66px; color: #fff;
+               text-shadow: 0 4px 0 rgba(0,0,0,.4), 0 6px 24px rgba(0,0,0,.6), 3px 3px 0 #000, -3px 3px 0 #000, 3px -3px 0 #000, -3px -3px 0 #000; }
+      .rank { left: 380px; right: 20px; top: 1080px; text-align: center; font-family: "Anton"; font-size: 220px; line-height: 1; color: var(--y);
+              text-shadow: 0 10px 30px rgba(0,0,0,.55), 4px 4px 0 #000, -4px 4px 0 #000, 4px -4px 0 #000, -4px -4px 0 #000; }
+      .flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="38.046" data-width="1080" data-height="1920">
+      <section id="gfx" class="clip" data-start="0" data-duration="38.046" data-track-index="1">
+        <div class="el title" id="title"><div>SEO tactics <b>ranked</b> 🏆<br /><span style="font-family:P6;font-size:34px;color:#cfc8d6">1 = must do · 10 = skip it</span></div></div>
+        <div class="el" id="ladder"></div>
+        <div id="pops"></div>
+        <div id="texts"></div>
+        <div class="flash" id="flash"></div>
+      </section>
+    </div>
+
+    <script>
+      function T(x) { let acc = 0; for (const [a, b] of KEEP) { if (x < a) return acc; if (x <= b) return acc + x - a; acc += b - a; } return acc; }
+      const at = (x) => T(x);
+      // [name, icon, item spoken, rank spoken, rank] on the ORIGINAL clock (raw/ranking.mp4)
+      const ITEMS = [
+        ["Publishing daily content", "📝", 1.40, 3.55, 8],
+        ["Service pages", "🧰", 5.60, 7.10, 2],
+        ["Location pages", "📍", 8.40, 9.90, 1],
+        ["AI content", "🤖", 11.00, 15.75, 9],
+        ["Internal linking", "🕸️", 17.65, 20.00, 3],
+        ["Programmatic SEO", "⚙️", 21.25, 22.80, 10],
+        ["Backlinks", "🔗", 24.25, 25.70, 2],
+        ["Content refresh", "🔄", 26.60, 28.30, 1],
+        ["E-E-A-T", "🎓", 31.92, 33.10, 2],
+        ["Versus pages", "⚖️", 34.35, 36.00, 3],
+        ["Schema markup", "🧩", 37.17, 38.30, 1],
+        ["Core Web Vitals", "⚡", 39.63, 41.15, 1],
+        ["Domain authority", "🏆", 42.27, 43.90, 2],
+      ];
+      // spoken asides that get their own caption (no new item): [from, to, text]
+      const ASIDES = [[12.45, 15.0, "Hmm… AI content"], [19.12, 19.9, "Internal linking"], [29.65, 31.3, "Fresh content: 1"]];
+      const COLORS = ["#ff7b7b", "#ffb36b", "#ffe36b", "#c6f06b", "#7be0a0", "#6bd6e8", "#7ba7ff", "#a98bff", "#e58bff", "#ff8bc4"];
+      const tl = gsap.timeline({ paused: true });
+
+      function build() {
+        const ladder = document.getElementById("ladder");
+        ladder.innerHTML = COLORS.map((c, i) => `<div class="row" id="r${i + 1}"><div class="n" style="background:${c}">${i + 1}</div><div class="slot"></div></div>`).join("");
+        const L = { x: 34, y: 300, rowH: 98, slotX: 64 + 12 };
+
+        tl.fromTo("#title", { opacity: 0, y: -40 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, 0.05);
+        tl.set("#ladder", { opacity: 1 }, 0.1);
+        tl.fromTo("#ladder .row", { opacity: 0, x: -80 }, { opacity: 1, x: 0, duration: 0.3, stagger: 0.05, ease: "power3.out" }, 0.1);
+
+        const used = {};
+        const texts = document.getElementById("texts");
+        const mk = (cls, txt) => { const d = document.createElement("div"); d.className = "el " + cls; d.textContent = txt; texts.appendChild(d); return d; };
+        const pops = document.getElementById("pops");
+        ITEMS.forEach(([name, icon, tIn, tRank, r], k) => {
+          const n = used[r] = (used[r] || 0) + 1;
+          const pop = document.createElement("div");
+          pop.className = "pop"; pop.textContent = icon; pops.appendChild(pop);
+          // centre position (chest), then the slot in its row
+          const cx = 715 - 120, cy = 760;
+          const sx = L.x + L.slotX + (n - 1) * 62, sy = L.y + (r - 1) * L.rowH + 13;
+          const s1 = at(tIn), s2 = at(tRank);
+          tl.set(pop, { x: cx, y: cy, scale: 0.2, opacity: 0, transformOrigin: "0 0" }, s1);
+          tl.to(pop, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2)" }, s1);
+          tl.to(pop, { y: cy - 14, duration: 0.6, yoyo: true, repeat: 1, ease: "sine.inOut" }, s1 + 0.35);
+          // label (item name), then the big rank number
+          const label = mk("label", name), rank = mk("rank", String(r));
+          tl.fromTo(label, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.2, immediateRender: false }, s1);
+          tl.set(label, { opacity: 0 }, s2);
+          tl.fromTo(rank, { opacity: 0, scale: 2.2 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2.5)", immediateRender: false }, s2);
+          tl.to(rank, { opacity: 0, duration: 0.15 }, s2 + 0.75);
+          // fly into the slot (64 px icon = scale 64/240)
+          tl.to(pop, { x: sx, y: sy, scale: 64 / 240, duration: 0.55, ease: "power3.inOut" }, s2 + 0.15);
+          tl.fromTo("#r" + r + " .slot", { boxShadow: "inset 0 0 0 4px rgba(255,212,38,1)" }, { boxShadow: "inset 0 0 0 0px rgba(255,212,38,0)", duration: 0.8, immediateRender: false }, s2 + 0.65);
+          tl.fromTo("#r" + r + " .n", { scale: 1 }, { scale: 1.15, duration: 0.12, yoyo: true, repeat: 1, immediateRender: false }, s2 + 0.65);
+        });
+        ASIDES.forEach(([a, b, text]) => {
+          const label = mk("label", text);
+          tl.fromTo(label, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.2, immediateRender: false }, at(a));
+          tl.set(label, { opacity: 0 }, at(b));
+        });
+        // closing: the finished ladder takes a bow
+        tl.to("#ladder", { scale: 1.04, transformOrigin: "0 50%", duration: 0.4, yoyo: true, repeat: 1, ease: "sine.inOut" }, at(43.9) + 0.9);
+
+        window.__timelines["main"] = tl;
+      }
+    </script>
+    <script>document.fonts.ready.then(build);</script>
+  </body>
+</html>
