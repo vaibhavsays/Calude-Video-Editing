@@ -3,9 +3,10 @@
 no sound effects, professional camera moves, B-roll that sometimes takes the whole frame.
 
   1. Tighten the user's timeline (edl.json, see tools/edl.py), 10 ms audio fades at every join.
-  2. Voice: per-clip gain so every shot sits at the same loudness, light denoise, high-pass, a little presence,
+  2. Voice: denoise (static/hiss), a gentle gate against the room tail, less boxiness, a little presence,
      gentle compression, limiter. Nothing else in the mix.
-  3. Picture: 30 fps (iPhone portrait, auto-rotated), deblock + denoise, mild sharpen, clean colour boost and soft S-curve.
+  3. Picture: 30 fps (iPhone portrait, auto-rotated), natural grade: neutral white balance, true skin tones, brighter
+     mids, slight contrast, light denoise + sharpening.
   4. Camera: slow push-ins on every shot and an eased punch at every hard cut.
   5. Split windows: the speaker sits below the B-roll panel (head below 790 px). Full-screen B-roll windows are
      opaque in the overlay, so only the graphics show there while the voice carries on.
@@ -35,9 +36,12 @@ CLIPS = [(0.0, 0.0)]
 # Split windows (original clock) with the source crop top for the speaker; same windows as MODES in index.html
 SPLIT = [(0.0, 20.7, 230)]  # tier board on top the whole time, speaker below (head starts ~850 px)
 
-GRADE = ("deblock=filter=weak:block=8,hqdn3d=2:1.5:3:3,unsharp=5:5:0.45:5:5:0,"
-         "eq=contrast=1.06:saturation=1.08,vibrance=intensity=0.10,"
-         "curves=master='0/0.012 0.25/0.235 0.5/0.5 0.75/0.775 1/0.988'")
+# Natural grade (house rule, see CLAUDE.md): neutral white balance from the white wall (iPhone footage runs warm, so
+# red is pulled down and blue up), no saturation/vibrance boost (that turns skin red), brighter mids with lifted
+# shadows, slight contrast, light denoise and CAS sharpening.
+GRADE = ("hqdn3d=1.5:1.2:3:3,colorchannelmixer=rr=0.955:bb=1.055,"
+         "eq=contrast=1.05:brightness=0.015:saturation=0.97:gamma=1.04,"
+         "curves=master='0/0.01 0.2/0.215 0.5/0.53 0.8/0.83 1/0.99',cas=strength=0.45")
 
 # Camera keyframes on the ORIGINAL clock: (time, zoom, centre x, centre y) as fractions of the frame.
 # Between keys the move is eased (smoothstep); a key with the same values holds.
@@ -92,8 +96,9 @@ def main(out_path):
     for i, (a, b) in enumerate(KEEP):
         d = b - a
         g.append(f"[as{i}]atrim={a}:{b},asetpts=PTS-STARTPTS,afade=t=in:d=0.01,afade=t=out:st={max(0, d - 0.012):.3f}:d=0.012[ac{i}]")
-    g.append("".join(f"[ac{i}]" for i in range(n)) + f"concat=n={n}:v=0:a=1,afftdn=nr=8:nf=-45,highpass=f=75,"
-             "equalizer=f=3200:t=q:w=1.2:g=2.5,equalizer=f=220:t=q:w=1:g=-1.5,"
+    g.append("".join(f"[ac{i}]" for i in range(n)) + f"concat=n={n}:v=0:a=1,highpass=f=80,afftdn=nr=14:nf=-42:tn=1,anlmdn=s=4:p=0.002:r=0.006,"
+             "agate=threshold=0.012:ratio=1.8:attack=6:release=140:range=0.35,"   # tame the room tail between words
+             "equalizer=f=280:t=q:w=1.1:g=-2.5,equalizer=f=3200:t=q:w=1.2:g=2.5,equalizer=f=9000:t=h:w=1:g=1,"
              "acompressor=threshold=0.09:ratio=2.5:attack=8:release=160:makeup=1.6,volume=5.5dB,alimiter=limit=0.85[a]")
     cmd = ["ffmpeg", "-y", "-v", "error", "-i", str(SRC), "-i", str(HERE / "renders/overlay.mov"),
            "-filter_complex", ";\n".join(g), "-map", "[v]", "-map", "[a]",
