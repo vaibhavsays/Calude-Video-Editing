@@ -17,8 +17,10 @@ Short-form video editing (9:16 Reels/Shorts). Source footage lives in `raw/`, fi
 - Keep quality: lay graphics over the untouched original and encode once, at CRF 15 or lower. Never render the footage through JPEG frame capture.
 
 ## Look & sound (user's standing brief, every video)
-- Skin must look natural, never red/orange. Neutralise white balance off a white/grey surface (the iPhone footage runs warm), no saturation or vibrance boost, slight contrast, brighter mids, lifted (not muddy) shadows. Reference grade: `GRADE` in `hyperframes/content-tier-list/composite.py`.
-- Light denoise + gentle sharpening only; no motion blur, no compression artifacts.
+- **Color correction:** neutralise white balance off a white/grey surface (the iPhone footage runs warm).
+- **Color grading:** natural skin tones, never red/orange (no saturation or vibrance boost); brighter mids, lifted (not muddy) shadows, cinematic contrast (gentle S-curve).
+- **Quality/sharpness:** artifact removal (deblock), noise reduction, gentle sharpening; upscaling (Lanczos) only when the source is below 1080x1920. No motion blur.
+- Reference grade: `GRADE` in `hyperframes/content-tier-list/composite.py`.
 - Voice crisp and front-and-center: denoise static/hiss, tame room echo (gentle gate), cut boxiness, a little presence, ~-14 LUFS.
 - Professional, stable talking-head framing for Reels/YouTube.
 - Chat file uploads are limited to 30 MB.
