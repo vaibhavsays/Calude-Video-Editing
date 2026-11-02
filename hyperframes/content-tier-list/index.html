@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="vendor/gsap.min.js"></script>
+    <script src="edl.js"></script>
+    <style>
+      @font-face { font-family: "P6"; src: url("assets/fonts/poppins-latin-600-normal.woff2"); font-weight: 600; }
+      @font-face { font-family: "P7"; src: url("assets/fonts/poppins-latin-700-normal.woff2"); font-weight: 700; }
+      @font-face { font-family: "P8"; src: url("assets/fonts/poppins-latin-800-normal.woff2"); font-weight: 800; }
+      @font-face { font-family: "Anton"; src: url("assets/fonts/anton-latin-400-normal.woff2"); }
+      :root { --y: #ffd426; --ink: #17151a; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
+      body { font-family: "P7", sans-serif; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; }
+      .clip { position: absolute; inset: 0; }
+      .el { position: absolute; opacity: 0; }
+
+      /* top panel (speaker is composited below 760 px) */
+      #panel { position: absolute; left: 0; right: 0; top: 0; height: 790px; }
+      #panel .bg { position: absolute; inset: 0 0 30px 0; background: linear-gradient(180deg, #2a2733 0%, #1c1a22 100%); }
+      #panel svg.wave { position: absolute; left: 0; bottom: 0; width: 1080px; height: 60px; filter: drop-shadow(0 8px 10px rgba(0,0,0,.35)); }
+      .title { left: 0; right: 0; top: 36px; display: flex; justify-content: center; }
+      .title div { font-family: "P8"; font-size: 44px; line-height: 1.1; text-align: center; color: var(--ink); background: #fff; padding: 12px 34px; border-radius: 18px; box-shadow: 0 12px 30px rgba(0,0,0,.35); }
+      .title div small { display: block; font-family: "P7"; font-size: 30px; color: #6b6470; }
+      .row { position: absolute; left: 40px; width: 1000px; height: 86px; display: flex; }
+      .row .t { width: 96px; height: 86px; border-radius: 14px 0 0 14px; display: grid; place-items: center; font-family: "Anton"; font-size: 54px; color: var(--ink); }
+      .row .s { flex: 1; border-radius: 0 14px 14px 0; background: rgba(255,255,255,.07); border: 2px solid rgba(255,255,255,.10); border-left: none; }
+
+      /* content mock-ups (drawn at 420x280, shrunk into the tier rows) */
+      .card { position: absolute; left: 0; top: 0; width: 420px; height: 280px; border-radius: 26px; background: #fff; overflow: hidden; opacity: 0;
+              box-shadow: 0 24px 60px rgba(0,0,0,.45); padding: 22px 26px; font-family: "P7"; color: var(--ink); }
+      .card .tag { display: inline-block; font-family: "P8"; font-size: 20px; letter-spacing: 2px; color: #fff; padding: 4px 12px; border-radius: 8px; }
+      .card .ln { height: 14px; border-radius: 7px; background: #e6e1d9; margin: 12px 0; }
+      .card .hd { font-family: "P8"; font-size: 30px; line-height: 1.1; margin: 10px 0 6px; }
+      .card .bars { display: flex; align-items: flex-end; gap: 12px; height: 130px; margin-top: 14px; }
+      .card .bars i { flex: 1; border-radius: 8px 8px 3px 3px; }
+      .card .li { display: flex; align-items: center; gap: 12px; font-family: "P7"; font-size: 24px; margin: 7px 0; }
+      .card .li b { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-family: "P8"; font-size: 20px; flex: none; }
+
+      /* item name / verdict under the pop-up card */
+      .label { left: 40px; right: 40px; top: 1690px; text-align: center; font-family: "P8"; font-size: 64px; color: #fff;
+               text-shadow: 0 4px 0 rgba(0,0,0,.4), 0 6px 24px rgba(0,0,0,.6), 3px 3px 0 #000, -3px 3px 0 #000, 3px -3px 0 #000, -3px -3px 0 #000; }
+      .verdict { left: 0; right: 0; top: 1660px; display: flex; justify-content: center; }
+      .verdict span { font-family: "Anton"; font-size: 110px; line-height: 1; color: var(--ink); padding: 10px 44px; border-radius: 24px; box-shadow: 0 16px 40px rgba(0,0,0,.45); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="17.966" data-width="1080" data-height="1920">
+      <section id="gfx" class="clip" data-start="0" data-duration="17.966" data-track-index="1">
+        <div id="panel"><div class="bg"></div><svg class="wave" viewBox="0 0 1080 60" preserveAspectRatio="none"><path d="M0 0 H1080 V22 C 900 60, 720 0, 540 26 C 360 52, 180 4, 0 30 Z" fill="#1c1a22"/></svg>
+          <div class="el title" id="title"><div>Content that ranks in AI search 🤖<small>(tier list)</small></div></div>
+          <div id="rows"></div>
+        </div>
+        <div id="cards">
+          <div class="card" id="c1"><span class="tag" style="background:#ff6b6b">BLOG</span><div style="height:92px;border-radius:14px;margin-top:12px;background:linear-gradient(135deg,#ffd29d,#ff9a8b)"></div><div class="hd" style="font-size:24px">10 SEO tips for 2026</div><div class="ln" style="width:80%"></div></div>
+          <div class="card" id="c2"><span class="tag" style="background:#3b5bdb">WHITE PAPER</span><div class="hd">The State of AI Search</div><div class="ln"></div><div class="ln" style="width:90%"></div><div class="ln" style="width:70%"></div><div class="ln" style="width:85%"></div></div>
+          <div class="card" id="c3"><span class="tag" style="background:#12a150">ORIGINAL DATA</span><div class="bars"><i style="height:35%;background:#9ad7b0"></i><i style="height:55%;background:#5fc187"></i><i style="height:42%;background:#9ad7b0"></i><i style="height:78%;background:#2fa866"></i><i style="height:100%;background:#12a150"></i></div><div class="ln" style="width:60%"></div></div>
+          <div class="card" id="c4"><span class="tag" style="background:#7c3aed">IN-DEPTH GUIDE</span><div class="li"><b style="background:#7c3aed">1</b>The basics</div><div class="li"><b style="background:#7c3aed">2</b>Step-by-step</div><div class="li"><b style="background:#7c3aed">3</b>Advanced tips</div><div class="li"><b style="background:#7c3aed">4</b>Checklist</div></div>
+          <div class="card" id="c5"><span class="tag" style="background:#0e9fb5">GLOSSARY</span><div style="display:flex;gap:22px;align-items:center;margin-top:8px"><div style="font-family:Anton;font-size:120px;line-height:1;color:#0e9fb5">A–Z</div><div style="flex:1"><div class="ln"></div><div class="ln" style="width:80%"></div><div class="ln"></div><div class="ln" style="width:60%"></div></div></div></div>
+          <div class="card" id="c6"><span class="tag" style="background:#f08c00">LISTICLE</span><div class="hd">Top 10 SEO tools</div><div class="li"><b style="background:#f08c00">1</b><span class="ln" style="flex:1;margin:0"></span></div><div class="li"><b style="background:#f08c00">2</b><span class="ln" style="flex:1;margin:0"></span></div><div class="li"><b style="background:#f08c00">3</b><span class="ln" style="flex:1;margin:0"></span></div></div>
+          <div class="card" id="c7"><span class="tag" style="background:#e5383b">COMPARISON</span><div style="display:flex;gap:16px;align-items:center;margin-top:14px"><div style="flex:1;height:170px;border-radius:14px;background:#eef2ff;display:grid;place-items:center;font-family:P8;font-size:40px;color:#3b5bdb">A</div><div style="font-family:Anton;font-size:46px">VS</div><div style="flex:1;height:170px;border-radius:14px;background:#fff0f0;display:grid;place-items:center;font-family:P8;font-size:40px;color:#e5383b">B</div></div></div>
+        </div>
+        <div id="texts"></div>
+      </section>
+    </div>
+
+    <script>
+      function T(x) { let acc = 0; for (const [a, b] of KEEP) { if (x < a) return acc; if (x <= b) return acc + x - a; acc += b - a; } return acc; }
+      const at = (x) => T(x);
+      const TIERS = [["S", "#f78fd8"], ["A", "#8fb8ff"], ["B", "#ffe36b"], ["C", "#7fe0e6"], ["D", "#9be38f"], ["F", "#ff8080"]];
+      // [card, name, item spoken, verdict spoken, tier] on the ORIGINAL clock (raw/2November.MOV)
+      const ITEMS = [
+        ["#c1", "Blogs", 1.15, 2.15, "B"],
+        ["#c2", "White papers", 3.45, 4.95, "B"],
+        ["#c3", "Original data & research", 5.45, 8.05, "A"],
+        ["#c4", "In-depth guides", 9.42, 10.85, "B"],
+        ["#c5", "Glossary pages", 11.70, 13.72, "C"],
+        ["#c6", "Listicle content", 14.80, 16.30, "D"],
+        ["#c7", "Comparison pages", 17.45, 18.75, "D"],
+      ];
+      const tl = gsap.timeline({ paused: true });
+      const ROW0 = 168, ROWH = 92, SLOT0 = 40 + 96 + 12, TW = 112;
+
+      function build() {
+        const rows = document.getElementById("rows");
+        rows.innerHTML = TIERS.map(([t, c], i) => `<div class="row" id="row${t}" style="top:${ROW0 + i * ROWH}px"><div class="t" style="background:${c}">${t}</div><div class="s"></div></div>`).join("");
+        const texts = document.getElementById("texts");
+        const mk = (cls, html) => { const d = document.createElement("div"); d.className = "el " + cls; d.innerHTML = html; texts.appendChild(d); return d; };
+
+        tl.fromTo("#title", { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, 0.02);
+        tl.fromTo("#rows .row", { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.3, stagger: 0.06, ease: "power3.out" }, 0.1);
+
+        const used = {};
+        ITEMS.forEach(([id, name, tIn, tV, tier]) => {
+          const card = document.querySelector(id);
+          const ti = TIERS.findIndex(([t]) => t === tier), color = TIERS[ti][1];
+          const n = used[tier] = (used[tier] || 0) + 1;
+          const k = TW / 420;  // 112 x 75 thumbnail fits the 86 px row
+          const sx = SLOT0 + (n - 1) * (TW + 12), sy = ROW0 + ti * ROWH + (86 - 280 * k) / 2;
+          const s1 = at(tIn), s2 = at(tV);
+          const label = mk("label", name);
+          const verdict = mk("verdict", `<span style="background:${color}">${tier} TIER</span>`);
+          // card pops up on the chest, floats, then flies into its tier on the verdict
+          tl.set(card, { x: 330, y: 1380, scale: 0.3, opacity: 0, transformOrigin: "0 0" }, s1);
+          tl.to(card, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(1.8)" }, s1);
+          tl.fromTo(label, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.2, immediateRender: false }, s1 + 0.05);
+          tl.set(label, { opacity: 0 }, s2);
+          tl.fromTo(verdict, { opacity: 0, scale: 1.8 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2.4)", immediateRender: false }, s2);
+          tl.to(verdict, { opacity: 0, duration: 0.15 }, s2 + 0.85);
+          tl.to(card, { x: sx, y: sy, scale: k, duration: 0.6, ease: "power3.inOut" }, s2 + 0.25);
+          tl.fromTo("#row" + tier + " .s", { backgroundColor: "rgba(255,255,255,.30)" }, { backgroundColor: "rgba(255,255,255,.07)", duration: 0.8, immediateRender: false }, s2 + 0.8);
+          tl.fromTo("#row" + tier + " .t", { scale: 1 }, { scale: 1.12, duration: 0.12, yoyo: true, repeat: 1, immediateRender: false }, s2 + 0.8);
+        });
+        window.__timelines["main"] = tl;
+      }
+    </script>
+    <script>document.fonts.ready.then(build);</script>
+  </body>
+</html>
