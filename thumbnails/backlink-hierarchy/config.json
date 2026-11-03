@@ -1,0 +1,17 @@
+{
+  "theme": "mint",
+  "logos": ["google-color.svg", "google-search-console.svg"],
+  "logos_top": "140px",
+  "logo_size": "104px",
+  "title": "Backlink Hierarchy",
+  "title_size": "92px",
+  "title_top": "278px",
+  "subtitle": "TIER 1 · 2 · 3 EXPLAINED",
+  "sub_top": "400px",
+  "big_word": "TIERS",
+  "big_size": "380px",
+  "big_top": "475px",
+  "person_width": "1080px",
+  "photo": "assets/vaibhav_suit_cutout.png",
+  "output": "cover.png"
+}
