@@ -21,3 +21,6 @@ broll/inserts/
 hyperframes/*/main.mp4
 hyperframes/*/renders/
 __pycache__/
+
+# Over GitHub's 100 MB file limit; kept in the NOVEMBER3 release instead
+raw/nov3.mp4
