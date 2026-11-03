@@ -106,7 +106,7 @@ def main(out_path):
     g.append("".join(f"[ac{i}]" for i in range(n)) + f"concat=n={n}:v=0:a=1,highpass=f=80,afftdn=nr=14:nf=-42:tn=1,anlmdn=s=4:p=0.002:r=0.006,"
              "agate=threshold=0.012:ratio=1.8:attack=6:release=140:range=0.35,"   # tame the room tail between words
              "equalizer=f=280:t=q:w=1.1:g=-2.5,equalizer=f=3200:t=q:w=1.2:g=2.5,equalizer=f=9000:t=h:w=1:g=1,"
-             "acompressor=threshold=0.09:ratio=2.5:attack=8:release=160:makeup=1.6,volume=4.5dB,alimiter=limit=0.85[a]")
+             "acompressor=threshold=0.09:ratio=2.5:attack=8:release=160:makeup=1.6,volume=3.7dB,alimiter=limit=0.85[a]")
     cmd = ["ffmpeg", "-y", "-v", "error", "-i", str(SRC), "-i", str(HERE / "renders/overlay.mov"),
            "-filter_complex", ";\n".join(g), "-map", "[v]", "-map", "[a]",
            "-t", f"{DUR:.3f}", "-c:v", "libx264", "-preset", "slow", "-crf", "15", "-profile:v", "high", "-pix_fmt", "yuv420p",
