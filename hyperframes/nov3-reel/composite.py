@@ -21,7 +21,9 @@ HERE = Path(__file__).resolve().parent
 SRC = HERE / "../../raw/nov3.mp4"
 OUT = HERE / "../../output/Backlink_Hierarchy.mp4"
 edl = json.loads((HERE / "edl.json").read_text())
-KEEP, DUR = edl["keep"], edl["duration"]
+# snap the cuts to the 30 fps frame grid so picture and sound are cut at exactly the same instants (no 1-frame slip)
+KEEP = [[round(a * 30) / 30, round(b * 30) / 30] for a, b in edl["keep"]]
+DUR = round(sum(b - a for a, b in KEEP), 3)
 
 def T(x):
     acc = 0.0
@@ -33,9 +35,11 @@ def T(x):
 
 # Hard cuts in the upload (original clock) and per-clip voice gain in dB
 CLIPS = [(0.0, 0.0), (2.57, 0.0), (8.40, 0.0), (36.37, 0.0)]
-# The upload's picture runs ~0.2 s behind its sound (mouth still moving after the voice stops, e.g. at 36.1 s), and
-# the voice chain adds ~0.04 s: take each video segment this much later than its audio so lips match the voice.
-VIDEO_OFFSET = 0.18
+# The upload is in sync (checked frame by frame: lips close with the voice at 27.3, 29.4 and on the "m" at 30.0 s), so
+# the picture is cut on the same clock. The voice chain (FFT denoise) delays the sound by ~0.038 s; AUDIO_LATENCY is
+# trimmed off the front of the processed voice (and padded at the end) so lips stay matched.
+VIDEO_OFFSET = 0.0
+AUDIO_LATENCY = 0.038
 # Split windows (original clock) with the source crop top for the speaker; same windows as MODES in index.html
 SPLIT = [(9.90, 32.75, 330)]  # backlink pyramid on top, speaker below (head starts ~835 px)
 
@@ -93,7 +97,7 @@ def main(out_path):
     z, x, y = cam_expr()
     g = [f"[0:v]split={n}" + "".join(f"[vs{i}]" for i in range(n))]
     for i, (a, b) in enumerate(KEEP):
-        g.append(f"[vs{i}]trim={a + VIDEO_OFFSET:.3f}:{b + VIDEO_OFFSET:.3f},setpts=PTS-STARTPTS[vc{i}]")
+        g.append(f"[vs{i}]trim={max(0.0, a + VIDEO_OFFSET):.3f}:{b + VIDEO_OFFSET:.3f},setpts=PTS-STARTPTS[vc{i}]")
     g.append("".join(f"[vc{i}]" for i in range(n)) + f"concat=n={n}:v=1:a=0,fps=30,{GRADE},split={1 + len(SPLIT)}[u0]" +
              "".join(f"[u{k + 1}]" for k in range(len(SPLIT))))
     g.append(f"[u0]scale=2160:3840:flags=lanczos,zoompan=z='{z}':x='{x}':y='{y}':d=1:s=1080x1920:fps=30[f0]")
@@ -109,7 +113,8 @@ def main(out_path):
     g.append("".join(f"[ac{i}]" for i in range(n)) + f"concat=n={n}:v=0:a=1,highpass=f=80,afftdn=nr=14:nf=-42:tn=1,anlmdn=s=4:p=0.002:r=0.006,"
              "agate=threshold=0.012:ratio=1.8:attack=6:release=140:range=0.35,"   # tame the room tail between words
              "equalizer=f=280:t=q:w=1.1:g=-2.5,equalizer=f=3200:t=q:w=1.2:g=2.5,equalizer=f=9000:t=h:w=1:g=1,"
-             "acompressor=threshold=0.09:ratio=2.5:attack=8:release=160:makeup=1.6,volume=3.7dB,alimiter=limit=0.85[a]")
+             "acompressor=threshold=0.09:ratio=2.5:attack=8:release=160:makeup=1.6,volume=3.7dB,alimiter=limit=0.85,"
+             f"atrim=start={AUDIO_LATENCY},asetpts=PTS-STARTPTS,apad=pad_dur={AUDIO_LATENCY}[a]")
     cmd = ["ffmpeg", "-y", "-v", "error", "-i", str(SRC), "-i", str(HERE / "renders/overlay.mov"),
            "-filter_complex", ";\n".join(g), "-map", "[v]", "-map", "[a]",
            "-t", f"{DUR:.3f}", "-c:v", "libx264", "-preset", "slow", "-crf", "15", "-profile:v", "high", "-pix_fmt", "yuv420p",
