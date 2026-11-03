@@ -33,6 +33,9 @@ def T(x):
 
 # Hard cuts in the upload (original clock) and per-clip voice gain in dB
 CLIPS = [(0.0, 0.0), (2.57, 0.0), (8.40, 0.0), (36.37, 0.0)]
+# The upload's picture runs ~0.2 s behind its sound (mouth still moving after the voice stops, e.g. at 36.1 s), and
+# the voice chain adds ~0.04 s: take each video segment this much later than its audio so lips match the voice.
+VIDEO_OFFSET = 0.18
 # Split windows (original clock) with the source crop top for the speaker; same windows as MODES in index.html
 SPLIT = [(9.90, 32.75, 330)]  # backlink pyramid on top, speaker below (head starts ~835 px)
 
@@ -90,7 +93,7 @@ def main(out_path):
     z, x, y = cam_expr()
     g = [f"[0:v]split={n}" + "".join(f"[vs{i}]" for i in range(n))]
     for i, (a, b) in enumerate(KEEP):
-        g.append(f"[vs{i}]trim={a}:{b},setpts=PTS-STARTPTS[vc{i}]")
+        g.append(f"[vs{i}]trim={a + VIDEO_OFFSET:.3f}:{b + VIDEO_OFFSET:.3f},setpts=PTS-STARTPTS[vc{i}]")
     g.append("".join(f"[vc{i}]" for i in range(n)) + f"concat=n={n}:v=1:a=0,fps=30,{GRADE},split={1 + len(SPLIT)}[u0]" +
              "".join(f"[u{k + 1}]" for k in range(len(SPLIT))))
     g.append(f"[u0]scale=2160:3840:flags=lanczos,zoompan=z='{z}':x='{x}':y='{y}':d=1:s=1080x1920:fps=30[f0]")
