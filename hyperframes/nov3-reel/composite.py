@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Final composite for the content-type tier list (S-F) reel, styled after the user's reference. Same treatment as before:
+"""Final composite for the Nov 3 reel (backlink hierarchy), styled after the user's reference. Same treatment as before:
 no sound effects, professional camera moves, B-roll that sometimes takes the whole frame.
 
   1. Tighten the user's timeline (edl.json, see tools/edl.py), 10 ms audio fades at every join.
   2. Voice: denoise (static/hiss), a gentle gate against the room tail, less boxiness, a little presence,
      gentle compression, limiter. Nothing else in the mix.
-  3. Picture: 30 fps (iPhone portrait, auto-rotated), artifact removal, noise reduction, colour correction (neutral
+  3. Picture: 30 fps, artifact removal, noise reduction, colour correction (neutral
      white balance), natural-skin colour grading with cinematic contrast, sharpening.
   4. Camera: slow push-ins on every shot and an eased punch at every hard cut.
   5. Split windows: the speaker sits below the B-roll panel (head below 790 px). Full-screen B-roll windows are
@@ -18,8 +18,8 @@ import json, subprocess, sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-SRC = HERE / "../../raw/2November.MOV"
-OUT = HERE / "../../output/Content_Tier_List.mp4"
+SRC = HERE / "../../raw/nov3.mp4"
+OUT = HERE / "../../output/Backlink_Hierarchy.mp4"
 edl = json.loads((HERE / "edl.json").read_text())
 KEEP, DUR = edl["keep"], edl["duration"]
 
@@ -32,25 +32,28 @@ def T(x):
     return acc
 
 # Hard cuts in the upload (original clock) and per-clip voice gain in dB
-CLIPS = [(0.0, 0.0)]
+CLIPS = [(0.0, 0.0), (2.57, 0.0), (8.40, 0.0), (36.37, 0.0)]
 # Split windows (original clock) with the source crop top for the speaker; same windows as MODES in index.html
-SPLIT = [(0.0, 20.7, 230)]  # tier board on top the whole time, speaker below (head starts ~850 px)
+SPLIT = [(9.90, 32.75, 330)]  # backlink pyramid on top, speaker below (head starts ~835 px)
 
 # House look (see CLAUDE.md), in order:
 #   artifact removal  - deblock the phone's compression blocks
 #   noise reduction   - light temporal/spatial denoise (hqdn3d)
-#   color correction  - neutral white balance off the white wall (iPhone footage runs warm: red down, blue up)
+#   color correction  - neutral white balance off the white wall (measured for this clip: R/B 1.06)
 #   color grading     - natural skin tones (no saturation/vibrance boost), brighter mids, lifted shadows,
 #                       cinematic contrast (gentle S-curve: deeper blacks, rolled-off highlights)
 #   sharpening        - contrast-adaptive sharpening (cas); sources below 1080x1920 are Lanczos-upscaled first
-GRADE = ("deblock=filter=weak:block=8,hqdn3d=1.8:1.4:3.5:3.5,colorchannelmixer=rr=0.955:bb=1.055,"
+GRADE = ("deblock=filter=weak:block=8,hqdn3d=1.8:1.4:3.5:3.5,colorchannelmixer=rr=0.975:gg=0.993:bb=1.035,"
          "eq=brightness=0.015:saturation=0.97:gamma=1.04,"
          "curves=master='0/0 0.12/0.10 0.3/0.30 0.5/0.535 0.75/0.80 0.92/0.94 1/0.99',cas=strength=0.5")
 
 # Camera keyframes on the ORIGINAL clock: (time, zoom, centre x, centre y) as fractions of the frame.
 # Between keys the move is eased (smoothstep); a key with the same values holds.
 # one slow push-in on the full-frame layer (only seen under the split, which covers the frame)
-CAM = [(0.0, 1.0, .5, .4), (20.7, 1.04, .5, .4)]
+CAM = [(0.0, 1.0, .5, .32), (2.55, 1.05, .5, .32),      # slow push-ins per clip (the user's cuts at 2.57, 8.40, 36.37)
+       (2.58, 1.06, .5, .32), (8.38, 1.0, .5, .32),
+       (8.42, 1.0, .5, .32), (36.35, 1.06, .5, .32),
+       (36.38, 1.08, .5, .32), (40.4, 1.02, .5, .32)]
 CUTS = [c for c, _ in CLIPS]
 
 
@@ -103,7 +106,7 @@ def main(out_path):
     g.append("".join(f"[ac{i}]" for i in range(n)) + f"concat=n={n}:v=0:a=1,highpass=f=80,afftdn=nr=14:nf=-42:tn=1,anlmdn=s=4:p=0.002:r=0.006,"
              "agate=threshold=0.012:ratio=1.8:attack=6:release=140:range=0.35,"   # tame the room tail between words
              "equalizer=f=280:t=q:w=1.1:g=-2.5,equalizer=f=3200:t=q:w=1.2:g=2.5,equalizer=f=9000:t=h:w=1:g=1,"
-             "acompressor=threshold=0.09:ratio=2.5:attack=8:release=160:makeup=1.6,volume=5.5dB,alimiter=limit=0.85[a]")
+             "acompressor=threshold=0.09:ratio=2.5:attack=8:release=160:makeup=1.6,volume=4.5dB,alimiter=limit=0.85[a]")
     cmd = ["ffmpeg", "-y", "-v", "error", "-i", str(SRC), "-i", str(HERE / "renders/overlay.mov"),
            "-filter_complex", ";\n".join(g), "-map", "[v]", "-map", "[a]",
            "-t", f"{DUR:.3f}", "-c:v", "libx264", "-preset", "slow", "-crf", "15", "-profile:v", "high", "-pix_fmt", "yuv420p",

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""Edit decision list for the content-type tier list reel (S-F tiers, styled after the user's reference),
-from raw/2November.MOV (20.6 s, one seated take, iPhone HEVC/H.264 rotated portrait, mono audio).
+"""Edit decision list for the Nov 3 reel ("Backlink hierarchy: tier 1 / 2 / 3"), from raw/nov3.mp4
+(40.8 s, 25 Mbps, one seated take with the user's own cuts at 2.57, 8.40 and 36.37 s; the raw file lives in the
+NOVEMBER3 GitHub release because it is over 100 MB).
 
 No retakes to drop. Inside the timeline, pauses longer than 0.38 s are shortened, keeping 0.20 s after a word
 ends and 0.12 s before the next one starts (silence map at -36 dB, d 0.12 s), so the hard cuts flow straight on.
@@ -11,7 +12,7 @@ import json
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-TAKES = [(1.00, 19.55)]  # skip the dead air before the first word and after the last
+TAKES = [(0.0, 40.35)]  # stop before the dead air after the last word
 LEAD, TAIL, MIN_PAUSE = 0.20, 0.12, 0.38
 
 sil = [tuple(map(float, l.split())) for l in open(HERE / "silences.txt") if l.strip()]
