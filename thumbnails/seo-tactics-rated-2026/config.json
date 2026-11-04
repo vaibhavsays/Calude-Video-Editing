@@ -1,0 +1,17 @@
+{
+  "theme": "blue",
+  "logos": ["google-color.svg", "openai.svg"],
+  "logos_top": "140px",
+  "logo_size": "104px",
+  "title": "SEO Tactics Rated for 2026",
+  "title_size": "72px",
+  "title_top": "286px",
+  "subtitle": "S TO F TIER LIST",
+  "sub_top": "400px",
+  "big_word": "S-TIER",
+  "big_size": "330px",
+  "big_top": "490px",
+  "person_width": "1080px",
+  "photo": "assets/vaibhav_suit_cutout.png",
+  "output": "cover.png"
+}
