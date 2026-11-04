@@ -40,7 +40,7 @@ SEGMENTS.forEach(([s, e, text]) => {
   let t = s;
   phrases.forEach((p, i) => {
     const d = (e - s) * lens[i] / total;
-    CUES.push([T(t), T(i === phrases.length - 1 ? e + 0.1 : t + d), p]);
+    CUES.push([T(t), T(i === phrases.length - 1 ? e : t + d), p]);
     t += d;
   });
 });
