@@ -43,11 +43,12 @@
       .why { left: 60px; right: 60px; top: 1470px; display: flex; justify-content: center; }
       .why div { font-family: "P8"; font-size: 44px; color: #fff; background: rgba(17,15,20,.9); padding: 14px 30px; border-radius: 20px; box-shadow: 0 14px 36px rgba(0,0,0,.4); text-align: center; line-height: 1.2; }
       .why div b { color: var(--y); }
+      .why.low { top: 1560px; } .why.low div { font-size: 38px; padding: 10px 24px; }
 
       /* captions */
       #captions { position: absolute; left: 40px; right: 40px; top: 0; height: 100%; z-index: 60; }
-      .cap { position: absolute; left: 0; right: 0; top: 1720px; display: flex; flex-wrap: wrap; justify-content: center; gap: 2px 14px; opacity: 0;
-             font-family: "P8"; font-style: italic; font-size: 54px; line-height: 1.15; text-align: center; color: #fff; text-transform: uppercase;
+      .cap { position: absolute; left: 0; right: 0; top: 1735px; display: flex; flex-wrap: wrap; justify-content: center; gap: 2px 14px; opacity: 0;
+             font-family: "P8"; font-style: italic; font-size: 50px; line-height: 1.12; text-align: center; color: #fff; text-transform: uppercase;
              text-shadow: 0 4px 0 rgba(0,0,0,.5), 0 6px 18px rgba(0,0,0,.55), 3px 3px 0 #000, -3px 3px 0 #000, 3px -3px 0 #000, -3px -3px 0 #000; }
       .cap .w { display: inline-block; }
       .cap .hl { color: var(--y); }
@@ -147,16 +148,18 @@
           const badge = document.createElement("div");
           badge.className = "badge"; badge.style.background = color; badge.textContent = tier; card.appendChild(badge);
           // card pops up on the chest, floats, gets its tier badge, then flies into its row
-          tl.set(card, { x: 372, y: 1440, scale: 0.3, opacity: 0, transformOrigin: "0 0" }, s1);
-          tl.to(card, { opacity: 1, scale: 0.8, duration: 0.35, ease: "back.out(1.8)" }, s1);
-          tl.to(card, { y: 1428, duration: 0.6, yoyo: true, repeat: 1, ease: "sine.inOut" }, s1 + 0.35);
+          // the close take (from 34.2 s) frames the face lower, so cards and chips sit lower and smaller there
+          const close = tIn >= 34.2, cs = close ? 0.62 : 0.8, cy = close ? 1530 : 1440;
+          tl.set(card, { x: 540 - 210 * cs, y: cy, scale: 0.3, opacity: 0, transformOrigin: "0 0" }, s1);
+          tl.to(card, { opacity: 1, scale: cs, duration: 0.35, ease: "back.out(1.8)" }, s1);
+          tl.to(card, { y: cy - 10, duration: 0.6, yoyo: true, repeat: 1, ease: "sine.inOut" }, s1 + 0.35);
           tl.fromTo(badge, { opacity: 0, scale: 2.4, rotation: -20 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.3, ease: "back.out(2.4)", immediateRender: false }, s2);
           tl.to(badge, { opacity: 0, duration: 0.15 }, s2 + 0.75);
           tl.to(card, { x: sx, y: sy, scale: k, duration: 0.6, ease: "power3.inOut" }, s2 + 0.8);
           tl.fromTo("#row" + tier + " .s", { backgroundColor: "rgba(255,255,255,.30)" }, { backgroundColor: "rgba(255,255,255,.07)", duration: 0.8, immediateRender: false }, s2 + 1.35);
           tl.fromTo("#row" + tier + " .t", { scale: 1 }, { scale: 1.12, duration: 0.12, yoyo: true, repeat: 1, immediateRender: false }, s2 + 1.35);
           if (why) {
-            const chip = mk("why", `<div>${why}</div>`);
+            const chip = mk("why" + (close ? " low" : ""), `<div>${why}</div>`);
             const c0 = Math.max(at(w0), s2 + 1.45), c1 = at(w1);
             tl.fromTo(chip, { opacity: 0, y: 30, scale: 0.85 }, { opacity: 1, y: 0, scale: 1, duration: 0.3, ease: "back.out(1.8)", immediateRender: false }, c0);
             tl.to(chip, { y: -8, duration: 0.8, yoyo: true, repeat: Math.max(0, Math.floor((c1 - c0 - 0.6) / 0.8) - 1), ease: "sine.inOut" }, c0 + 0.3);

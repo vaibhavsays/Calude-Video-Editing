@@ -59,7 +59,7 @@ GRADE = ("deblock=filter=weak:block=8,hqdn3d=1.8:1.4:3.5:3.5,colorchannelmixer=r
 # zoom in / zoom out: each kept segment alternates a slow push-in and a slow pull-out, centred on the face
 CAM = []
 for i, (a, b) in enumerate(KEEP):
-    z0, z1 = (1.0, 1.07) if i % 2 == 0 else (1.07, 1.0)
+    z0, z1 = (1.0, 1.05) if i % 2 == 0 else (1.05, 1.0)
     CAM += [(a + 0.001, z0, .5, .33), (b - 0.001, z1, .5, .33)]
 CUTS = [a for a, _ in KEEP]  # a soft zoom kick at every join so the pause cuts read as deliberate
 
