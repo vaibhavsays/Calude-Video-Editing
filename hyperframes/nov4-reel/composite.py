@@ -40,7 +40,7 @@ CLIPS = [(0.0, 1.0), (34.20, 0.0)]  # wide take ~1 dB quieter than the close tak
 VIDEO_OFFSET = 0.0
 AUDIO_LATENCY = 0.038
 # Split windows (original clock) with the source crop top for the speaker; same windows as MODES in index.html
-SPLIT = [(9.90, 32.75, 330)]  # backlink pyramid on top, speaker below (head starts ~835 px)
+SPLIT = [(0.0, 34.2, 290), (34.2, 80.1, 100)]  # tier board on top all along, speaker below (head ~835 px)
 
 # House look (see CLAUDE.md), in order:
 #   artifact removal  - deblock the phone's compression blocks
@@ -56,11 +56,12 @@ GRADE = ("deblock=filter=weak:block=8,hqdn3d=1.8:1.4:3.5:3.5,colorchannelmixer=r
 # Camera keyframes on the ORIGINAL clock: (time, zoom, centre x, centre y) as fractions of the frame.
 # Between keys the move is eased (smoothstep); a key with the same values holds.
 # one slow push-in on the full-frame layer (only seen under the split, which covers the frame)
-CAM = [(0.0, 1.0, .5, .32), (2.55, 1.05, .5, .32),      # slow push-ins per clip (the user's cuts at 2.57, 8.40, 36.37)
-       (2.58, 1.06, .5, .32), (8.38, 1.0, .5, .32),
-       (8.42, 1.0, .5, .32), (36.35, 1.06, .5, .32),
-       (36.38, 1.08, .5, .32), (40.4, 1.02, .5, .32)]
-CUTS = [c for c, _ in CLIPS]
+# zoom in / zoom out: each kept segment alternates a slow push-in and a slow pull-out, centred on the face
+CAM = []
+for i, (a, b) in enumerate(KEEP):
+    z0, z1 = (1.0, 1.07) if i % 2 == 0 else (1.07, 1.0)
+    CAM += [(a + 0.001, z0, .5, .33), (b - 0.001, z1, .5, .33)]
+CUTS = [a for a, _ in KEEP]  # a soft zoom kick at every join so the pause cuts read as deliberate
 
 
 def cam_expr():
@@ -101,7 +102,8 @@ def main(out_path):
              "".join(f"[u{k + 1}]" for k in range(len(SPLIT))))
     g.append(f"[u0]scale=2160:3840:flags=lanczos,zoompan=z='{z}':x='{x}':y='{y}':d=1:s=1080x1920:fps=30[f0]")
     for k, (a, b, top) in enumerate(SPLIT):
-        g.append(f"[u{k + 1}]crop=1080:1160:0:{top}[h{k}]")
+        g.append(f"[u{k + 1}]crop=1080:1160:0:{top},scale=2160:2320:flags=lanczos,"
+                 f"zoompan=z='{z}':x='iw/2-iw/zoom/2':y='(ih-ih/zoom)*0.30':d=1:s=1080x1160:fps=30[h{k}]")
         g.append(f"[f{k}][h{k}]overlay=0:760:enable='between(t,{T(a):.3f},{T(b) - 0.001:.3f})'[f{k + 1}]")
     g.append(f"[f{len(SPLIT)}][1:v]overlay=0:0:format=auto:eof_action=pass[v]")
 
