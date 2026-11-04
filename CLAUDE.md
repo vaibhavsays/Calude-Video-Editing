@@ -23,4 +23,5 @@ Short-form video editing (9:16 Reels/Shorts). Source footage lives in `raw/`, fi
 - Reference grade: `GRADE` in `hyperframes/content-tier-list/composite.py`.
 - Voice crisp and front-and-center: denoise static/hiss, tame room echo (gentle gate), cut boxiness, a little presence, ~-14 LUFS.
 - Professional, stable talking-head framing for Reels/YouTube.
+- Lip sync: verify on the finished file (lip closures vs audio dips, frame by frame). Cut picture and sound on the same 30 fps frame grid, remove the voice chain's latency, and write MP4s without edit lists (`-movflags +faststart+negative_cts_offsets -use_editlist 0`, AAC priming pre-trimmed) because phone players ignore edit lists. Reference: `hyperframes/nov4-reel/composite.py`.
 - Chat file uploads are limited to 30 MB.

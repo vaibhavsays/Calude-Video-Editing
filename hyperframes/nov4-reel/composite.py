@@ -39,6 +39,7 @@ CLIPS = [(0.0, 1.0), (34.20, 0.0)]  # wide take ~1 dB quieter than the close tak
 # trimmed off the front of the processed voice (and padded at the end) so lips stay matched.
 VIDEO_OFFSET = 0.0
 AUDIO_LATENCY = 0.038
+AAC_PRIMING = 1024 / 44100
 # Split windows (original clock) with the source crop top for the speaker; same windows as MODES in index.html
 SPLIT = [(0.0, 34.2, 290), (34.2, 80.1, 100)]  # tier board on top all along, speaker below (head ~835 px)
 
@@ -115,12 +116,16 @@ def main(out_path):
              "agate=threshold=0.012:ratio=1.8:attack=6:release=140:range=0.35,"   # tame the room tail between words
              "equalizer=f=280:t=q:w=1.1:g=-2.5,equalizer=f=3200:t=q:w=1.2:g=2.5,equalizer=f=9000:t=h:w=1:g=1,"
              "acompressor=threshold=0.09:ratio=2.5:attack=8:release=160:makeup=1.6,volume=4.6dB,alimiter=limit=0.85,"
-             f"atrim=start={AUDIO_LATENCY},asetpts=PTS-STARTPTS,apad=pad_dur={AUDIO_LATENCY}[a]")
+             f"atrim=start={AUDIO_LATENCY + AAC_PRIMING:.4f},asetpts=PTS-STARTPTS,apad=pad_dur={AUDIO_LATENCY + AAC_PRIMING:.4f}[a]")
     cmd = ["ffmpeg", "-y", "-v", "error", "-i", str(SRC), "-i", str(HERE / "renders/overlay.mov"),
            "-filter_complex", ";\n".join(g), "-map", "[v]", "-map", "[a]",
            "-t", f"{DUR:.3f}", "-c:v", "libx264", "-preset", "slow", "-crf", "17", "-profile:v", "high", "-pix_fmt", "yuv420p",
            "-tune", "film", "-r", "30", "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709",
-           "-c:a", "aac", "-b:a", "256k", "-ar", "44100", "-movflags", "+faststart", str(out_path)]
+           "-c:a", "aac", "-b:a", "256k", "-ar", "44100",
+           # no MP4 edit lists: phone/in-app players often ignore them, which shifted the picture ~2 frames late.
+           # B-frame delay goes into negative CTS offsets instead, so frame 0 is shown at t=0 everywhere, and the
+           # AAC encoder's 1024 priming samples are pre-trimmed from the voice (AAC_PRIMING) so sound starts at t=0.
+           "-movflags", "+faststart+negative_cts_offsets", "-use_editlist", "0", str(out_path)]
     subprocess.run(cmd, check=True)
     print("Wrote", Path(out_path).resolve())
 
