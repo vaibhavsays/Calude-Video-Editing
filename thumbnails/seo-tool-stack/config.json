@@ -1,0 +1,17 @@
+{
+  "theme": "peach",
+  "logos": ["google-analytics.svg", "semrush.svg", "claude-color.svg", "google-search-console.svg"],
+  "logos_top": "140px",
+  "logo_size": "104px",
+  "title": "My SEO Tool Stack",
+  "title_size": "72px",
+  "title_top": "286px",
+  "subtitle": "TOOLS I USE EVERY DAY",
+  "sub_top": "400px",
+  "big_word": "STACK",
+  "big_size": "340px",
+  "big_top": "480px",
+  "person_width": "1080px",
+  "photo": "assets/vaibhav_suit_cutout.png",
+  "output": "cover.png"
+}
