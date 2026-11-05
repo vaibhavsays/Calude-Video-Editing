@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="vendor/gsap.min.js"></script>
+    <script src="edl.js"></script>
+    <style>
+      @font-face { font-family: "P6"; src: url("assets/fonts/poppins-latin-600-normal.woff2"); font-weight: 600; }
+      @font-face { font-family: "P7"; src: url("assets/fonts/poppins-latin-700-normal.woff2"); font-weight: 700; }
+      @font-face { font-family: "P8"; src: url("assets/fonts/poppins-latin-800-normal.woff2"); font-weight: 800; }
+      @font-face { font-family: "Anton"; src: url("assets/fonts/anton-latin-400-normal.woff2"); }
+      :root { --y: #ffd426; --ink: #17151a; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
+      body { font-family: "P7", sans-serif; color: var(--ink); }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; }
+      .clip { position: absolute; inset: 0; }
+      .el { position: absolute; opacity: 0; }
+
+      /* title above the head */
+      .title { left: 0; right: 0; top: 70px; display: flex; justify-content: center; }
+      .title div { font-family: "P8"; font-size: 54px; color: #fff; background: rgba(17,15,20,.9); padding: 14px 36px; border-radius: 22px; box-shadow: 0 14px 40px rgba(0,0,0,.35); white-space: nowrap; }
+      .title div b { color: var(--y); }
+      .count { left: 0; right: 0; top: 196px; display: flex; justify-content: center; }
+      .count span { font-family: "Anton"; font-size: 40px; letter-spacing: 2px; color: var(--ink); background: var(--y); padding: 2px 22px; border-radius: 14px; }
+
+      /* job + tool card on the chest */
+      .job { left: 0; right: 0; top: 880px; display: flex; justify-content: center; }
+      .job span { font-family: "P8"; font-size: 40px; letter-spacing: 3px; color: #fff; background: rgba(17,15,20,.88); padding: 10px 30px; border-radius: 40px; text-transform: uppercase; white-space: nowrap; box-shadow: 0 12px 30px rgba(0,0,0,.35); }
+      .tool { left: 130px; width: 820px; top: 975px; height: 250px; border-radius: 36px; background: #fff; box-shadow: 0 26px 70px rgba(0,0,0,.45);
+              display: flex; align-items: center; gap: 34px; padding: 0 40px; }
+      .tool .lg { width: 170px; height: 170px; border-radius: 34px; background: #f4f2ef; display: grid; place-items: center; flex: none; }
+      .tool .lg img { width: 118px; height: 118px; object-fit: contain; }
+      .tool .lg .em { font-size: 110px; line-height: 1; }
+      .tool .nm { font-family: "P8"; font-size: 62px; line-height: 1.05; }
+      .tool .nm small { display: block; font-family: "P6"; font-size: 30px; color: #8b8279; margin-top: 8px; }
+      .again { position: absolute; right: -18px; top: -24px; font-family: "P8"; font-size: 30px; color: var(--ink); background: var(--y); padding: 6px 18px; border-radius: 18px; transform: rotate(6deg); box-shadow: 0 10px 24px rgba(0,0,0,.25); }
+
+      /* final recap grid */
+      .recap { left: 70px; right: 70px; top: 880px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+      .recap div { height: 150px; border-radius: 26px; background: #fff; display: grid; place-items: center; box-shadow: 0 14px 34px rgba(0,0,0,.35); opacity: 0; }
+      .recap img { width: 86px; height: 86px; object-fit: contain; }
+      .recap .em { font-size: 74px; line-height: 1; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="24.633" data-width="1080" data-height="1920">
+      <section id="gfx" class="clip" data-start="0" data-duration="24.633" data-track-index="1">
+        <div class="el title" id="title"><div>My <b>SEO tool</b> stack 🧰</div></div>
+        <div id="cards"></div>
+      </section>
+    </div>
+
+    <script>
+      function T(x) { let acc = 0; for (const [a, b] of KEEP) { if (x < a) return acc; if (x <= b) return acc + x - a; acc += b - a; } return acc; }
+      const at = (x) => T(x);
+      // [job, tool, sub-line, logo (img path or emoji), job spoken, tool spoken, "again"?] on the ORIGINAL clock
+      const STACK = [
+        ["Website analytics", "GA4", "Google Analytics", "assets/logos/google-analytics.svg", 0.05, 1.05],
+        ["Keyword research", "Semrush", "Keywords & volume", "assets/logos/semrush.svg", 2.31, 3.25],
+        ["Backlink analysis", "Semrush", "Backlink audit", "assets/logos/semrush.svg", 4.27, 5.60, true],
+        ["Page speed", "PageSpeed Insights", "by Google", "assets/logos/pagespeedinsights.svg", 6.65, 7.83],
+        ["Reviews", "Trustindex", "Review widgets", "⭐", 9.22, 10.27],
+        ["Site crawl", "Screaming Frog", "SEO Spider", "🐸", 11.24, 12.53],
+        ["Content writing", "Claude", "by Anthropic", "assets/logos/claude-color.svg", 13.53, 14.98],
+        ["Schema markup", "Schema.org", "Structured data", "🧩", 15.80, 17.09],
+        ["Search performance", "Search Console", "Google", "assets/logos/google-search-console.svg", 18.15, 19.77],
+        ["Heatmaps", "Microsoft Clarity", "Free heatmaps", "assets/logos/microsoft-color.svg", 21.02, 22.06],
+        ["AI search visibility", "Semrush", "AI visibility toolkit", "assets/logos/semrush.svg", 23.15, 24.65, true],
+      ];
+      const tl = gsap.timeline({ paused: true });
+      const logo = (l, cls = "") => l.startsWith("assets/") ? `<img src="${l}" />` : `<span class="em ${cls}">${l}</span>`;
+
+      function build() {
+        const root = document.getElementById("cards");
+        tl.fromTo("#title", { opacity: 0, y: -40, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "back.out(1.8)" }, 0.02);
+        STACK.forEach(([job, tool, sub, lg, tJob, tTool, again], i) => {
+          const next = i + 1 < STACK.length ? STACK[i + 1][4] : 25.75;
+          const s1 = at(tJob), s2 = at(tTool), s3 = at(next) - 0.12;
+          const cnt = document.createElement("div"); cnt.className = "el count"; cnt.innerHTML = `<span>${i + 1} / ${STACK.length}</span>`; root.appendChild(cnt);
+          const j = document.createElement("div"); j.className = "el job"; j.innerHTML = `<span>${job}</span>`; root.appendChild(j);
+          const c = document.createElement("div"); c.className = "el tool";
+          c.innerHTML = `<div class="lg">${logo(lg)}</div><div class="nm">${tool}<small>${sub}</small></div>${again ? '<div class="again">again 🔁</div>' : ""}`;
+          root.appendChild(c);
+          tl.fromTo(cnt, { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.2, ease: "back.out(2)" }, s1);
+          tl.set(cnt, { opacity: 0 }, s3);
+          // job pill drops in when the job is named
+          tl.fromTo(j, { opacity: 0, y: -30, scale: 0.85 }, { opacity: 1, y: 0, scale: 1, duration: 0.25, ease: "back.out(2)" }, s1);
+          // tool card swings in on the tool's name, logo pops, then a gentle float until the next job
+          tl.fromTo(c, { opacity: 0, x: i % 2 ? 260 : -260, rotation: i % 2 ? 6 : -6, scale: 0.85 }, { opacity: 1, x: 0, rotation: 0, scale: 1, duration: 0.38, ease: "back.out(1.6)" }, s2);
+          tl.fromTo(c.querySelector(".lg"), { scale: 0.3, rotation: -25 }, { scale: 1, rotation: 0, duration: 0.42, ease: "back.out(2.6)", immediateRender: false }, s2 + 0.08);
+          if (again) tl.fromTo(c.querySelector(".again"), { opacity: 0, scale: 2 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2.4)", immediateRender: false }, s2 + 0.3);
+          tl.to(c, { y: -8, duration: 0.5, yoyo: true, repeat: 1, ease: "sine.inOut" }, s2 + 0.45);
+          tl.to([j, c], { opacity: 0, y: -24, scale: 0.92, duration: 0.18, ease: "power2.in" }, s3 - 0.06);
+        });
+        // closing recap: every tool in one grid
+        const rc = document.createElement("div"); rc.className = "el recap"; rc.id = "recap";
+        const uniq = [...new Map(STACK.map((r) => [r[1], r])).values()];
+        rc.innerHTML = uniq.map((r) => `<div>${logo(r[3])}</div>`).join("");
+        root.appendChild(rc);
+        const r0 = at(25.75);
+        tl.set(rc, { opacity: 1 }, r0);
+        tl.fromTo("#recap div", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.2, stagger: 0.05, ease: "back.out(2)" }, r0);
+        window.__timelines["main"] = tl;
+      }
+    </script>
+    <script>document.fonts.ready.then(build);</script>
+  </body>
+</html>

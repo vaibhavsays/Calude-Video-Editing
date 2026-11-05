@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Edit decision list for the Nov 4 reel (9 SEO tactics rated S-F), from raw/nov4.mp4 (80.1 s, 20 Mbps; two takes,
-cut at 34.2 s; the raw file lives in the NOVEMBER4RAWVIDEO GitHub release because it is over 100 MB).
+"""Edit decision list for the Nov 5 reel ("my SEO tool stack": 11 jobs and the tool for each), from raw/nov5.mp4
+(26.8 s, one seated take; the raw file lives in the RAWVIDEO5 GitHub release).
 
 No retakes to drop. Inside the timeline, pauses longer than 0.38 s are shortened, keeping 0.20 s after a word
 ends and 0.12 s before the next one starts (silence map at -36 dB, d 0.12 s), so the hard cuts flow straight on.
@@ -11,7 +11,7 @@ import json
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-TAKES = [(1.45, 79.3)]  # skip the dead air before the first word and after the last
+TAKES = [(0.0, 26.6)]  # keep ~1 s after the last word for the closing recap of every tool
 LEAD, TAIL, MIN_PAUSE = 0.20, 0.12, 0.38
 
 sil = [tuple(map(float, l.split())) for l in open(HERE / "silences.txt") if l.strip()]

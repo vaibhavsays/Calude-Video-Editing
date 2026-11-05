@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Final composite for the Nov 4 reel (S-F ratings, same treatment as the tier list and Nov 3 reels). Same treatment as before:
+"""Final composite for the Nov 5 reel (SEO tool stack), same treatment as the Nov 4 reel. Same treatment as before:
 no sound effects, professional camera moves, B-roll that sometimes takes the whole frame.
 
   1. Tighten the user's timeline (edl.json, see tools/edl.py), 10 ms audio fades at every join.
@@ -18,8 +18,8 @@ import json, subprocess, sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-SRC = HERE / "../../raw/nov4.mp4"
-OUT = HERE / "../../output/Nov4_Ratings.mp4"
+SRC = HERE / "../../raw/nov5.mp4"
+OUT = HERE / "../../output/SEO_Tool_Stack.mp4"
 edl = json.loads((HERE / "edl.json").read_text())
 # snap the cuts to the 30 fps frame grid so picture and sound are cut at exactly the same instants (no 1-frame slip)
 KEEP = [[round(a * 30) / 30, round(b * 30) / 30] for a, b in edl["keep"]]
@@ -34,19 +34,19 @@ def T(x):
     return acc
 
 # Hard cuts in the upload (original clock) and per-clip voice gain in dB
-CLIPS = [(0.0, 1.0), (34.20, 0.0)]  # wide take ~1 dB quieter than the close take
+CLIPS = [(0.0, 0.0)]
 # The upload is assumed in sync (checked on the output frame by frame), so the picture is cut on the same clock. The voice chain (FFT denoise) delays the sound by ~0.038 s; AUDIO_LATENCY is
 # trimmed off the front of the processed voice (and padded at the end) so lips stay matched.
 VIDEO_OFFSET = 0.0
 AUDIO_LATENCY = 0.038
 AAC_PRIMING = 1024 / 44100
 # Split windows (original clock) with the source crop top for the speaker; same windows as MODES in index.html
-SPLIT = [(0.0, 34.2, 290), (34.2, 80.1, 100)]  # tier board on top all along, speaker below (head ~835 px)
+SPLIT = []  # full frame: the tool cards sit on the chest, the title above the head
 
 # House look (see CLAUDE.md), in order:
 #   artifact removal  - deblock the phone's compression blocks
 #   noise reduction   - light temporal/spatial denoise (hqdn3d)
-#   color correction  - neutral white balance off the white wall (measured for this clip: R/B 1.09)
+#   color correction  - neutral white balance off the white wall (measured for this clip: R/B 1.10)
 #   color grading     - natural skin tones (no saturation/vibrance boost), brighter mids, lifted shadows,
 #                       cinematic contrast (gentle S-curve: deeper blacks, rolled-off highlights)
 #   sharpening        - contrast-adaptive sharpening (cas); sources below 1080x1920 are Lanczos-upscaled first
@@ -115,11 +115,11 @@ def main(out_path):
     g.append("".join(f"[ac{i}]" for i in range(n)) + f"concat=n={n}:v=0:a=1,highpass=f=80,afftdn=nr=14:nf=-42:tn=1,anlmdn=s=4:p=0.002:r=0.006,"
              "agate=threshold=0.012:ratio=1.8:attack=6:release=140:range=0.35,"   # tame the room tail between words
              "equalizer=f=280:t=q:w=1.1:g=-2.5,equalizer=f=3200:t=q:w=1.2:g=2.5,equalizer=f=9000:t=h:w=1:g=1,"
-             "acompressor=threshold=0.09:ratio=2.5:attack=8:release=160:makeup=1.6,volume=4.6dB,alimiter=limit=0.85,"
+             "acompressor=threshold=0.09:ratio=2.5:attack=8:release=160:makeup=1.6,volume=7.0dB,alimiter=limit=0.85,"
              f"atrim=start={AUDIO_LATENCY + AAC_PRIMING:.4f},asetpts=PTS-STARTPTS,apad=pad_dur={AUDIO_LATENCY + AAC_PRIMING:.4f}[a]")
     cmd = ["ffmpeg", "-y", "-v", "error", "-i", str(SRC), "-i", str(HERE / "renders/overlay.mov"),
            "-filter_complex", ";\n".join(g), "-map", "[v]", "-map", "[a]",
-           "-t", f"{DUR:.3f}", "-c:v", "libx264", "-preset", "slow", "-crf", "17", "-profile:v", "high", "-pix_fmt", "yuv420p",
+           "-t", f"{DUR:.3f}", "-c:v", "libx264", "-preset", "slow", "-crf", "15", "-profile:v", "high", "-pix_fmt", "yuv420p",
            "-tune", "film", "-r", "30", "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709",
            "-c:a", "aac", "-b:a", "256k", "-ar", "44100",
            # no MP4 edit lists: phone/in-app players often ignore them, which shifted the picture ~2 frames late.
