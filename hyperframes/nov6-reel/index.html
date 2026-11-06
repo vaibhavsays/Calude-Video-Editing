@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="vendor/gsap.min.js"></script>
+    <script src="edl.js"></script>
+    <style>
+      @font-face { font-family: "P5"; src: url("assets/fonts/poppins-latin-500-normal.woff2"); }
+      @font-face { font-family: "P6"; src: url("assets/fonts/poppins-latin-600-normal.woff2"); }
+      @font-face { font-family: "P7"; src: url("assets/fonts/poppins-latin-700-normal.woff2"); }
+      @font-face { font-family: "P8"; src: url("assets/fonts/poppins-latin-800-normal.woff2"); }
+      @font-face { font-family: "Anton"; src: url("assets/fonts/anton-latin-400-normal.woff2"); }
+      @font-face { font-family: "Mono"; src: url("assets/fonts/jetbrains-mono-latin-600-normal.woff2"); }
+      :root { --y: #ffd426; --ink: #17151a; --seo: #1a73e8; --geo: #8b5cf6; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
+      body { font-family: "P7", sans-serif; color: var(--ink); }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; }
+      .clip { position: absolute; inset: 0; }
+      .el { position: absolute; opacity: 0; }
+      .center { left: 0; right: 0; display: flex; justify-content: center; }
+
+      #scrim { position: absolute; left: 0; right: 0; top: 0; height: 900px; opacity: 0; background: linear-gradient(180deg, rgba(12,10,16,.78) 0%, rgba(12,10,16,.55) 55%, rgba(12,10,16,0) 100%); }
+      /* ---------- hook (wide take, above the head) ---------- */
+      #hook { top: 150px; flex-direction: column; align-items: center; gap: 22px; }
+      #hook .big { font-family: "Anton"; font-size: 170px; line-height: 1; color: #fff; letter-spacing: 2px;
+                   text-shadow: 0 8px 0 rgba(0,0,0,.35), 0 18px 40px rgba(0,0,0,.45); white-space: nowrap; }
+      #hook .big .vs { font-size: 110px; color: var(--y); margin: 0 26px; vertical-align: 22px; }
+      #hook .big .g { color: #d8b4fe; }
+      .pill { font-family: "P8"; font-size: 44px; color: var(--ink); background: #fff; padding: 12px 34px; border-radius: 60px; box-shadow: 0 14px 36px rgba(0,0,0,.35); white-space: nowrap; }
+      .pill.dark { color: #fff; background: rgba(17,15,20,.9); }
+      .pill b { color: var(--geo); }
+      .pill.dark b { color: var(--y); }
+
+      #geo { top: 160px; }
+      #geo .word { font-family: "Anton"; font-size: 330px; line-height: 1; letter-spacing: 10px; color: #fff;
+                   background: linear-gradient(135deg, #7c3aed, #c026d3); padding: 10px 60px 20px; border-radius: 50px; box-shadow: 0 30px 80px rgba(76, 29, 149, .55); }
+      #newtag { top: 120px; left: 690px; }
+      #newtag div { font-family: "P8"; font-size: 40px; background: var(--y); padding: 8px 22px; border-radius: 18px; transform: rotate(8deg); box-shadow: 0 10px 26px rgba(0,0,0,.35); }
+
+      #stack { left: 110px; top: 110px; width: 860px; }
+      #stack .r { display: flex; align-items: center; gap: 28px; margin-bottom: 26px; opacity: 0; }
+      #stack .l { width: 170px; height: 170px; border-radius: 34px; display: grid; place-items: center; font-family: "Anton"; font-size: 130px; color: #fff;
+                  background: linear-gradient(135deg, #7c3aed, #c026d3); box-shadow: 0 18px 40px rgba(76,29,149,.5); flex: none; }
+      #stack .w { font-family: "P8"; font-size: 84px; color: #fff; text-shadow: 0 6px 24px rgba(0,0,0,.6), 0 3px 0 rgba(0,0,0,.4); }
+      #ask { top: 120px; left: 830px; }
+      #ask div { font-size: 150px; filter: drop-shadow(0 14px 24px rgba(0,0,0,.4)); }
+
+      /* ---------- day badge ---------- */
+      #day { top: 140px; flex-direction: column; align-items: center; gap: 22px; }
+      #day .tile { display: flex; align-items: center; gap: 26px; background: #fff; padding: 22px 40px; border-radius: 34px; box-shadow: 0 24px 60px rgba(0,0,0,.4); }
+      #day .num { font-family: "Anton"; font-size: 150px; line-height: .95; color: #fff; background: linear-gradient(135deg, #7c3aed, #c026d3); padding: 6px 34px 14px; border-radius: 26px; }
+      #day .txt { font-family: "P8"; font-size: 52px; line-height: 1.08; }
+      #day .txt small { display: block; font-family: "P6"; font-size: 32px; color: #6b6470; }
+      #day .bar { width: 760px; height: 26px; border-radius: 14px; background: rgba(255,255,255,.35); overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,.3); }
+      #day .bar i { display: block; height: 100%; width: 6%; background: var(--y); border-radius: 14px; }
+      #day .cap6 { font-family: "P8"; font-size: 34px; color: #fff; text-shadow: 0 3px 12px rgba(0,0,0,.7); }
+
+      /* ---------- SEO vs GEO on the chest ---------- */
+      #vs { top: 1080px; gap: 0; align-items: center; }
+      .side { width: 400px; height: 330px; border-radius: 36px; background: #fff; box-shadow: 0 26px 70px rgba(0,0,0,.45); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
+      .side .h { font-family: "Anton"; font-size: 110px; line-height: 1; }
+      .side .s { font-family: "P7"; font-size: 30px; color: #6b6470; }
+      .side .lgs { display: flex; gap: 14px; }
+      .side .lgs img { width: 56px; height: 56px; }
+      .vsb { width: 130px; height: 130px; border-radius: 50%; background: var(--y); display: grid; place-items: center; font-family: "Anton"; font-size: 64px; margin: 0 -30px; z-index: 2; box-shadow: 0 14px 30px rgba(0,0,0,.4); }
+
+      /* ---------- top panel (split windows) ---------- */
+      #panel { position: absolute; left: 0; right: 0; top: 0; height: 790px; opacity: 0; }
+      #panel .bg { position: absolute; inset: 0 0 30px 0; background: radial-gradient(120% 90% at 50% 0%, #2f2a3d 0%, #18161d 70%); }
+      #panel svg.wave { position: absolute; left: 0; bottom: 0; width: 1080px; height: 60px; }
+      .hdr { top: 34px; }
+      .hdr .pill { font-size: 40px; }
+      .scene { position: absolute; left: 70px; top: 130px; width: 940px; height: 590px; opacity: 0; }
+
+      /* google-ish results */
+      .serp { position: absolute; inset: 0; background: #fff; border-radius: 30px; padding: 28px 34px; box-shadow: 0 20px 60px rgba(0,0,0,.5); overflow: hidden; }
+      .sbar { display: flex; align-items: center; gap: 18px; height: 84px; border: 2px solid #dfe1e5; border-radius: 42px; padding: 0 26px; box-shadow: 0 2px 8px rgba(32,33,36,.18); }
+      .sbar img { width: 44px; height: 44px; }
+      .sbar .q { font-family: "P5"; font-size: 34px; color: #202124; white-space: nowrap; overflow: hidden; }
+      .sbar .caret { width: 3px; height: 38px; background: #1a73e8; }
+      .engines { position: absolute; right: 34px; top: 136px; display: flex; gap: 12px; }
+      .engines div { display: flex; align-items: center; gap: 8px; font-family: "P7"; font-size: 24px; color: #3c4043; background: #f1f3f4; border-radius: 30px; padding: 6px 16px; opacity: 0; }
+      .engines img { width: 30px; height: 30px; }
+      .res { margin-top: 22px; padding: 14px 18px; border-radius: 18px; opacity: 0; position: relative; }
+      .res .u { font-family: "P5"; font-size: 22px; color: #4d5156; }
+      .res .t { font-family: "P6"; font-size: 34px; color: #1a0dab; line-height: 1.2; }
+      .res .ln { height: 12px; border-radius: 6px; background: #e8eaed; margin-top: 10px; width: 88%; }
+      .res.hit { background: #eef4ff; }
+      .res .rk { position: absolute; right: 16px; top: 16px; font-family: "Anton"; font-size: 34px; color: #fff; background: #1a73e8; padding: 0 14px; border-radius: 10px; }
+      .cursor { position: absolute; left: 700px; top: 520px; font-size: 64px; opacity: 0; filter: drop-shadow(0 4px 6px rgba(0,0,0,.4)); }
+      .ripple { position: absolute; width: 90px; height: 90px; border-radius: 50%; border: 6px solid #1a73e8; opacity: 0; }
+      .stamp { position: absolute; right: 30px; bottom: 30px; font-family: "Anton"; font-size: 54px; color: #1a73e8; border: 6px solid #1a73e8; border-radius: 16px; padding: 2px 20px; transform: rotate(-8deg); background: rgba(255,255,255,.92); opacity: 0; }
+
+      /* AI chat */
+      .chat { position: absolute; inset: 0; background: #faf9f7; border-radius: 30px; padding: 26px 30px; box-shadow: 0 20px 60px rgba(0,0,0,.5); overflow: hidden; }
+      .chat .top { display: flex; align-items: center; gap: 14px; font-family: "P7"; font-size: 28px; color: #6b6470; }
+      .chat .top img { width: 40px; height: 40px; }
+      .bub { margin-top: 20px; font-family: "P6"; font-size: 32px; line-height: 1.3; padding: 16px 24px; border-radius: 26px; opacity: 0; }
+      .bub.me { margin-left: auto; width: fit-content; max-width: 80%; background: #2f2a3d; color: #fff; border-bottom-right-radius: 8px; }
+      .bub.ai { background: #fff; border: 2px solid #ece8f5; color: var(--ink); }
+      .bub.ai .line { opacity: 0; }
+      .pick { margin-top: 10px; display: flex; align-items: center; gap: 16px; padding: 12px 16px; border-radius: 18px; background: #f3edff; border: 3px solid var(--geo); }
+      .pick .nm { font-family: "P8"; font-size: 34px; }
+      .pick .nm small { display: block; font-family: "P6"; font-size: 24px; color: #6b6470; }
+      .rec { margin-left: auto; font-family: "P8"; font-size: 26px; color: #fff; background: #12a150; padding: 6px 16px; border-radius: 14px; opacity: 0; white-space: nowrap; }
+
+      /* bars */
+      .bars { position: absolute; inset: 0; background: #fff; border-radius: 30px; padding: 40px 44px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+      .bars .ttl { font-family: "P8"; font-size: 46px; margin-bottom: 30px; }
+      .brow { display: flex; align-items: center; gap: 22px; margin-bottom: 44px; }
+      .brow .lb { width: 170px; font-family: "Anton"; font-size: 74px; line-height: 1; }
+      .brow .track { flex: 1; height: 86px; border-radius: 22px; background: #f1eff4; overflow: hidden; position: relative; }
+      .brow .fill { height: 100%; width: 0; border-radius: 22px; display: flex; align-items: center; justify-content: flex-end; padding-right: 18px; gap: 10px; }
+      .brow .fill img { width: 48px; height: 48px; background: #fff; border-radius: 12px; padding: 5px; }
+      .fire { position: absolute; right: 60px; top: 360px; font-family: "P8"; font-size: 40px; background: var(--y); padding: 8px 22px; border-radius: 18px; transform: rotate(-6deg); opacity: 0; box-shadow: 0 10px 24px rgba(0,0,0,.25); }
+
+      /* platform grid */
+      .plats { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+      .plat { background: #fff; border-radius: 30px; display: flex; align-items: center; gap: 24px; padding: 0 34px; box-shadow: 0 20px 50px rgba(0,0,0,.45); opacity: 0; }
+      .plat img { width: 110px; height: 110px; }
+      .plat span { font-family: "P8"; font-size: 46px; }
+
+      /* full-screen B-roll */
+      #broll { position: absolute; inset: 0; opacity: 0; background: radial-gradient(110% 70% at 50% 20%, #352c4d 0%, #16141b 75%); }
+      #broll .head { position: absolute; left: 0; right: 0; top: 150px; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+      #broll .head img { width: 150px; height: 150px; background: #fff; border-radius: 40px; padding: 18px; box-shadow: 0 20px 50px rgba(0,0,0,.5); }
+      #broll .head .nm { font-family: "P8"; font-size: 64px; color: #fff; }
+      .qcard { position: absolute; left: 80px; width: 920px; background: #fff; border-radius: 30px; padding: 22px 30px; box-shadow: 0 24px 60px rgba(0,0,0,.5); opacity: 0; }
+      .qcard .k { display: inline-block; font-family: "P8"; font-size: 26px; letter-spacing: 2px; color: #fff; padding: 4px 14px; border-radius: 10px; margin-bottom: 8px; }
+      .qcard .q { font-family: "P6"; font-size: 40px; line-height: 1.25; }
+      .gen { position: absolute; left: 80px; width: 920px; top: 1130px; background: #fff; border-radius: 30px; padding: 26px 30px; box-shadow: 0 24px 60px rgba(0,0,0,.5); opacity: 0; }
+      .gen .g1 { font-family: "P8"; font-size: 36px; color: var(--geo); margin-bottom: 12px; }
+      .gen .ln { height: 18px; border-radius: 9px; background: linear-gradient(90deg, #ece6fb, #d9cdf8, #ece6fb); margin: 14px 0; transform-origin: left center; }
+
+      /* blue link -> recommendation */
+      #shift { top: 1060px; align-items: center; gap: 26px; }
+      #shift .a, #shift .b { font-family: "P8"; font-size: 44px; padding: 18px 28px; border-radius: 24px; box-shadow: 0 18px 44px rgba(0,0,0,.45); white-space: nowrap; }
+      #shift .a { background: #fff; color: #1a0dab; text-decoration: line-through; text-decoration-thickness: 5px; text-decoration-color: rgba(229,56,59,0); }
+      #shift .b { background: linear-gradient(135deg, #7c3aed, #c026d3); color: #fff; }
+      #shift .ar { font-size: 70px; color: #fff; filter: drop-shadow(0 6px 10px rgba(0,0,0,.5)); }
+
+      /* square ending */
+      #recap { top: 120px; flex-direction: column; align-items: center; gap: 22px; }
+      #recap .row2 { display: flex; gap: 22px; }
+      #recap .c { font-family: "P8"; font-size: 50px; padding: 16px 32px; border-radius: 22px; background: #fff; box-shadow: 0 14px 34px rgba(0,0,0,.45); white-space: nowrap; }
+      #recap .c b { font-family: "Anton"; font-weight: 400; font-size: 60px; margin-right: 8px; }
+      #save { top: 1760px; }
+      #save div { font-family: "P8"; font-size: 46px; color: var(--ink); background: var(--y); padding: 14px 40px; border-radius: 60px; box-shadow: 0 16px 40px rgba(0,0,0,.45); }
+
+      /* captions */
+      #captions { position: absolute; left: 40px; right: 40px; top: 0; height: 100%; z-index: 60; }
+      .cap { position: absolute; left: 0; right: 0; top: 1735px; display: flex; flex-wrap: wrap; justify-content: center; gap: 2px 14px; opacity: 0;
+             font-family: "P8"; font-style: italic; font-size: 50px; line-height: 1.12; text-align: center; color: #fff; text-transform: uppercase;
+             text-shadow: 0 4px 0 rgba(0,0,0,.5), 0 6px 18px rgba(0,0,0,.55), 3px 3px 0 #000, -3px 3px 0 #000, 3px -3px 0 #000, -3px -3px 0 #000; }
+      .cap.sq { top: 1545px; }
+      .cap .w { display: inline-block; }
+      .cap .hl { color: var(--y); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="51.609" data-width="1080" data-height="1920">
+      <section id="gfx" class="clip" data-start="0" data-duration="51.609" data-track-index="1">
+        <div id="scrim"></div>
+        <!-- hook -->
+        <div class="el center" id="hook"><div class="big">SEO<span class="vs">vs</span><span class="g">GEO</span></div><div class="pill">Simple explanation 💡</div></div>
+        <div class="el center" id="geo"><div class="word">GEO</div></div>
+        <div class="el" id="newtag"><div>🆕 naya word</div></div>
+        <div class="el" id="stack">
+          <div class="r"><div class="l">G</div><div class="w">Generative</div></div>
+          <div class="r"><div class="l">E</div><div class="w">Engine</div></div>
+          <div class="r"><div class="l">O</div><div class="w">Optimization</div></div>
+        </div>
+        <div class="el" id="ask"><div>🤔</div></div>
+
+        <!-- day 6 -->
+        <div class="el center" id="day">
+          <div class="tile"><div class="num">DAY 6</div><div class="txt">Decoding<br />AI SEO<small>100-day series</small></div></div>
+          <div class="bar"><i></i></div><div class="cap6">6 / 100</div>
+        </div>
+
+        <!-- SEO vs GEO on the chest -->
+        <div class="el center" id="vs">
+          <div class="side" id="vsl"><div class="h" style="color:var(--seo)">SEO</div><div class="lgs"><img src="assets/logos/google-color.svg" /><img src="assets/logos/bing-color.svg" /></div><div class="s">Search engines</div></div>
+          <div class="vsb">VS</div>
+          <div class="side" id="vsr"><div class="h" style="color:var(--geo)">GEO</div><div class="lgs"><img src="assets/logos/openai.svg" /><img src="assets/logos/gemini-color.svg" /><img src="assets/logos/perplexity-color.svg" /></div><div class="s">AI answer engines</div></div>
+        </div>
+
+        <!-- top panel -->
+        <div id="panel"><div class="bg"></div><svg class="wave" viewBox="0 0 1080 60" preserveAspectRatio="none"><path d="M0 0 H1080 V22 C 900 60, 720 0, 540 26 C 360 52, 180 4, 0 30 Z" fill="#18161d"/></svg>
+          <div class="el center hdr" id="h1"><div class="pill"><b style="color:var(--seo)">SEO</b> = Search Engine Optimization</div></div>
+          <div class="el center hdr" id="h2"><div class="pill"><b>GEO</b> = Generative Engine Optimization</div></div>
+          <div class="el center hdr" id="h3"><div class="pill">💼 What we do for <b>clients</b></div></div>
+          <div class="el center hdr" id="h4"><div class="pill">🤖 Where <b>GEO</b> works</div></div>
+
+          <div class="scene" id="s1"><div class="serp">
+            <div class="sbar"><img src="assets/logos/google-color.svg" /><div class="q" id="q1"></div><div class="caret" id="caret1"></div></div>
+            <div class="engines"><div id="eg"><img src="assets/logos/google-color.svg" />Google</div><div id="eb"><img src="assets/logos/bing-color.svg" />Bing</div></div>
+            <div class="res hit" id="r1"><div class="u">smilecaredental.in</div><div class="t">Smile Care Dental – Best Dentist in Delhi</div><div class="ln"></div><div class="rk">#1</div></div>
+            <div class="res" id="r2"><div class="u">practo.com › delhi › dentist</div><div class="t">Top 10 Dentists in Delhi – Book Now</div><div class="ln" style="width:70%"></div></div>
+            <div class="res" id="r3"><div class="u">justdial.com › dentists</div><div class="t">Dentists Near Me – Ratings &amp; Reviews</div><div class="ln" style="width:78%"></div></div>
+            <div class="ripple" id="rip"></div>
+            <div class="cursor" id="cur">👆</div>
+            <div class="stamp" id="stamp">BLUE LINKS 🔗</div>
+          </div></div>
+
+          <div class="scene" id="s2"><div class="chat">
+            <div class="top"><img src="assets/logos/openai.svg" /><img src="assets/logos/gemini-color.svg" /><img src="assets/logos/perplexity-color.svg" /><span>AI search</span></div>
+            <div class="bub me" id="u1">Best dentist in Delhi?</div>
+            <div class="bub ai" id="a1">
+              <div class="line" id="al1">✨ Based on reviews and expert mentions, my top pick:</div>
+              <div class="pick line" id="al2"><div style="font-size:54px">🦷</div><div class="nm">Smile Care Dental<small>⭐ 4.9 · 1,200+ reviews · Saket</small></div><div class="rec" id="rec">✅ RECOMMENDED</div></div>
+            </div>
+          </div></div>
+
+          <div class="scene" id="s3"><div class="bars">
+            <div class="ttl">Where client work goes in 2026</div>
+            <div class="brow"><div class="lb" style="color:var(--seo)">SEO</div><div class="track"><div class="fill" id="b1" style="background:linear-gradient(90deg,#8ab4f8,#1a73e8)"><img src="assets/logos/google-color.svg" /></div></div></div>
+            <div class="brow"><div class="lb" style="color:var(--geo)">GEO</div><div class="track"><div class="fill" id="b2" style="background:linear-gradient(90deg,#c4b5fd,#7c3aed)"><img src="assets/logos/openai.svg" /><img src="assets/logos/gemini-color.svg" /><img src="assets/logos/perplexity-color.svg" /></div></div></div>
+            <div class="fire" id="fire">zyada kaam 🔥</div>
+          </div></div>
+
+          <div class="scene" id="s4"><div class="plats">
+            <div class="plat" id="p1"><img src="assets/logos/openai.svg" /><span>ChatGPT</span></div>
+            <div class="plat" id="p2"><img src="assets/logos/gemini-color.svg" /><span>Gemini</span></div>
+            <div class="plat" id="p3"><img src="assets/logos/deepseek-color.svg" /><span>DeepSeek</span></div>
+            <div class="plat" id="p4"><img src="assets/logos/perplexity-color.svg" /><span>Perplexity</span></div>
+          </div></div>
+        </div>
+
+        <!-- full-screen B-roll -->
+        <div id="broll">
+          <div class="head"><img src="assets/logos/perplexity-color.svg" /><div class="nm">Ask anything 🤖</div></div>
+          <div class="qcard" id="qs" style="top:520px"><span class="k" style="background:#0e9fb5">SHORT-FORM</span><div class="q">best CRM India</div></div>
+          <div class="qcard" id="ql" style="top:760px"><span class="k" style="background:#7c3aed">LONG-FORM</span><div class="q">Which CRM is best for a 10-person sales team in India, under ₹2,000 a month?</div></div>
+          <div class="gen" id="gen"><div class="g1" id="g1">✨ Generating answer…</div><div class="ln"></div><div class="ln" style="width:85%"></div><div class="ln" style="width:92%"></div><div class="ln" style="width:60%"></div></div>
+        </div>
+
+        <!-- blue link -> direct recommendation -->
+        <div class="el center" id="shift"><div class="a" id="sa">🔗 Blue links</div><div class="ar">➜</div><div class="b" id="sb">🤖 Direct answer</div></div>
+
+        <!-- square ending -->
+        <div class="el center" id="recap">
+          <div class="row2"><div class="c"><b style="color:var(--seo)">SEO</b>= Google blue links 🔗</div></div>
+          <div class="row2"><div class="c"><b style="color:var(--geo)">GEO</b>= AI recommends you 🤖</div></div>
+        </div>
+        <div class="el center" id="save"><div>🔖 SAVE THIS REEL</div></div>
+      </section>
+      <div id="captions"></div>
+    </div>
+
+    <script>
+      function T(x) { let acc = 0; for (const [a, b] of KEEP) { if (x < a) return acc; if (x <= b) return acc + x - a; acc += b - a; } return acc; }
+      window.T = T;
+      const at = (x) => T(x);
+      const CUES = window.CUES = [];
+      const tl = gsap.timeline({ paused: true });
+      const SQ = 49.1;
+
+      function buildCaptions() {
+        const root = document.getElementById("captions");
+        CUES.forEach(([start, end, text]) => {
+          const el = document.createElement("div");
+          el.className = "cap" + (start >= at(SQ) ? " sq" : "");
+          let on = false;
+          const words = text.split(" ").map((w) => {
+            const hl = on || w.startsWith("*");
+            if (w.startsWith("*")) on = true;
+            if (/\*[,?.!:]?$/.test(w)) on = false;
+            return { w: w.replace(/\*/g, ""), hl };
+          });
+          el.innerHTML = words.map((o) => `<span class="w${o.hl ? " hl" : ""}">${o.w}</span>`).join(" ");
+          root.appendChild(el);
+          tl.set(el, { opacity: 1 }, start);
+          tl.set(el, { opacity: 0 }, end);
+          const ws = [...el.querySelectorAll(".w")];
+          const span = Math.min(0.5, (end - start) * 0.5);
+          ws.forEach((w, k) => tl.fromTo(w, { opacity: 0, y: 14, scale: 0.85 }, { opacity: 1, y: 0, scale: 1, duration: 0.14, ease: "back.out(2.2)" }, start + span * k / ws.length));
+        });
+      }
+
+      const pop = (el, t, from = {}) => tl.fromTo(el, { opacity: 0, scale: 0.6, y: 30, ...from }, { opacity: 1, scale: 1, y: 0, x: 0, rotation: 0, duration: 0.35, ease: "back.out(2)", immediateRender: false }, t);
+      const out = (el, t, d = 0.2) => tl.to(el, { opacity: 0, scale: 0.9, duration: d, ease: "power2.in" }, t - d);
+      const float = (el, t0, t1) => { const n = Math.max(0, Math.floor((t1 - t0) / 0.9) - 1); if (n) tl.to(el, { y: -10, duration: 0.9, yoyo: true, repeat: n, ease: "sine.inOut" }, t0); };
+      function type(el, text, t0, dur) {
+        const n = text.length;
+        for (let i = 0; i <= n; i++) tl.set(el, { textContent: text.slice(0, i) }, t0 + dur * i / n);
+      }
+
+      function build() {
+        buildCaptions();
+        tl.fromTo("#scrim", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 0);
+        tl.to("#scrim", { opacity: 0, duration: 0.3 }, at(15.3) - 0.3);
+        // ---------- hook ----------
+        tl.fromTo("#hook .big", { opacity: 0, scale: 1.6 }, { opacity: 1, scale: 1, duration: 0.4, ease: "expo.out" }, 0.0);
+        tl.set("#hook", { opacity: 1 }, 0.0);
+        tl.fromTo("#hook .pill", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.3, ease: "back.out(2)" }, 0.35);
+        float("#hook", 0.7, at(4.3));
+        out("#hook", at(4.42), 0.18);
+        // "GEO" slams in, new-word tag
+        tl.fromTo("#geo", { opacity: 0, scale: 2.2, rotation: -6 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.32, ease: "expo.out" }, at(4.45));
+        tl.fromTo("#newtag", { opacity: 0, scale: 2 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2.4)" }, at(4.7));
+        out("#newtag", at(6.1));
+        // GEO unfolds into Generative / Engine / Optimization
+        tl.to("#geo", { opacity: 0, scale: 0.5, y: -80, duration: 0.3, ease: "power2.in" }, at(6.2));
+        tl.set("#stack", { opacity: 1 }, at(6.3));
+        const rows = document.querySelectorAll("#stack .r");
+        [6.35, 7.05, 7.6].forEach((t, i) => {
+          tl.fromTo(rows[i], { opacity: 0, x: -120 }, { opacity: 1, x: 0, duration: 0.3, ease: "back.out(1.8)" }, at(t));
+          tl.fromTo(rows[i].querySelector(".l"), { rotation: -90, scale: 0.4 }, { rotation: 0, scale: 1, duration: 0.4, ease: "back.out(2.2)", immediateRender: false }, at(t));
+        });
+        tl.fromTo("#ask", { opacity: 0, scale: 0.3, rotation: -30 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.35, ease: "back.out(2.6)" }, at(10.25));
+        tl.to("#ask", { rotation: 12, duration: 0.25, yoyo: true, repeat: 1, ease: "sine.inOut" }, at(10.6));
+        out("#stack", at(11.4)); out("#ask", at(11.4));
+
+        // ---------- day 6 ----------
+        tl.fromTo("#day .tile", { opacity: 0, scale: 0.5, rotation: -8 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.4, ease: "back.out(1.8)" }, at(11.5));
+        tl.set("#day", { opacity: 1 }, at(11.5));
+        tl.fromTo("#day .bar, #day .cap6", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.25, stagger: 0.08 }, at(12.0));
+        tl.fromTo("#day .bar i", { width: "0%" }, { width: "6%", duration: 0.8, ease: "power3.out" }, at(12.2));
+        float("#day .tile", at(12.0), at(15.0));
+        out("#day", at(15.36));
+
+        // ---------- SEO vs GEO on the chest ----------
+        tl.set("#vs", { opacity: 1 }, at(16.1));
+        tl.fromTo("#vsl", { opacity: 0, x: -400, rotation: -10 }, { opacity: 1, x: 0, rotation: 0, duration: 0.4, ease: "back.out(1.6)" }, at(16.75));
+        tl.fromTo("#vsr", { opacity: 0, x: 400, rotation: 10 }, { opacity: 1, x: 0, rotation: 0, duration: 0.4, ease: "back.out(1.6)" }, at(17.1));
+        tl.fromTo("#vs .vsb", { opacity: 0, scale: 3 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2.6)" }, at(17.45));
+        tl.to("#vs .vsb", { scale: 1.15, duration: 0.3, yoyo: true, repeat: 3, ease: "sine.inOut" }, at(17.8));
+        out("#vs", at(19.6));
+
+        // ---------- split panel ----------
+        const P0 = at(19.70), P1 = at(42.26);
+        tl.fromTo("#panel", { opacity: 0, y: -120 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, P0);
+        tl.set("#panel", { opacity: 0 }, P1);
+        const scene = (hdr, sc, a, b) => {
+          tl.fromTo(hdr, { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.3, ease: "back.out(2)" }, a);
+          tl.fromTo(sc, { opacity: 0, y: 60, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "power3.out" }, a + 0.08);
+          if (b) { out(hdr, b); tl.to(sc, { opacity: 0, x: -200, duration: 0.25, ease: "power2.in" }, b - 0.25); }
+        };
+        // SEO: search, results, click a blue link
+        scene("#h1", "#s1", P0, at(29.42));
+        type(document.getElementById("q1"), "best dentist in delhi", P0 + 0.4, 1.3);
+        tl.to("#caret1", { opacity: 0, duration: 0.01, yoyo: true, repeat: 9, repeatDelay: 0.25 }, P0 + 1.8);
+        tl.fromTo("#eg", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2)" }, at(22.2));
+        tl.fromTo("#eb", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2)" }, at(22.7));
+        ["#r1", "#r2", "#r3"].forEach((r, i) => tl.fromTo(r, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, at(23.0) + i * 0.15));
+        tl.fromTo("#cur", { opacity: 0, x: 120, y: 120 }, { opacity: 1, x: 0, y: 0, duration: 0.25 }, at(24.8));
+        tl.to("#cur", { left: 520, top: 175, duration: 0.6, ease: "power2.inOut" }, at(25.05));
+        tl.set("#rip", { left: 500, top: 140 }, at(25.6));
+        tl.fromTo("#rip", { opacity: 1, scale: 0.2 }, { opacity: 0, scale: 2, duration: 0.5, ease: "power2.out", immediateRender: false }, at(25.65));
+        tl.to("#cur", { scale: 0.85, duration: 0.08, yoyo: true, repeat: 1 }, at(25.62));
+        tl.to("#r1 .t", { textDecoration: "underline", color: "#681da8", duration: 0.01 }, at(25.68));
+        tl.fromTo("#stamp", { opacity: 0, scale: 2.4 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2)" }, at(27.3));
+        // GEO: ask the AI, it recommends one brand directly
+        scene("#h2", "#s2", at(29.5), at(34.15));
+        tl.fromTo("#u1", { opacity: 0, x: 80 }, { opacity: 1, x: 0, duration: 0.3, ease: "back.out(2)" }, at(29.9));
+        tl.fromTo("#a1", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, at(30.5));
+        tl.fromTo("#al1", { opacity: 0 }, { opacity: 1, duration: 0.4 }, at(30.6));
+        tl.fromTo("#al2", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.35, ease: "back.out(1.8)" }, at(31.2));
+        tl.fromTo("#rec", { opacity: 0, scale: 2.2 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2.4)" }, at(31.35));
+        tl.to("#al2", { boxShadow: "0 0 0 10px rgba(139,92,246,.25)", duration: 0.4, yoyo: true, repeat: 3 }, at(31.7));
+        // clients: GEO bar outgrows SEO
+        scene("#h3", "#s3", at(34.25), at(39.1));
+        tl.to("#b1", { width: "42%", duration: 0.8, ease: "power3.out" }, at(34.8));
+        tl.to("#b2", { width: "92%", duration: 1.0, ease: "power3.out" }, at(36.4));
+        tl.fromTo("#fire", { opacity: 0, scale: 2 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2.4)" }, at(37.6));
+        // platforms pop on their names
+        scene("#h4", "#s4", at(39.15), 0);
+        [["#p1", 39.95], ["#p2", 40.75], ["#p3", 41.45], ["#p4", 41.95]].forEach(([p, t]) => pop(p, at(t), { rotation: -6 }));
+
+        // ---------- full-screen B-roll ----------
+        const B0 = at(42.26), B1 = at(46.51);
+        tl.fromTo("#broll", { opacity: 0 }, { opacity: 1, duration: 0.2 }, B0);
+        tl.fromTo("#broll .head", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2)" }, B0 + 0.05);
+        tl.fromTo("#ql", { opacity: 0, x: 300 }, { opacity: 1, x: 0, duration: 0.35, ease: "back.out(1.6)" }, at(43.6));
+        tl.fromTo("#qs", { opacity: 0, x: -300 }, { opacity: 1, x: 0, duration: 0.35, ease: "back.out(1.6)" }, at(44.35));
+        tl.fromTo("#gen", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, at(45.2));
+        tl.fromTo("#gen .ln", { scaleX: 0 }, { scaleX: 1, duration: 0.35, stagger: 0.2, ease: "power2.out" }, at(45.4));
+        tl.to("#g1", { opacity: 0.45, duration: 0.3, yoyo: true, repeat: 3 }, at(45.4));
+        tl.set("#broll", { opacity: 0 }, B1);
+
+        // ---------- blue link -> direct answer ----------
+        tl.set("#shift", { opacity: 1 }, at(46.7));
+        tl.fromTo("#sa", { opacity: 0, x: -200 }, { opacity: 1, x: 0, duration: 0.3, ease: "back.out(1.6)" }, at(46.7));
+        tl.fromTo("#shift .ar", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.25 }, at(47.0));
+        tl.fromTo("#sb", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2.2)" }, at(47.2));
+        tl.to("#sa", { opacity: 0.55, textDecorationColor: "rgba(229,56,59,1)", duration: 0.3 }, at(47.6));
+        out("#shift", at(48.85));
+
+        // ---------- square ending ----------
+        const rc = document.querySelectorAll("#recap .row2");
+        tl.set("#recap", { opacity: 1 }, at(49.2));
+        rc.forEach((r, i) => tl.fromTo(r, { opacity: 0, y: -40 }, { opacity: 1, y: 0, duration: 0.3, ease: "back.out(2)" }, at(49.25) + i * 0.25));
+        tl.fromTo("#save", { opacity: 0, scale: 0.5, y: 40 }, { opacity: 1, scale: 1, y: 0, duration: 0.35, ease: "back.out(2.2)" }, at(49.9));
+        tl.to("#save", { scale: 1.06, duration: 0.35, yoyo: true, repeat: 5, ease: "sine.inOut" }, at(50.4));
+        window.__timelines["main"] = tl;
+      }
+    </script>
+    <script src="captions.js"></script>
+    <script>document.fonts.ready.then(build);</script>
+  </body>
+</html>
