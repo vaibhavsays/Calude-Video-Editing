@@ -1,0 +1,17 @@
+{
+  "theme": "lavender",
+  "logos": ["google-color.svg", "openai.svg", "gemini-color.svg", "perplexity-color.svg"],
+  "logos_top": "140px",
+  "logo_size": "104px",
+  "title": "SEO vs GEO",
+  "title_size": "88px",
+  "title_top": "280px",
+  "subtitle": "AI SEO · DAY 6",
+  "sub_top": "410px",
+  "big_word": "GEO",
+  "big_size": "400px",
+  "big_top": "470px",
+  "person_width": "1080px",
+  "photo": "assets/vaibhav_suit_cutout.png",
+  "output": "cover.png"
+}
