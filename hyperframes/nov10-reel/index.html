@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="vendor/gsap.min.js"></script>
+    <script src="edl.js"></script>
+    <style>
+      @font-face { font-family: "P5"; src: url("assets/fonts/poppins-latin-500-normal.woff2"); }
+      @font-face { font-family: "P6"; src: url("assets/fonts/poppins-latin-600-normal.woff2"); }
+      @font-face { font-family: "P7"; src: url("assets/fonts/poppins-latin-700-normal.woff2"); }
+      @font-face { font-family: "P8"; src: url("assets/fonts/poppins-latin-800-normal.woff2"); }
+      @font-face { font-family: "Anton"; src: url("assets/fonts/anton-latin-400-normal.woff2"); }
+      :root { --y: #ffd426; --ink: #17151a; --aeo: #1a73e8; --geo: #8b5cf6; --ok: #12a150; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
+      body { font-family: "P7", sans-serif; color: var(--ink); }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; }
+      .clip { position: absolute; inset: 0; }
+      .el { position: absolute; opacity: 0; }
+      .center { left: 0; right: 0; display: flex; justify-content: center; }
+      .pill { font-family: "P8"; font-size: 42px; color: var(--ink); background: #fff; padding: 12px 34px; border-radius: 60px; box-shadow: 0 14px 36px rgba(0,0,0,.35); white-space: nowrap; }
+      .pill.dark { color: #fff; background: rgba(17,15,20,.9); }
+      .a { color: var(--aeo); } .g { color: var(--geo); }
+
+      /* ---------- hook (above the head) ---------- */
+      #last { top: 90px; }
+      #last .pill { font-size: 36px; }
+      #vs { top: 70px; }
+      #vs .card { font-family: "Anton"; font-size: 170px; line-height: 1; color: #fff; background: rgba(17,15,20,.88); padding: 10px 50px 20px; border-radius: 40px; box-shadow: 0 24px 60px rgba(0,0,0,.45); white-space: nowrap; }
+      #vs .card .a { color: #6ea8ff; } #vs .card .g { color: #c4b5fd; } #vs .card .v { font-size: 100px; color: var(--y); margin: 0 26px; vertical-align: 26px; }
+      .def { top: 320px; }
+      .def .pill { font-size: 40px; }
+
+      /* ---------- panel ---------- */
+      #panel { position: absolute; left: 0; right: 0; top: 0; height: 790px; opacity: 0; }
+      #panel .bg { position: absolute; inset: 0 0 30px 0; background: radial-gradient(120% 90% at 50% 0%, #26304a 0%, #13151c 72%); }
+      #panel svg.wave { position: absolute; left: 0; bottom: 0; width: 1080px; height: 60px; }
+      .hdr { top: 34px; }
+      .hdr .pill { font-size: 40px; }
+      .scene { position: absolute; left: 70px; top: 130px; width: 940px; height: 590px; opacity: 0; }
+      .white { position: absolute; inset: 0; background: #fff; border-radius: 30px; box-shadow: 0 20px 60px rgba(0,0,0,.5); overflow: hidden; padding: 26px 30px; }
+      .sbar { display: flex; align-items: center; gap: 18px; height: 80px; border: 2px solid #dfe1e5; border-radius: 40px; padding: 0 26px; box-shadow: 0 2px 8px rgba(32,33,36,.18); }
+      .sbar img { width: 42px; height: 42px; }
+      .sbar .q { font-family: "P5"; font-size: 32px; color: #202124; white-space: nowrap; overflow: hidden; }
+      .ov { margin-top: 20px; border-radius: 22px; padding: 18px 24px; background: linear-gradient(135deg, #eef3fe, #f6effd); opacity: 0; }
+      .ov .h { font-family: "P8"; font-size: 28px; color: #5b55d6; }
+      .ov .t { font-family: "P6"; font-size: 29px; line-height: 1.4; margin-top: 6px; }
+      .ov .src { display: inline-block; margin-top: 10px; font-family: "P7"; font-size: 22px; color: #3c4043; background: #fff; border-radius: 14px; padding: 4px 14px; }
+      .tiles { position: absolute; left: 30px; right: 30px; bottom: 26px; display: flex; gap: 18px; }
+      .tile { flex: 1; height: 120px; border-radius: 22px; background: #f3f5f9; display: flex; align-items: center; justify-content: center; gap: 12px; font-family: "P8"; font-size: 28px; opacity: 0; }
+      .tile i { font-style: normal; font-size: 44px; }
+      .stamp { position: absolute; right: 24px; top: 14px; font-family: "Anton"; font-size: 54px; color: var(--ok); border: 7px solid var(--ok); border-radius: 18px; padding: 2px 22px; transform: rotate(-8deg); background: rgba(255,255,255,.95); opacity: 0; z-index: 5; }
+
+      .chat { position: absolute; inset: 0; background: #f7f7fa; border-radius: 30px; padding: 26px 30px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+      .bub { margin-top: 18px; font-family: "P6"; font-size: 34px; line-height: 1.3; padding: 16px 24px; border-radius: 26px; opacity: 0; }
+      .bub.u { margin-left: auto; width: fit-content; background: #26304a; color: #fff; border-bottom-right-radius: 8px; }
+      .llms { display: flex; gap: 22px; margin-top: 34px; justify-content: center; }
+      .llm { width: 250px; height: 200px; border-radius: 26px; background: #fff; border: 2px solid #ece9f3; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; opacity: 0; box-shadow: 0 10px 24px rgba(0,0,0,.08); }
+      .llm img { width: 90px; height: 90px; }
+      .llm span { font-family: "P8"; font-size: 32px; }
+      .opp { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); font-family: "Anton"; font-size: 90px; color: #fff; background: var(--geo); padding: 6px 40px; border-radius: 26px; white-space: nowrap; opacity: 0; box-shadow: 0 20px 50px rgba(0,0,0,.45); z-index: 6; }
+
+      table.cmp { position: absolute; inset: 0; width: 100%; border-collapse: separate; border-spacing: 0; background: #fff; border-radius: 30px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+      .cmp th { font-family: "Anton"; font-size: 64px; font-weight: 400; padding: 14px 0; }
+      .cmp th:first-child { width: 190px; }
+      .cmp td { font-family: "P7"; font-size: 29px; line-height: 1.25; padding: 16px 18px; border-top: 2px solid #eef0f4; vertical-align: middle; }
+      .cmp td.k { font-family: "P8"; font-size: 26px; color: #6b6470; text-transform: uppercase; letter-spacing: 1px; }
+      .cmp tr.r { opacity: 0; }
+
+      .faq { border: 3px solid #e6e9ef; border-radius: 22px; padding: 18px 24px; position: relative; overflow: hidden; }
+      .faq .url { font-family: "P6"; font-size: 22px; color: #5f6368; margin-bottom: 8px; }
+      .faq .q { font-family: "P8"; font-size: 32px; line-height: 1.25; }
+      .faq .an { font-family: "P6"; font-size: 30px; line-height: 1.4; margin-top: 8px; color: #303540; }
+      .faq .tag { position: absolute; right: 16px; top: 14px; font-family: "P8"; font-size: 24px; color: #fff; background: var(--ok); padding: 4px 14px; border-radius: 12px; opacity: 0; }
+      .scan { position: absolute; left: 0; right: 0; height: 70px; top: -80px; background: linear-gradient(180deg, rgba(26,115,232,0), rgba(26,115,232,.35), rgba(26,115,232,0)); }
+      .bot { position: absolute; right: 26px; bottom: 24px; font-family: "P8"; font-size: 28px; color: #fff; background: var(--aeo); padding: 8px 18px; border-radius: 16px; opacity: 0; }
+      .follow { position: absolute; left: 0; right: 0; bottom: -4px; display: flex; justify-content: center; opacity: 0; }
+      .follow div { font-family: "P8"; font-size: 30px; color: var(--ink); background: var(--y); padding: 8px 26px; border-radius: 30px; }
+
+      /* full-screen B-roll: many websites -> one generated answer */
+      #f1 { position: absolute; inset: 0; opacity: 0; background: radial-gradient(110% 70% at 50% 20%, #33275a 0%, #120f1a 75%); }
+      #f1 .head { position: absolute; left: 60px; right: 60px; top: 150px; text-align: center; font-family: "P8"; font-size: 64px; line-height: 1.12; color: #fff; }
+      #f1 .head b { color: var(--y); }
+      .site { position: absolute; width: 330px; background: #fff; border-radius: 22px; padding: 16px 20px; box-shadow: 0 16px 40px rgba(0,0,0,.45); opacity: 0; }
+      .site .d { font-family: "P7"; font-size: 24px; color: #1a0dab; }
+      .site .l { height: 12px; border-radius: 6px; background: #e8eaed; margin-top: 10px; }
+      .ans { position: absolute; left: 110px; width: 860px; top: 960px; background: #fff; border-radius: 30px; padding: 28px 32px; box-shadow: 0 24px 60px rgba(0,0,0,.5); opacity: 0; }
+      .ans .h { display: flex; align-items: center; gap: 12px; font-family: "P8"; font-size: 32px; color: var(--geo); }
+      .ans .h img { width: 44px; height: 44px; }
+      .ans .ln { height: 18px; border-radius: 9px; background: linear-gradient(90deg, #ece6fb, #d9cdf8); margin: 16px 0; transform-origin: left center; }
+      .ans .refs { display: flex; gap: 10px; margin-top: 6px; }
+      .ans .refs span { font-family: "P7"; font-size: 24px; color: var(--geo); background: #f1ecfd; border-radius: 10px; padding: 2px 12px; opacity: 0; }
+
+      /* captions */
+      #captions { position: absolute; left: 40px; right: 40px; top: 0; height: 100%; z-index: 60; }
+      .cap { position: absolute; left: 0; right: 0; top: 1735px; display: flex; flex-wrap: wrap; justify-content: center; gap: 2px 14px; opacity: 0;
+             font-family: "P8"; font-style: italic; font-size: 50px; line-height: 1.12; text-align: center; color: #fff; text-transform: uppercase;
+             text-shadow: 0 4px 0 rgba(0,0,0,.5), 0 6px 18px rgba(0,0,0,.55), 3px 3px 0 #000, -3px 3px 0 #000, 3px -3px 0 #000, -3px -3px 0 #000; }
+      .cap .w { display: inline-block; }
+      .cap .hl { color: var(--y); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="56.549" data-width="1080" data-height="1920">
+      <section id="gfx" class="clip" data-start="0" data-duration="56.549" data-track-index="1">
+        <!-- hook -->
+        <div class="el center" id="last"><div class="pill dark">Last video: <span style="color:#6ea8ff">SEO</span> vs <span style="color:#c4b5fd">GEO</span> ✅</div></div>
+        <div class="el center" id="vs"><div class="card"><span class="a">AEO</span><span class="v">vs</span><span class="g">GEO</span></div></div>
+        <div class="el center def" id="d1"><div class="pill"><b class="a">A</b>nswer <b class="a">E</b>ngine <b class="a">O</b>ptimization</div></div>
+        <div class="el center def" id="d2"><div class="pill"><b class="g">G</b>enerative <b class="g">E</b>ngine <b class="g">O</b>ptimization</div></div>
+
+        <!-- panel -->
+        <div id="panel"><div class="bg"></div><svg class="wave" viewBox="0 0 1080 60" preserveAspectRatio="none"><path d="M0 0 H1080 V22 C 900 60, 720 0, 540 26 C 360 52, 180 4, 0 30 Z" fill="#13151c"/></svg>
+          <div class="el center hdr" id="h1"><div class="pill"><b class="a">AEO</b> = Answer Engine Optimization</div></div>
+          <div class="el center hdr" id="h2"><div class="pill"><b class="g">GEO</b> = Generative Engine Optimization</div></div>
+          <div class="el center hdr" id="h3"><div class="pill">🆚 The <b class="a">basic</b> <b class="g">difference</b></div></div>
+          <div class="el center hdr" id="h4"><div class="pill">⚙️ How <b class="a">AEO</b> works</div></div>
+          <div class="el center hdr" id="h5"><div class="pill">🏢 For <b class="a">your business</b></div></div>
+
+          <div class="scene" id="s1"><div class="white">
+            <div class="sbar"><img src="assets/logos/google-color.svg" /><div class="q" id="q1"></div></div>
+            <div class="ov" id="ov1"><div class="h">✨ AI Overview</div><div class="t">Mix 2 tbsp curd with a pinch of turmeric, apply for 15 minutes, then rinse with cool water.</div></div>
+            <div class="tiles"><div class="tile" id="t1"><i>✨</i>AI Overviews</div><div class="tile" id="t2"><i>🎙️</i>Voice search</div><div class="tile" id="t3"><i>📌</i>Featured snippets</div></div>
+            <div class="stamp" id="st1">DIRECT ANSWER ✅</div>
+          </div></div>
+
+          <div class="scene" id="s2"><div class="chat">
+            <div class="bub u" id="u2">Best sunscreen for oily skin?</div>
+            <div class="llms">
+              <div class="llm" id="l1"><img src="assets/logos/openai.svg" /><span>ChatGPT</span></div>
+              <div class="llm" id="l2"><img src="assets/logos/deepseek-color.svg" /><span>DeepSeek</span></div>
+              <div class="llm" id="l3"><img src="assets/logos/perplexity-color.svg" /><span>Perplexity</span></div>
+            </div>
+            <div class="opp" id="opp">EXACT OPPOSITE ↔</div>
+          </div></div>
+
+          <div class="scene" id="s3"><table class="cmp">
+            <tr><th></th><th class="a">AEO</th><th class="g">GEO</th></tr>
+            <tr class="r"><td class="k">Gives</td><td>One short, direct answer</td><td>A new answer it writes itself</td></tr>
+            <tr class="r"><td class="k">Where</td><td>AI Overviews, voice search, snippets</td><td>ChatGPT, DeepSeek, Perplexity</td></tr>
+            <tr class="r"><td class="k">From</td><td>The single best answer</td><td>Many websites combined</td></tr>
+          </table></div>
+
+          <div class="scene" id="s4"><div class="white">
+            <div class="faq" id="fq1"><div class="url">yourwebsite.com › faq</div><div class="q">Q: How to remove tan at home?</div><div class="an">A: Mix 2 tbsp curd with a pinch of turmeric, apply for 15 minutes, then rinse.</div><div class="tag" id="tg1">✅ TO THE POINT</div></div>
+            <div class="ov" id="ov2" style="margin-top:22px"><div class="h">✨ AI Overview</div><div class="t">Mix 2 tbsp curd with a pinch of turmeric, apply for 15 minutes, then rinse.</div><div class="src">🔗 yourwebsite.com</div></div>
+          </div></div>
+
+          <div class="scene" id="s5"><div class="white">
+            <div class="faq" id="fq2"><div class="url">coolfix-ac.in › faq</div><div class="q">Q: Do you repair ACs on the same day in Baner?</div><div class="an">A: Yes. Most AC repairs in Baner are done the same day if you call before 2 pm.</div><div class="scan" id="scan"></div></div>
+            <div class="ov" id="ov3" style="margin-top:22px"><div class="h">✨ Direct answer</div><div class="t">Yes, same-day AC repair in Baner if you call before 2 pm.</div><div class="src">🔗 coolfix-ac.in</div></div>
+            <div class="bot" id="bot">🤖 Crawler reading…</div>
+            <div class="follow" id="fol"><div>🔔 Follow @aiseovaibhav</div></div>
+          </div></div>
+        </div>
+
+        <!-- full-screen B-roll -->
+        <div id="f1">
+          <div class="head">GEO builds <b>one answer</b><br />from <b>many websites</b> 🧩</div>
+          <div class="site" style="left:60px;top:440px"><div class="d">skincare-blog.in</div><div class="l"></div><div class="l" style="width:70%"></div></div>
+          <div class="site" style="left:690px;top:420px"><div class="d">dermat-clinic.com</div><div class="l"></div><div class="l" style="width:60%"></div></div>
+          <div class="site" style="left:375px;top:560px"><div class="d">reddit.com › skincare</div><div class="l"></div><div class="l" style="width:80%"></div></div>
+          <div class="site" style="left:60px;top:690px"><div class="d">brand-site.in</div><div class="l"></div><div class="l" style="width:65%"></div></div>
+          <div class="site" style="left:690px;top:700px"><div class="d">review-site.com</div><div class="l"></div><div class="l" style="width:75%"></div></div>
+          <div class="ans" id="ans"><div class="h"><img src="assets/logos/perplexity-color.svg" />✨ Generated answer</div><div class="ln"></div><div class="ln" style="width:88%"></div><div class="ln" style="width:94%"></div><div class="ln" style="width:62%"></div>
+            <div class="refs"><span>[1]</span><span>[2]</span><span>[3]</span><span>[4]</span><span>[5]</span></div></div>
+        </div>
+      </section>
+      <div id="captions"></div>
+    </div>
+
+    <script>
+      function T(x) { let acc = 0; for (const [a, b] of KEEP) { if (x < a) return acc; if (x <= b) return acc + x - a; acc += b - a; } return acc; }
+      window.T = T;
+      const at = (x) => T(x);
+      const CUES = window.CUES = [];
+      const tl = gsap.timeline({ paused: true });
+
+      function buildCaptions() {
+        const root = document.getElementById("captions");
+        CUES.forEach(([start, end, text]) => {
+          const el = document.createElement("div");
+          el.className = "cap";
+          let on = false;
+          const words = text.split(" ").map((w) => {
+            const hl = on || w.startsWith("*");
+            if (w.startsWith("*")) on = true;
+            if (/\*[,?.!:]?$/.test(w)) on = false;
+            return { w: w.replace(/\*/g, ""), hl };
+          });
+          el.innerHTML = words.map((o) => `<span class="w${o.hl ? " hl" : ""}">${o.w}</span>`).join(" ");
+          root.appendChild(el);
+          tl.set(el, { opacity: 1 }, start);
+          tl.set(el, { opacity: 0 }, end);
+          const ws = [...el.querySelectorAll(".w")];
+          const span = Math.min(0.5, (end - start) * 0.5);
+          ws.forEach((w, k) => tl.fromTo(w, { opacity: 0, y: 14, scale: 0.85 }, { opacity: 1, y: 0, scale: 1, duration: 0.14, ease: "back.out(2.2)" }, start + span * k / ws.length));
+        });
+      }
+
+      const out = (el, t, d = 0.2) => tl.to(el, { opacity: 0, scale: 0.92, duration: d, ease: "power2.in" }, t - d);
+      const float = (el, t0, t1) => { const n = Math.max(0, Math.floor((t1 - t0) / 0.9) - 1); if (n) tl.to(el, { y: -10, duration: 0.9, yoyo: true, repeat: n, ease: "sine.inOut" }, t0); };
+      const popIn = (el, t, from = {}) => tl.fromTo(el, { opacity: 0, scale: 0.6, y: 30, ...from }, { opacity: 1, scale: 1, y: 0, x: 0, rotation: 0, duration: 0.35, ease: "back.out(2)", immediateRender: false }, t);
+      function type(el, text, t0, dur) { const n = text.length; for (let i = 0; i <= n; i++) tl.set(el, { textContent: text.slice(0, i) }, t0 + dur * i / n); }
+
+      function build() {
+        buildCaptions();
+        // ---------- hook ----------
+        tl.fromTo("#last", { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.3, ease: "back.out(2)" }, at(1.2));
+        float("#last", at(1.6), at(4.3));
+        out("#last", at(4.45), 0.15);
+        tl.fromTo("#vs", { opacity: 0, scale: 1.8 }, { opacity: 1, scale: 1, duration: 0.35, ease: "expo.out" }, at(4.5));
+        tl.fromTo("#vs .v", { rotation: -180, scale: 0 }, { rotation: 0, scale: 1, duration: 0.4, ease: "back.out(2)", immediateRender: false }, at(4.7));
+        tl.fromTo("#d1", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.3, ease: "back.out(2)" }, at(7.0));
+        tl.to("#vs .g", { opacity: 0.35, duration: 0.2 }, at(7.0));
+        out("#d1", at(8.7), 0.15);
+        tl.to("#vs .g", { opacity: 1, duration: 0.2 }, at(8.75));
+        tl.to("#vs .a", { opacity: 0.35, duration: 0.2 }, at(8.75));
+        tl.fromTo("#d2", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.3, ease: "back.out(2)" }, at(8.8));
+        out("#vs", at(10.15)); out("#d2", at(10.15));
+
+        // ---------- panel ----------
+        const P0 = at(10.53);
+        tl.fromTo("#panel", { opacity: 0, y: -120 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, P0);
+        const scene = (hdr, sc, a, b) => {
+          tl.fromTo(hdr, { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.3, ease: "back.out(2)", immediateRender: false }, a);
+          tl.fromTo(sc, { opacity: 0, y: 60, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, x: 0, duration: 0.4, ease: "power3.out", immediateRender: false }, a + 0.08);
+          if (b) { out(hdr, b); tl.to(sc, { opacity: 0, x: -200, duration: 0.25, ease: "power2.in" }, b - 0.25); }
+        };
+        // S1 AEO: query -> AI Overview -> where direct answers show
+        scene("#h1", "#s1", P0, at(21.3));
+        type(document.getElementById("q1"), "how to remove tan at home", at(12.9), 1.3);
+        tl.fromTo("#ov1", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, at(14.6));
+        [["#t1", 14.85], ["#t2", 16.55], ["#t3", 17.85]].forEach(([t, x]) => popIn(t, at(x)));
+        tl.fromTo("#st1", { opacity: 0, scale: 2.4 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2)" }, at(19.1));
+        // S2 GEO: the exact opposite, AI chat engines
+        scene("#h2", "#s2", at(22.05), 0);
+        tl.fromTo("#opp", { opacity: 0, scale: 2.2 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)" }, at(22.2));
+        out("#opp", at(23.7));
+        tl.fromTo("#u2", { opacity: 0, x: 80 }, { opacity: 1, x: 0, duration: 0.3, ease: "back.out(2)" }, at(24.0));
+        [["#l1", 28.4], ["#l2", 29.1], ["#l3", 29.8]].forEach(([l, x]) => popIn(l, at(x), { rotation: -8 }));
+        tl.set("#s2", { opacity: 0 }, at(36.5)); tl.set("#h2", { opacity: 0 }, at(36.5));
+        // full-screen: many websites -> one generated answer
+        tl.fromTo("#f1", { opacity: 0 }, { opacity: 1, duration: 0.2 }, at(30.7));
+        tl.fromTo("#f1 .head", { opacity: 0, y: -40 }, { opacity: 1, y: 0, duration: 0.35, ease: "back.out(2)" }, at(30.75));
+        tl.fromTo("#f1 .site", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.3, stagger: 0.18, ease: "back.out(2)" }, at(31.2));
+        tl.fromTo("#ans", { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, at(32.6));
+        tl.to("#f1 .site", { x: (i) => [200, -200, 0, 200, -200][i], y: (i) => [520, 540, 400, 300, 290][i], scale: 0.2, opacity: 0, duration: 0.6, stagger: 0.25, ease: "power2.in" }, at(33.0));
+        tl.fromTo("#ans .ln", { scaleX: 0 }, { scaleX: 1, duration: 0.4, stagger: 0.3, ease: "power2.out" }, at(33.3));
+        tl.fromTo("#ans .refs span", { opacity: 0, scale: 1.8 }, { opacity: 1, scale: 1, duration: 0.2, stagger: 0.18, ease: "back.out(2.4)" }, at(34.3));
+        tl.to("#f1", { opacity: 0, duration: 0.2 }, at(36.55) - 0.2);
+        // S3 comparison
+        scene("#h3", "#s3", at(36.65), at(41.0));
+        tl.fromTo("#s3 tr.r", { opacity: 0, x: -60 }, { opacity: 1, x: 0, duration: 0.3, stagger: 0.45, ease: "power3.out" }, at(37.1));
+        // S4 how AEO works
+        scene("#h4", "#s4", at(41.1), at(51.1));
+        tl.fromTo("#fq1", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.3 }, at(42.9));
+        tl.fromTo("#tg1", { opacity: 0, scale: 2 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2.4)" }, at(44.9));
+        tl.fromTo("#ov2", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.35, ease: "back.out(1.6)" }, at(49.0));
+        // S5 for your business: crawler reads the FAQ, shows the direct answer
+        scene("#h5", "#s5", at(51.2), 0);
+        tl.fromTo("#bot", { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: 0.3, ease: "back.out(2)" }, at(54.6));
+        tl.fromTo("#scan", { top: -80 }, { top: 260, duration: 1.1, repeat: 1, ease: "none" }, at(54.7));
+        tl.fromTo("#ov3", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.35, ease: "back.out(1.6)" }, at(57.75));
+        tl.to("#bot", { opacity: 0, duration: 0.2 }, at(57.7));
+        tl.fromTo("#fol", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.3, ease: "back.out(2)" }, at(58.4));
+        window.__timelines["main"] = tl;
+      }
+    </script>
+    <script src="captions.js"></script>
+    <script>document.fonts.ready.then(build);</script>
+  </body>
+</html>
