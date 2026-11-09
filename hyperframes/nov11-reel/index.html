@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="vendor/gsap.min.js"></script>
+    <script src="edl.js"></script>
+    <style>
+      @font-face { font-family: "P5"; src: url("assets/fonts/poppins-latin-500-normal.woff2"); }
+      @font-face { font-family: "P6"; src: url("assets/fonts/poppins-latin-600-normal.woff2"); }
+      @font-face { font-family: "P7"; src: url("assets/fonts/poppins-latin-700-normal.woff2"); }
+      @font-face { font-family: "P8"; src: url("assets/fonts/poppins-latin-800-normal.woff2"); }
+      @font-face { font-family: "Anton"; src: url("assets/fonts/anton-latin-400-normal.woff2"); }
+      :root { --y: #ffd426; --ink: #17151a; --blue: #1a73e8; --ok: #12a150; --bad: #e5383b; --geo: #8b5cf6; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
+      body { font-family: "P7", sans-serif; color: var(--ink); }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; }
+      .clip { position: absolute; inset: 0; }
+      .el { position: absolute; opacity: 0; }
+      .center { left: 0; right: 0; display: flex; justify-content: center; }
+      .pill { font-family: "P8"; font-size: 42px; color: var(--ink); background: #fff; padding: 12px 34px; border-radius: 60px; box-shadow: 0 14px 36px rgba(0,0,0,.35); white-space: nowrap; }
+      .pill.dark { color: #fff; background: rgba(17,15,20,.9); }
+      .pill b { color: var(--blue); } .pill.dark b { color: var(--y); }
+
+      /* ---------- hook: a 4,000-word blog above the head ---------- */
+      #doc { left: 70px; top: 70px; width: 560px; height: 340px; background: #fff; border-radius: 26px; padding: 22px 26px; box-shadow: 0 24px 60px rgba(0,0,0,.35); overflow: hidden; }
+      #doc .t { font-family: "P8"; font-size: 28px; display: flex; align-items: center; gap: 10px; }
+      #doc .lw { margin-top: 10px; height: 250px; overflow: hidden; }
+      #doc .lines i { display: block; height: 11px; border-radius: 6px; background: #e3e6ec; margin: 9px 0; }
+      #wc { left: 660px; top: 110px; text-align: center; }
+      #wc .n { font-family: "Anton"; font-size: 110px; line-height: 1; color: #fff; background: rgba(17,15,20,.9); padding: 6px 26px 12px; border-radius: 24px; box-shadow: 0 18px 44px rgba(0,0,0,.35); }
+      #wc .l { font-family: "P8"; font-size: 30px; color: var(--ink); background: #fff; display: inline-block; margin-top: 10px; padding: 4px 18px; border-radius: 16px; }
+      #stop { left: 150px; top: 120px; font-family: "Anton"; font-size: 150px; line-height: 1; color: #fff; background: var(--bad); padding: 6px 40px 16px; border-radius: 30px; transform: rotate(-6deg); box-shadow: 0 24px 60px rgba(229,56,59,.45); }
+      #nobody { top: 330px; }
+
+      #day { top: 90px; }
+      #day .tile { display: flex; align-items: center; gap: 24px; background: #fff; padding: 18px 34px; border-radius: 30px; box-shadow: 0 20px 50px rgba(0,0,0,.35); }
+      #day .num { font-family: "Anton"; font-size: 120px; line-height: .95; color: #fff; background: linear-gradient(135deg, #7c3aed, #c026d3); padding: 6px 28px 12px; border-radius: 22px; }
+      #day .txt { font-family: "P8"; font-size: 44px; line-height: 1.08; }
+      #day .txt small { display: block; font-family: "P6"; font-size: 28px; color: #6b6470; }
+
+      /* ---------- panel ---------- */
+      #panel { position: absolute; left: 0; right: 0; top: 0; height: 790px; opacity: 0; }
+      #panel .bg { position: absolute; inset: 0 0 30px 0; background: radial-gradient(120% 90% at 50% 0%, #2a2a3c 0%, #141419 72%); }
+      #panel svg.wave { position: absolute; left: 0; bottom: 0; width: 1080px; height: 60px; }
+      .hdr { top: 34px; }
+      .hdr .pill { font-size: 40px; }
+      .scene { position: absolute; left: 70px; top: 130px; width: 940px; height: 590px; opacity: 0; }
+      .white { position: absolute; inset: 0; background: #fff; border-radius: 30px; box-shadow: 0 20px 60px rgba(0,0,0,.5); overflow: hidden; padding: 26px 30px; }
+      .stamp { position: absolute; font-family: "Anton"; font-size: 64px; border: 8px solid; border-radius: 18px; padding: 2px 24px; background: rgba(255,255,255,.95); opacity: 0; z-index: 5; white-space: nowrap; }
+
+      /* S1 old way */
+      .counter { display: flex; align-items: center; gap: 18px; font-family: "P8"; font-size: 34px; }
+      .counter .v { font-family: "Anton"; font-size: 64px; color: var(--blue); }
+      .spam { font-family: "P6"; font-size: 30px; line-height: 1.5; color: #3c4043; margin-top: 14px; opacity: 0; }
+      .spam span { background: #fff2b3; border-radius: 6px; padding: 0 4px; }
+      .rank1 { position: absolute; right: 30px; top: 26px; font-family: "P8"; font-size: 32px; color: #fff; background: var(--ok); padding: 8px 20px; border-radius: 16px; opacity: 0; }
+      .win { position: absolute; left: 30px; right: 30px; bottom: 26px; height: 90px; border-radius: 22px; background: #e6f6ec; color: var(--ok); display: flex; align-items: center; justify-content: center; font-family: "P8"; font-size: 38px; opacity: 0; }
+
+      /* S2 SERP vs AI */
+      .cols { position: absolute; inset: 0; display: flex; gap: 26px; }
+      .col { flex: 1; background: #fff; border-radius: 30px; padding: 24px 26px; box-shadow: 0 20px 50px rgba(0,0,0,.45); position: relative; overflow: hidden; }
+      .col .h { font-family: "P8"; font-size: 34px; display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+      .col .h img { width: 44px; height: 44px; }
+      .blink { height: 16px; border-radius: 8px; background: #c6d6f7; margin: 15px 0; }
+      .blink.s { background: #e8eaed; width: 80%; height: 11px; margin-top: -6px; }
+      .cross { position: absolute; left: 10px; right: 10px; top: 50%; height: 12px; background: var(--bad); border-radius: 6px; transform: rotate(-24deg) scaleX(0); }
+      .llm { display: flex; align-items: center; gap: 16px; margin: 16px 0; padding: 12px 16px; border-radius: 18px; background: #f4f2fb; font-family: "P8"; font-size: 32px; opacity: 0; }
+      .llm img { width: 54px; height: 54px; }
+      .chips2 { position: absolute; left: 26px; right: 26px; bottom: 22px; display: flex; gap: 12px; }
+      .chips2 div { flex: 1; text-align: center; font-family: "P8"; font-size: 26px; color: #fff; background: var(--geo); padding: 10px 0; border-radius: 16px; opacity: 0; }
+      .target { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); font-family: "Anton"; font-size: 84px; color: var(--ink); background: var(--y); padding: 6px 40px; border-radius: 26px; white-space: nowrap; opacity: 0; box-shadow: 0 20px 50px rgba(0,0,0,.45); z-index: 6; }
+
+      /* S3 answer exactly what they ask */
+      .qa { border: 3px solid #e6e9ef; border-radius: 22px; padding: 14px 22px; margin-bottom: 16px; opacity: 0; }
+      .qa .q { font-family: "P8"; font-size: 32px; }
+      .qa .a { font-family: "P6"; font-size: 28px; line-height: 1.4; color: #303540; margin-top: 4px; opacity: 0; }
+      .tabs { position: absolute; left: 30px; right: 30px; bottom: 24px; display: flex; gap: 18px; }
+      .tabs div { flex: 1; height: 86px; border-radius: 20px; background: #f3f5f9; display: flex; align-items: center; justify-content: center; gap: 12px; font-family: "P8"; font-size: 32px; opacity: 0; }
+      .tabs div em { font-style: normal; color: #fff; background: var(--ok); border-radius: 12px; padding: 2px 10px; font-size: 26px; }
+
+      /* full-screen B-roll: medicine vs hospital */
+      #f1 { position: absolute; inset: 0; opacity: 0; background: radial-gradient(110% 70% at 50% 18%, #20384a 0%, #0f141a 75%); }
+      #f1 .head { position: absolute; left: 50px; right: 50px; top: 150px; text-align: center; font-family: "P8"; font-size: 62px; line-height: 1.12; color: #fff; }
+      #f1 .head b { color: var(--y); }
+      .ask { position: absolute; right: 90px; top: 400px; max-width: 760px; font-family: "P6"; font-size: 40px; color: #fff; background: #2f3b4d; padding: 20px 30px; border-radius: 30px 30px 8px 30px; opacity: 0; }
+      .opt { position: absolute; left: 90px; width: 900px; border-radius: 30px; padding: 26px 32px; display: flex; align-items: center; gap: 26px; box-shadow: 0 24px 60px rgba(0,0,0,.5); opacity: 0; background: #fff; }
+      .opt .ic { font-size: 110px; line-height: 1; }
+      .opt .t { font-family: "P8"; font-size: 44px; line-height: 1.15; }
+      .opt .t small { display: block; font-family: "P6"; font-size: 30px; color: #5f6368; margin-top: 4px; }
+      .opt .m { margin-left: auto; width: 96px; height: 96px; border-radius: 50%; display: grid; place-items: center; font-family: "P8"; font-size: 56px; color: #fff; flex: none; }
+
+      /* end */
+      #follow { top: 120px; flex-direction: column; align-items: center; gap: 16px; }
+      #follow .b { font-family: "P8"; font-size: 50px; color: var(--ink); background: var(--y); padding: 14px 40px; border-radius: 60px; box-shadow: 0 18px 44px rgba(0,0,0,.35); }
+
+      /* captions */
+      #captions { position: absolute; left: 40px; right: 40px; top: 0; height: 100%; z-index: 60; }
+      .cap { position: absolute; left: 0; right: 0; top: 1735px; display: flex; flex-wrap: wrap; justify-content: center; gap: 2px 14px; opacity: 0;
+             font-family: "P8"; font-style: italic; font-size: 50px; line-height: 1.12; text-align: center; color: #fff; text-transform: uppercase;
+             text-shadow: 0 4px 0 rgba(0,0,0,.5), 0 6px 18px rgba(0,0,0,.55), 3px 3px 0 #000, -3px 3px 0 #000, 3px -3px 0 #000, -3px -3px 0 #000; }
+      .cap .w { display: inline-block; }
+      .cap .hl { color: var(--y); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="50.446" data-width="1080" data-height="1920">
+      <section id="gfx" class="clip" data-start="0" data-duration="50.446" data-track-index="1">
+        <!-- hook -->
+        <div class="el" id="doc"><div class="t">📄 my-blog-post.docx</div><div class="lw"><div class="lines" id="lines"></div></div></div>
+        <div class="el" id="wc"><div class="n" id="wcn">0</div><div class="l">words</div></div>
+        <div class="el" id="stop">STOP ✋</div>
+        <div class="el center" id="nobody"><div class="pill dark">Nobody is reading it <b>😴</b></div></div>
+        <div class="el center" id="day"><div class="tile"><div class="num">DAY 8</div><div class="txt">Decoding<br />AI SEO<small>100-day series</small></div></div></div>
+
+        <!-- panel -->
+        <div id="panel"><div class="bg"></div><svg class="wave" viewBox="0 0 1080 60" preserveAspectRatio="none"><path d="M0 0 H1080 V22 C 900 60, 720 0, 540 26 C 360 52, 180 4, 0 30 Z" fill="#141419"/></svg>
+          <div class="el center hdr" id="h1"><div class="pill">📉 The <b>old</b> way</div></div>
+          <div class="el center hdr" id="h2"><div class="pill">🤖 Now it's an <b>AI search</b> game</div></div>
+          <div class="el center hdr" id="h3"><div class="pill">🎯 Answer <b>exactly</b> what they ask</div></div>
+
+          <div class="scene" id="s1"><div class="white">
+            <div class="counter">✍️ Word count: <span class="v" id="cnt">500</span></div>
+            <div class="spam" id="spam">Looking for the <span>best dentist in Pune</span>? Our <span>best dentist in Pune</span> clinic is the <span>best dentist in Pune</span> because every <span>dentist in Pune</span> knows we are the <span>best dentist in Pune</span>…</div>
+            <div class="rank1" id="rk">📈 Rank #1</div>
+            <div class="stamp" id="na" style="left:190px;top:200px;color:var(--bad);border-color:var(--bad);transform:rotate(-8deg)">NOT ANYMORE ❌</div>
+            <div class="win" id="win">✅ To-the-point answers win</div>
+          </div></div>
+
+          <div class="scene" id="s2"><div class="cols">
+            <div class="col"><div class="h"><img src="assets/logos/google-color.svg" />Google SERP</div>
+              <div class="blink"></div><div class="blink s"></div><div class="blink"></div><div class="blink s"></div><div class="blink"></div><div class="blink s"></div><div class="blink"></div><div class="blink s"></div>
+              <div class="cross" id="cross"></div></div>
+            <div class="col"><div class="h">🤖 AI search</div>
+              <div class="llm" id="g1"><img src="assets/logos/openai.svg" />ChatGPT</div>
+              <div class="llm" id="g2"><img src="assets/logos/gemini-color.svg" />Gemini</div>
+              <div class="llm" id="g3"><img src="assets/logos/perplexity-color.svg" />Perplexity</div>
+              <div class="chips2"><div id="c1">🏆 Ranks</div><div id="c2">🤝 Recommends</div></div></div>
+            <div class="target" id="tgt">🎯 POINT-TO-POINT</div>
+          </div></div>
+
+          <div class="scene" id="s3"><div class="white">
+            <div class="qa" id="qa1"><div class="q">💰 "What does it cost?"</div><div class="a" id="an1">→ Starts at ₹2,499. Includes cleaning and a check-up.</div></div>
+            <div class="qa" id="qa2"><div class="q">✨ "What are the benefits?"</div><div class="a" id="an2">→ Whiter teeth, fresher breath, done in 30 minutes.</div></div>
+            <div class="stamp" id="ttp" style="right:40px;top:300px;font-size:46px;color:var(--ok);border-color:var(--ok);transform:rotate(6deg)">TO THE POINT ✅</div>
+            <div class="tabs"><div id="tb1">📝 Blog <em>✓</em></div><div id="tb2">🛠️ Service pages <em>✓</em></div></div>
+          </div></div>
+        </div>
+
+        <!-- full-screen B-roll: the medicine analogy -->
+        <div id="f1">
+          <div class="head">Asked for <b>medicine</b>?<br />Give the <b>medicine</b> 💊</div>
+          <div class="ask" id="ask">"Is bimari ki dawa kya hai?" 🤒</div>
+          <div class="opt" id="good" style="top:640px;border:5px solid var(--ok)"><div class="ic">💊</div><div class="t">The medicine<small>Short, direct answer</small></div><div class="m" style="background:var(--ok)">✓</div></div>
+          <div class="opt" id="bad" style="top:900px;border:5px solid var(--bad)"><div class="ic">🏥</div><div class="t">A whole hospital<small>4,000 words around it</small></div><div class="m" style="background:var(--bad)">✕</div></div>
+        </div>
+
+        <!-- end -->
+        <div class="el center" id="follow"><div class="b">🔔 Follow @aiseovaibhav</div><div class="pill dark">for more <b>AI SEO tips</b></div></div>
+      </section>
+      <div id="captions"></div>
+    </div>
+
+    <script>
+      function T(x) { let acc = 0; for (const [a, b] of KEEP) { if (x < a) return acc; if (x <= b) return acc + x - a; acc += b - a; } return acc; }
+      window.T = T;
+      const at = (x) => T(x);
+      const CUES = window.CUES = [];
+      const tl = gsap.timeline({ paused: true });
+
+      function buildCaptions() {
+        const root = document.getElementById("captions");
+        CUES.forEach(([start, end, text]) => {
+          const el = document.createElement("div");
+          el.className = "cap";
+          let on = false;
+          const words = text.split(" ").map((w) => {
+            const hl = on || w.startsWith("*");
+            if (w.startsWith("*")) on = true;
+            if (/\*[,?.!:]?$/.test(w)) on = false;
+            return { w: w.replace(/\*/g, ""), hl };
+          });
+          el.innerHTML = words.map((o) => `<span class="w${o.hl ? " hl" : ""}">${o.w}</span>`).join(" ");
+          root.appendChild(el);
+          tl.set(el, { opacity: 1 }, start);
+          tl.set(el, { opacity: 0 }, end);
+          const ws = [...el.querySelectorAll(".w")];
+          const span = Math.min(0.5, (end - start) * 0.5);
+          ws.forEach((w, k) => tl.fromTo(w, { opacity: 0, y: 14, scale: 0.85 }, { opacity: 1, y: 0, scale: 1, duration: 0.14, ease: "back.out(2.2)" }, start + span * k / ws.length));
+        });
+      }
+
+      const out = (el, t, d = 0.2) => tl.to(el, { opacity: 0, scale: 0.92, duration: d, ease: "power2.in" }, t - d);
+      const float = (el, t0, t1) => { const n = Math.max(0, Math.floor((t1 - t0) / 0.9) - 1); if (n) tl.to(el, { y: -10, duration: 0.9, yoyo: true, repeat: n, ease: "sine.inOut" }, t0); };
+      const popIn = (el, t, from = {}) => tl.fromTo(el, { opacity: 0, scale: 0.6, y: 30, ...from }, { opacity: 1, scale: 1, y: 0, x: 0, rotation: 0, duration: 0.35, ease: "back.out(2)", immediateRender: false }, t);
+      const count = (el, from, to, t0, d, fmt = (v) => Math.round(v).toLocaleString("en-IN")) => {
+        const o = { v: from }; tl.fromTo(o, { v: from }, { v: to, duration: d, ease: "power2.out", onUpdate: () => (el.textContent = fmt(o.v)) }, t0);
+      };
+
+      function build() {
+        buildCaptions();
+        // ---------- hook ----------
+        document.getElementById("lines").innerHTML = Array.from({ length: 40 }, (_, i) => `<i style="width:${70 + ((i * 37) % 30)}%"></i>`).join("");
+        tl.fromTo("#doc", { opacity: 0, y: -60, rotation: -3 }, { opacity: 1, y: 0, rotation: 0, duration: 0.45, ease: "back.out(1.6)" }, at(1.3));
+        tl.fromTo("#lines", { y: 0 }, { y: -500, duration: 5.4, ease: "none" }, at(1.6));
+        tl.fromTo("#wc", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)" }, at(4.9));
+        const wcn = document.getElementById("wcn");
+        count(wcn, 0, 2000, at(5.0), 0.5); count(wcn, 2000, 3000, at(5.6), 0.3); count(wcn, 3000, 4000, at(6.0), 0.3);
+        tl.fromTo("#stop", { opacity: 0, scale: 3, rotation: -20 }, { opacity: 1, scale: 1, rotation: -6, duration: 0.3, ease: "back.out(1.8)" }, at(6.97));
+        tl.to(["#doc", "#wc"], { opacity: 0.25, filter: "blur(4px)", duration: 0.25 }, at(7.0));
+        tl.fromTo("#nobody", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.3, ease: "back.out(2)" }, at(8.0));
+        out(["#doc", "#wc", "#stop", "#nobody"], at(9.55));
+        // day 8
+        tl.fromTo("#day", { opacity: 0, scale: 0.5, rotation: -6 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.4, ease: "back.out(1.8)" }, at(10.0));
+        float("#day", at(10.5), at(13.2));
+        out("#day", at(13.5));
+
+        // ---------- panel ----------
+        const P0 = at(13.76);
+        tl.fromTo("#panel", { opacity: 0, y: -120 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, P0);
+        const scene = (hdr, sc, a, b) => {
+          tl.fromTo(hdr, { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.3, ease: "back.out(2)", immediateRender: false }, a);
+          tl.fromTo(sc, { opacity: 0, y: 60, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, x: 0, duration: 0.4, ease: "power3.out", immediateRender: false }, a + 0.08);
+          if (b) { out(hdr, b); tl.to(sc, { opacity: 0, x: -200, duration: 0.25, ease: "power2.in" }, b - 0.25); }
+        };
+        // S1 old way: word count up, keyword stuffing, rank #1, NOT ANYMORE
+        scene("#h1", "#s1", P0, at(21.4));
+        count(document.getElementById("cnt"), 500, 4000, at(13.95), 1.8);
+        tl.fromTo("#spam", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.35 }, at(16.45));
+        tl.fromTo("#spam span", { backgroundColor: "rgba(255,242,179,0)" }, { backgroundColor: "rgba(255,226,102,1)", duration: 0.2, stagger: 0.12, immediateRender: false }, at(16.6));
+        tl.fromTo("#rk", { opacity: 0, scale: 2 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2.4)" }, at(16.95));
+        tl.fromTo("#na", { opacity: 0, scale: 2.6 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2)" }, at(18.05));
+        tl.to("#rk", { opacity: 0.25, duration: 0.2 }, at(18.1));
+        tl.fromTo("#win", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.3, ease: "back.out(2)" }, at(19.5));
+        // S2 not a SERP game, an AI search game
+        scene("#h2", "#s2", at(21.45), at(31.5));
+        tl.to("#cross", { scaleX: 1, duration: 0.3, ease: "power3.out" }, at(23.9));
+        [["#g1", 24.2], ["#g2", 24.6], ["#g3", 25.0]].forEach(([g, t]) => popIn(g, at(t), { x: 60 }));
+        popIn("#c1", at(26.55)); popIn("#c2", at(27.4));
+        tl.fromTo("#tgt", { opacity: 0, scale: 2.4 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)" }, at(29.0));
+            // full-screen: medicine vs hospital
+        tl.fromTo("#f1", { opacity: 0 }, { opacity: 1, duration: 0.2 }, at(31.95));
+        tl.fromTo("#f1 .head", { opacity: 0, y: -40 }, { opacity: 1, y: 0, duration: 0.35, ease: "back.out(2)" }, at(32.0));
+        tl.fromTo("#ask", { opacity: 0, x: 120 }, { opacity: 1, x: 0, duration: 0.3, ease: "back.out(2)" }, at(32.4));
+        popIn("#good", at(34.15), { x: -200 });
+        popIn("#bad", at(36.05), { x: 200 });
+        tl.to("#bad", { x: 14, duration: 0.05, yoyo: true, repeat: 5 }, at(36.6));
+        tl.to("#good", { scale: 1.04, duration: 0.3, yoyo: true, repeat: 1 }, at(37.4));
+        tl.to("#f1", { opacity: 0, duration: 0.2 }, at(38.7) - 0.2);
+        // S3 answer exactly what they ask
+        scene("#h3", "#s3", at(39.05), 0);
+        popIn("#qa1", at(39.15), { x: -100 });
+        tl.fromTo("#an1", { opacity: 0 }, { opacity: 1, duration: 0.3 }, at(40.2));
+        popIn("#qa2", at(41.2), { x: -100 });
+        tl.fromTo("#an2", { opacity: 0 }, { opacity: 1, duration: 0.3 }, at(42.0));
+        tl.fromTo("#ttp", { opacity: 0, scale: 2.4 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2)" }, at(42.9));
+        popIn("#tb1", at(45.0)); popIn("#tb2", at(47.25));
+        tl.set("#panel", { opacity: 0 }, at(50.1));
+
+        // ---------- end ----------
+        tl.set("#follow", { opacity: 1 }, at(50.3));
+        tl.fromTo("#follow .b", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2.2)" }, at(50.3));
+        tl.fromTo("#follow .pill", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.3, ease: "back.out(2)" }, at(50.8));
+        tl.to("#follow .b", { scale: 1.06, duration: 0.3, yoyo: true, repeat: 3, ease: "sine.inOut" }, at(51.2));
+        window.__timelines["main"] = tl;
+      }
+    </script>
+    <script src="captions.js"></script>
+    <script>document.fonts.ready.then(build);</script>
+  </body>
+</html>
