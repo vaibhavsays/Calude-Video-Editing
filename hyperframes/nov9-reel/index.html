@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="vendor/gsap.min.js"></script>
+    <script src="edl.js"></script>
+    <style>
+      @font-face { font-family: "P5"; src: url("assets/fonts/poppins-latin-500-normal.woff2"); }
+      @font-face { font-family: "P6"; src: url("assets/fonts/poppins-latin-600-normal.woff2"); }
+      @font-face { font-family: "P7"; src: url("assets/fonts/poppins-latin-700-normal.woff2"); }
+      @font-face { font-family: "P8"; src: url("assets/fonts/poppins-latin-800-normal.woff2"); }
+      @font-face { font-family: "Anton"; src: url("assets/fonts/anton-latin-400-normal.woff2"); }
+      :root { --y: #ffd426; --ink: #17151a; --g: #1a73e8; --ok: #12a150; --bad: #e5383b; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
+      body { font-family: "P7", sans-serif; color: var(--ink); }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; }
+      .clip { position: absolute; inset: 0; }
+      .el { position: absolute; opacity: 0; }
+      .center { left: 0; right: 0; display: flex; justify-content: center; }
+      .pill { font-family: "P8"; font-size: 42px; color: var(--ink); background: #fff; padding: 12px 34px; border-radius: 60px; box-shadow: 0 14px 36px rgba(0,0,0,.35); white-space: nowrap; }
+      .pill b { color: var(--g); }
+      .pill.dark { color: #fff; background: rgba(17,15,20,.9); }
+      .pill.dark b { color: var(--y); }
+
+      /* ---------- hook: business profile card on the chest ---------- */
+      #tag0 { top: 900px; }
+      #gbp { left: 120px; width: 840px; top: 995px; background: #fff; border-radius: 34px; padding: 30px 36px; box-shadow: 0 30px 80px rgba(0,0,0,.45); }
+      .gbp-h { display: flex; align-items: center; gap: 22px; }
+      .gbp-h img { width: 86px; height: 86px; }
+      .gbp-h .nm { font-family: "P8"; font-size: 46px; line-height: 1.1; }
+      .gbp-h .nm small { display: block; font-family: "P6"; font-size: 28px; color: #5f6368; }
+      .stars { font-size: 34px; color: #fbbc04; letter-spacing: 3px; margin: 14px 0 6px; }
+      .stars span { font-family: "P6"; font-size: 28px; color: #5f6368; letter-spacing: 0; margin-left: 10px; }
+      .acts { display: flex; gap: 14px; margin-top: 14px; }
+      .acts div { flex: 1; text-align: center; font-family: "P7"; font-size: 28px; color: var(--g); border: 2px solid #dadce0; border-radius: 40px; padding: 10px 0; }
+      .stampx { position: absolute; right: -20px; top: -40px; font-family: "Anton"; font-size: 52px; line-height: 1.05; color: var(--bad); border: 7px solid var(--bad); border-radius: 18px; padding: 6px 22px; background: rgba(255,255,255,.95); transform: rotate(-8deg); text-align: center; opacity: 0; box-shadow: 0 12px 30px rgba(0,0,0,.25); }
+      .fixit { position: absolute; right: -10px; top: -36px; font-family: "Anton"; font-size: 52px; color: #fff; background: var(--ok); border-radius: 18px; padding: 6px 26px; transform: rotate(6deg); opacity: 0; box-shadow: 0 12px 30px rgba(0,0,0,.3); }
+
+      /* ---------- top panel ---------- */
+      #panel { position: absolute; left: 0; right: 0; top: 0; height: 790px; opacity: 0; }
+      #panel .bg { position: absolute; inset: 0 0 30px 0; background: radial-gradient(120% 90% at 50% 0%, #22324a 0%, #121821 72%); }
+      #panel svg.wave { position: absolute; left: 0; bottom: 0; width: 1080px; height: 60px; }
+      .hdr { top: 34px; }
+      .hdr .pill { font-size: 40px; }
+      .scene { position: absolute; left: 70px; top: 130px; width: 940px; height: 590px; opacity: 0; }
+      .white { position: absolute; inset: 0; background: #fff; border-radius: 30px; box-shadow: 0 20px 60px rgba(0,0,0,.5); overflow: hidden; }
+
+      /* S1 queries */
+      .qrow { display: flex; align-items: center; gap: 18px; margin: 26px 34px 0; height: 86px; border: 2px solid #dfe1e5; border-radius: 44px; padding: 0 28px; opacity: 0; box-shadow: 0 2px 8px rgba(32,33,36,.15); }
+      .qrow .ic { font-size: 38px; }
+      .qrow .q { font-family: "P6"; font-size: 36px; color: #202124; }
+      .qrow .pin { margin-left: auto; font-family: "P7"; font-size: 24px; color: #fff; background: var(--g); border-radius: 20px; padding: 4px 14px; }
+      .ais { position: absolute; left: 34px; right: 34px; bottom: 30px; display: flex; justify-content: space-between; }
+      .ai { width: 200px; height: 130px; border-radius: 24px; background: #f4f6fb; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; opacity: 0; }
+      .ai img { width: 62px; height: 62px; }
+      .ai span { font-family: "P7"; font-size: 24px; }
+
+      /* S2 website vs GBP */
+      .two { position: absolute; inset: 0; display: flex; gap: 30px; align-items: stretch; }
+      .opt { flex: 1; background: #fff; border-radius: 30px; box-shadow: 0 20px 50px rgba(0,0,0,.45); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 30px; opacity: 0; position: relative; }
+      .opt .big { font-size: 120px; line-height: 1; }
+      .opt img { width: 130px; height: 130px; }
+      .opt .t { font-family: "P8"; font-size: 40px; text-align: center; line-height: 1.15; }
+      .opt .ok { font-family: "P8"; font-size: 30px; color: #fff; background: var(--ok); padding: 6px 20px; border-radius: 16px; opacity: 0; }
+      .plus { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); width: 100px; height: 100px; border-radius: 50%; background: var(--y); display: grid; place-items: center; font-family: "Anton"; font-size: 64px; z-index: 3; opacity: 0; box-shadow: 0 12px 30px rgba(0,0,0,.4); }
+
+      /* S3 map */
+      .map { position: absolute; inset: 0; border-radius: 30px; overflow: hidden; background: #e9efe4; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+      .map svg { position: absolute; inset: 0; }
+      .me { position: absolute; left: 430px; top: 280px; width: 40px; height: 40px; border-radius: 50%; background: var(--g); border: 6px solid #fff; box-shadow: 0 4px 12px rgba(0,0,0,.3); }
+      .ring { position: absolute; left: 450px; top: 300px; width: 520px; height: 520px; margin: -260px 0 0 -260px; border-radius: 50%; background: rgba(26,115,232,.14); border: 4px solid rgba(26,115,232,.5); opacity: 0; }
+      .mpin { position: absolute; font-size: 74px; opacity: 0; filter: drop-shadow(0 6px 8px rgba(0,0,0,.35)); transform-origin: 50% 100%; }
+      .mlabel { position: absolute; left: 330px; top: 70px; font-family: "P8"; font-size: 32px; color: #fff; background: var(--ok); padding: 10px 22px; border-radius: 18px; opacity: 0; box-shadow: 0 10px 24px rgba(0,0,0,.3); white-space: nowrap; }
+      .youl { position: absolute; left: 380px; top: 340px; font-family: "P7"; font-size: 26px; color: var(--g); background: #fff; padding: 2px 14px; border-radius: 12px; }
+
+      /* S4 checklist */
+      .ck { position: absolute; inset: 0; background: #fff; border-radius: 30px; padding: 22px 34px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+      .ci { display: flex; align-items: center; gap: 20px; height: 78px; border-bottom: 2px solid #eef0f4; font-family: "P7"; font-size: 34px; color: #9aa0a6; }
+      .ci:last-child { border-bottom: none; }
+      .ci .box { width: 50px; height: 50px; border-radius: 14px; border: 4px solid #c9ced6; display: grid; place-items: center; font-family: "P8"; font-size: 32px; color: #fff; flex: none; }
+      .ci .em { font-size: 38px; width: 46px; text-align: center; }
+
+      /* S5 result */
+      .chat { position: absolute; inset: 0; background: #f7f8fa; border-radius: 30px; padding: 26px 30px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+      .chat .top { display: flex; align-items: center; gap: 14px; font-family: "P7"; font-size: 28px; color: #6b6470; }
+      .chat .top img { width: 42px; height: 42px; }
+      .bub { margin-top: 22px; font-family: "P6"; font-size: 34px; line-height: 1.3; padding: 16px 24px; border-radius: 26px; opacity: 0; }
+      .bub.u { margin-left: auto; width: fit-content; background: #22324a; color: #fff; border-bottom-right-radius: 8px; }
+      .bub.bot { background: #fff; border: 2px solid #e6e9ef; }
+      .res { display: flex; align-items: center; gap: 18px; margin-top: 12px; padding: 14px 18px; border-radius: 20px; border: 3px solid var(--ok); background: #effaf3; }
+      .res img { width: 70px; height: 70px; }
+      .res .nm { font-family: "P8"; font-size: 34px; line-height: 1.15; }
+      .res .nm small { display: block; font-family: "P6"; font-size: 24px; color: #5f6368; }
+      .rec { margin-left: auto; font-family: "P8"; font-size: 24px; color: #fff; background: var(--ok); padding: 6px 14px; border-radius: 14px; white-space: nowrap; opacity: 0; }
+
+      /* ---------- full-screen B-roll ---------- */
+      .full { position: absolute; inset: 0; opacity: 0; background: radial-gradient(110% 70% at 50% 18%, #26395a 0%, #10151d 75%); }
+      .full .head { position: absolute; left: 0; right: 0; top: 170px; text-align: center; font-family: "P8"; font-size: 70px; color: #fff; line-height: 1.1; }
+      .full .head small { display: block; font-family: "P6"; font-size: 36px; color: #b9c6dc; margin-top: 10px; }
+      .rv { position: absolute; left: 80px; width: 920px; background: #fff; border-radius: 30px; padding: 30px 34px; box-shadow: 0 24px 60px rgba(0,0,0,.5); opacity: 0; }
+      .rv .who { display: flex; align-items: center; gap: 16px; font-family: "P7"; font-size: 32px; }
+      .rv .av { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; font-family: "P8"; font-size: 32px; color: #fff; }
+      .rv .tx { font-family: "P6"; font-size: 36px; line-height: 1.4; margin-top: 12px; }
+      .kw { background: #fff2b3; border-radius: 8px; padding: 0 6px; }
+      .post { position: absolute; left: 160px; width: 760px; top: 470px; background: #fff; border-radius: 30px; overflow: hidden; box-shadow: 0 24px 60px rgba(0,0,0,.5); opacity: 0; }
+      .post .img { height: 300px; background: linear-gradient(135deg, #8ec5fc, #e0c3fc); display: grid; place-items: center; font-size: 150px; }
+      .post .bd { padding: 24px 30px; }
+      .post .bd .t { font-family: "P8"; font-size: 40px; line-height: 1.15; }
+      .post .bd .s { font-family: "P6"; font-size: 28px; color: #5f6368; margin-top: 6px; }
+      .post .btn { display: inline-block; margin-top: 16px; font-family: "P7"; font-size: 30px; color: #fff; background: var(--g); padding: 10px 30px; border-radius: 30px; }
+      .week { position: absolute; left: 90px; right: 90px; top: 1290px; display: flex; justify-content: space-between; }
+      .day { width: 116px; height: 150px; border-radius: 24px; background: rgba(255,255,255,.1); border: 2px solid rgba(255,255,255,.2); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; font-family: "P7"; font-size: 28px; color: #fff; }
+      .day i { font-style: normal; width: 46px; height: 46px; border-radius: 50%; background: rgba(255,255,255,.15); display: grid; place-items: center; font-size: 26px; }
+
+      /* ---------- chest chips ---------- */
+      #remember { top: 1170px; flex-direction: column; align-items: center; gap: 22px; }
+      #remember .icons { display: flex; gap: 14px; }
+      #remember .icons div { width: 92px; height: 92px; border-radius: 24px; background: #fff; display: grid; place-items: center; font-size: 50px; box-shadow: 0 12px 30px rgba(0,0,0,.35); opacity: 0; }
+      #cmt { top: 1060px; }
+      #cmt .c { background: #fff; border-radius: 34px; padding: 26px 40px; box-shadow: 0 26px 70px rgba(0,0,0,.45); text-align: center; }
+      #cmt .c .k { font-family: "P6"; font-size: 34px; color: #5f6368; }
+      #cmt .c .v { font-family: "Anton"; font-size: 96px; line-height: 1.05; color: var(--g); letter-spacing: 1px; }
+      #kit { top: 1360px; }
+      #kit .c { display: flex; align-items: center; gap: 22px; background: var(--y); border-radius: 28px; padding: 18px 34px; box-shadow: 0 20px 50px rgba(0,0,0,.4); }
+      #kit .c .ic { font-size: 70px; }
+      #kit .c .t { font-family: "P8"; font-size: 40px; line-height: 1.12; }
+      #kit .c .t small { display: block; font-family: "P6"; font-size: 28px; }
+
+      /* captions */
+      #captions { position: absolute; left: 40px; right: 40px; top: 0; height: 100%; z-index: 60; }
+      .cap { position: absolute; left: 0; right: 0; top: 1735px; display: flex; flex-wrap: wrap; justify-content: center; gap: 2px 14px; opacity: 0;
+             font-family: "P8"; font-style: italic; font-size: 50px; line-height: 1.12; text-align: center; color: #fff; text-transform: uppercase;
+             text-shadow: 0 4px 0 rgba(0,0,0,.5), 0 6px 18px rgba(0,0,0,.55), 3px 3px 0 #000, -3px 3px 0 #000, 3px -3px 0 #000, -3px -3px 0 #000; }
+      .cap .w { display: inline-block; }
+      .cap .hl { color: var(--y); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="71.968" data-width="1080" data-height="1920">
+      <section id="gfx" class="clip" data-start="0" data-duration="71.968" data-track-index="1">
+        <!-- hook -->
+        <div class="el center" id="tag0"><div class="pill dark">Google Business Profile <b>×</b> AI Search 🤖</div></div>
+        <div class="el" id="gbp">
+          <div class="gbp-h"><img src="assets/logos/googlemaps.svg" /><div class="nm">Your Business<small>Dental clinic · Baner, Pune</small></div></div>
+          <div class="stars">★★★★★<span>4.8 · 126 reviews · Open now</span></div>
+          <div class="acts"><div>📞 Call</div><div>🧭 Directions</div><div>🌐 Website</div></div>
+          <div class="stampx" id="stx">NOT RECOMMENDED<br />BY AI ❌</div>
+          <div class="fixit" id="fix">LET'S FIX IT ✅</div>
+        </div>
+
+        <!-- panel -->
+        <div id="panel"><div class="bg"></div><svg class="wave" viewBox="0 0 1080 60" preserveAspectRatio="none"><path d="M0 0 H1080 V22 C 900 60, 720 0, 540 26 C 360 52, 180 4, 0 30 Z" fill="#121821"/></svg>
+          <div class="el center hdr" id="h1"><div class="pill">📍 What people search <b>locally</b></div></div>
+          <div class="el center hdr" id="h2"><div class="pill">🤖 What <b>AI</b> recommends now</div></div>
+          <div class="el center hdr" id="h3"><div class="pill">📍 <b>Nearby</b> = recommended</div></div>
+          <div class="el center hdr" id="h4"><div class="pill">✅ GMB checklist for <b>AI</b></div></div>
+          <div class="el center hdr" id="h5"><div class="pill">🎯 The <b>result</b></div></div>
+
+          <div class="scene" id="s1"><div class="white">
+            <div class="qrow" id="q1"><span class="ic">🦷</span><span class="q">dentist near me</span><span class="pin">📍 2 km</span></div>
+            <div class="qrow" id="q2"><span class="ic">☕</span><span class="q">best café in Indore</span><span class="pin">📍 city</span></div>
+            <div class="qrow" id="q3"><span class="ic">❄️</span><span class="q">AC repair in Baner</span><span class="pin">📍 area</span></div>
+            <div class="ais">
+              <div class="ai"><img src="assets/logos/openai.svg" /><span>ChatGPT</span></div>
+              <div class="ai"><img src="assets/logos/gemini-color.svg" /><span>Gemini</span></div>
+              <div class="ai"><img src="assets/logos/perplexity-color.svg" /><span>Perplexity</span></div>
+              <div class="ai"><img src="assets/logos/google-color.svg" /><span>AI Overviews</span></div>
+            </div>
+          </div></div>
+
+          <div class="scene" id="s2"><div class="two">
+            <div class="opt" id="o1"><div class="big">🌐</div><div class="t">Your<br />website</div><div class="ok">✅ Recommended</div></div>
+            <div class="opt" id="o2"><img src="assets/logos/googlemaps.svg" /><div class="t">Your Google<br />Business Profile</div><div class="ok">✅ Recommended</div></div>
+            <div class="plus" id="plus">+</div>
+          </div></div>
+
+          <div class="scene" id="s3"><div class="map">
+            <svg viewBox="0 0 940 590" width="940" height="590"><g stroke="#fff" stroke-linecap="round"><path d="M-20 120 L960 200" stroke-width="34"/><path d="M-20 430 L960 380" stroke-width="40"/><path d="M180 -20 L260 620" stroke-width="30"/><path d="M640 -20 L700 620" stroke-width="34"/><path d="M-20 300 L960 280" stroke-width="18"/></g>
+              <g fill="#cfe8c4"><rect x="300" y="460" width="160" height="110" rx="20"/><rect x="760" y="40" width="150" height="120" rx="20"/></g></svg>
+            <div class="ring" id="ring"></div>
+            <div class="mpin" id="m1" style="left:150px;top:60px">📍</div>
+            <div class="mpin" id="m2" style="left:760px;top:420px">📍</div>
+            <div class="mpin" id="m3" style="left:560px;top:150px">📍</div>
+            <div class="me"></div><div class="youl">You</div>
+            <div class="mlabel" id="ml">✅ Your Business · 0.8 km</div>
+          </div></div>
+
+          <div class="scene" id="s4"><div class="ck" id="ck"></div></div>
+
+          <div class="scene" id="s5"><div class="chat">
+            <div class="top"><img src="assets/logos/openai.svg" /><img src="assets/logos/gemini-color.svg" /><img src="assets/logos/perplexity-color.svg" /><span>AI search</span></div>
+            <div class="bub u" id="u1">Best dentist near me?</div>
+            <div class="bub bot" id="a1">Here's a top-rated clinic close to you:
+              <div class="res"><img src="assets/logos/googlemaps.svg" /><div class="nm">Your Business<small>⭐ 4.8 · 0.8 km · Open now</small></div><div class="rec" id="rec">✅ RECOMMENDED</div></div>
+            </div>
+          </div></div>
+        </div>
+
+        <!-- full-screen B-roll: review replies -->
+        <div class="full" id="f1">
+          <div class="head">Reply with <span style="color:var(--y)">keywords</span> 💬<small>Every review, every time</small></div>
+          <div class="rv" id="rv1" style="top:480px"><div class="who"><div class="av" style="background:#e8710a">R</div>Riya S. <span style="color:#fbbc04;margin-left:auto;letter-spacing:3px">★★★★★</span></div><div class="tx">"Painless treatment and a very gentle doctor!"</div></div>
+          <div class="rv" id="rv2" style="top:830px;left:140px;width:860px;border-left:10px solid var(--g)"><div class="who"><div class="av" style="background:var(--g)">Y</div>Owner reply</div><div class="tx">"Thank you, Riya! So glad your <span class="kw">root canal treatment</span> at our <span class="kw">dental clinic in Baner</span> was painless. See you at your check-up!"</div></div>
+        </div>
+
+        <!-- full-screen B-roll: weekly posts -->
+        <div class="full" id="f2">
+          <div class="head">Post on your GMB <span style="color:var(--y)">every week</span> 📝</div>
+          <div class="post" id="post"><div class="img">🦷</div><div class="bd"><div class="t">Free dental check-up this week</div><div class="s">Update · Your Business</div><div class="btn">Book</div></div></div>
+          <div class="week" id="week"></div>
+        </div>
+
+        <!-- remember -->
+        <div class="el center" id="remember"><div class="pill dark">🧠 Remember <b>all</b> these points</div><div class="icons"><div>⭐</div><div>💬</div><div>🖼️</div><div>🛍️</div><div>📝</div><div>🔑</div><div>🔄</div></div></div>
+
+        <!-- CTA -->
+        <div class="el center" id="cmt"><div class="c"><div class="k">💬 Comment your</div><div class="v">BUSINESS NAME</div></div></div>
+        <div class="el center" id="kit"><div class="c"><div class="ic">📋</div><div class="t">GMB Optimization Checklist<small>I'll send it to you in DM</small></div></div></div>
+      </section>
+      <div id="captions"></div>
+    </div>
+
+    <script>
+      function T(x) { let acc = 0; for (const [a, b] of KEEP) { if (x < a) return acc; if (x <= b) return acc + x - a; acc += b - a; } return acc; }
+      window.T = T;
+      const at = (x) => T(x);
+      const CUES = window.CUES = [];
+      const tl = gsap.timeline({ paused: true });
+
+      function buildCaptions() {
+        const root = document.getElementById("captions");
+        CUES.forEach(([start, end, text]) => {
+          const el = document.createElement("div");
+          el.className = "cap";
+          let on = false;
+          const words = text.split(" ").map((w) => {
+            const hl = on || w.startsWith("*");
+            if (w.startsWith("*")) on = true;
+            if (/\*[,?.!:]?$/.test(w)) on = false;
+            return { w: w.replace(/\*/g, ""), hl };
+          });
+          el.innerHTML = words.map((o) => `<span class="w${o.hl ? " hl" : ""}">${o.w}</span>`).join(" ");
+          root.appendChild(el);
+          tl.set(el, { opacity: 1 }, start);
+          tl.set(el, { opacity: 0 }, end);
+          const ws = [...el.querySelectorAll(".w")];
+          const span = Math.min(0.5, (end - start) * 0.5);
+          ws.forEach((w, k) => tl.fromTo(w, { opacity: 0, y: 14, scale: 0.85 }, { opacity: 1, y: 0, scale: 1, duration: 0.14, ease: "back.out(2.2)" }, start + span * k / ws.length));
+        });
+      }
+
+      const out = (el, t, d = 0.2) => tl.to(el, { opacity: 0, scale: 0.92, duration: d, ease: "power2.in" }, t - d);
+      const float = (el, t0, t1) => { const n = Math.max(0, Math.floor((t1 - t0) / 0.9) - 1); if (n) tl.to(el, { y: -10, duration: 0.9, yoyo: true, repeat: n, ease: "sine.inOut" }, t0); };
+      const popIn = (el, t, from = {}) => tl.fromTo(el, { opacity: 0, scale: 0.6, y: 30, ...from }, { opacity: 1, scale: 1, y: 0, x: 0, rotation: 0, duration: 0.35, ease: "back.out(2)", immediateRender: false }, t);
+
+      const CHECK = [["⭐", "Reviews, even the negative ones", 28.2], ["💬", "Keyword-rich review replies", 30.75], ["🖼️", "New photos & videos", 33.85],
+                     ["🛍️", "Products & services listed", 37.25], ["📝", "Posts every week", 39.5], ["🔑", "Trending keywords covered", 45.55], ["🔄", "Everything kept updated", 47.9]];
+
+      function build() {
+        buildCaptions();
+        // ---------- hook ----------
+        tl.fromTo("#tag0", { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.3, ease: "back.out(2)" }, 0.05);
+        tl.fromTo("#gbp", { opacity: 0, y: 160, rotation: 4, scale: 0.9 }, { opacity: 1, y: 0, rotation: 0, scale: 1, duration: 0.5, ease: "back.out(1.5)" }, at(0.6));
+        float("#gbp", at(1.2), at(4.2));
+        tl.fromTo("#stx", { opacity: 0, scale: 2.6, rotation: -20 }, { opacity: 1, scale: 1, rotation: -8, duration: 0.3, ease: "back.out(2)" }, at(4.3));
+        tl.to("#gbp", { x: 12, duration: 0.05, yoyo: true, repeat: 5 }, at(4.6));
+        tl.to("#stx", { opacity: 0, scale: 0.8, duration: 0.15 }, at(5.6));
+        tl.fromTo("#fix", { opacity: 0, scale: 2.2, rotation: 20 }, { opacity: 1, scale: 1, rotation: 6, duration: 0.3, ease: "back.out(2.2)" }, at(5.7));
+        out("#gbp", at(6.85)); out("#tag0", at(6.85));
+
+        // ---------- panel ----------
+        const P0 = at(7.2), P1 = at(53.75);
+        tl.fromTo("#panel", { opacity: 0, y: -120 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, P0);
+        tl.set("#panel", { opacity: 0 }, P1);
+        const scene = (hdr, sc, a, b) => {
+          tl.fromTo(hdr, { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.3, ease: "back.out(2)", immediateRender: false }, a);
+          tl.fromTo(sc, { opacity: 0, y: 60, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, x: 0, duration: 0.4, ease: "power3.out", immediateRender: false }, a + 0.08);
+          if (b) { out(hdr, b); tl.to(sc, { opacity: 0, x: -200, duration: 0.25, ease: "power2.in" }, b - 0.25); }
+        };
+        // S1 local searches, then the AI engines
+        scene("#h1", "#s1", P0, at(13.95));
+        [["#q1", 8.6], ["#q2", 9.4], ["#q3", 10.3]].forEach(([q, t]) => tl.fromTo(q, { opacity: 0, x: 120 }, { opacity: 1, x: 0, duration: 0.3, ease: "back.out(1.8)" }, at(t)));
+        tl.to("#s1 .qrow", { opacity: 0.35, duration: 0.3 }, at(12.0));
+        tl.fromTo("#s1 .ai", { opacity: 0, y: 40, scale: 0.6 }, { opacity: 1, y: 0, scale: 1, duration: 0.3, stagger: 0.12, ease: "back.out(2.2)" }, at(12.1));
+        // S2 website + GBP
+        scene("#h2", "#s2", at(14.15), at(19.76));
+        popIn("#o1", at(15.3), { x: -200 });
+        tl.fromTo("#plus", { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2.6)" }, at(16.5));
+        popIn("#o2", at(17.1), { x: 200 });
+        tl.fromTo("#s2 .ok", { opacity: 0, scale: 1.8 }, { opacity: 1, scale: 1, duration: 0.25, stagger: 0.15, ease: "back.out(2.4)" }, at(18.3));
+        tl.to("#o2", { boxShadow: "0 0 0 12px rgba(18,161,80,.45), 0 20px 50px rgba(0,0,0,.45)", duration: 0.4, yoyo: true, repeat: 1 }, at(18.4));
+        // S3 map: nearby search, one pin becomes the recommendation
+        scene("#h3", "#s3", at(19.9), at(25.7));
+        tl.fromTo("#ring", { opacity: 0, scale: 0.2 }, { opacity: 1, scale: 1, duration: 0.8, ease: "power2.out" }, at(20.4));
+        [["#m1", 21.0], ["#m2", 21.3], ["#m3", 21.6]].forEach(([m, t]) => tl.fromTo(m, { opacity: 0, y: -80 }, { opacity: 1, y: 0, duration: 0.35, ease: "bounce.out" }, at(t)));
+        tl.to(["#m1", "#m2"], { opacity: 0.35, scale: 0.8, duration: 0.3 }, at(23.3));
+        tl.to("#m3", { scale: 1.45, duration: 0.3, ease: "back.out(3)" }, at(23.3));
+        tl.fromTo("#ml", { opacity: 0, y: 20, scale: 0.6 }, { opacity: 1, y: 0, scale: 1, duration: 0.3, ease: "back.out(2.4)" }, at(23.45));
+        // S4 checklist (rows tick as they are named)
+        const ck = document.getElementById("ck");
+        ck.innerHTML = CHECK.map(([e, t], i) => `<div class="ci" id="ci${i}"><span class="box">✓</span><span class="em">${e}</span><span>${t}</span></div>`).join("");
+        scene("#h4", "#s4", at(25.9), at(50.95));
+        tl.fromTo("#ck .ci", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.25, stagger: 0.07, ease: "power3.out" }, at(26.1));
+        CHECK.forEach(([, , t], i) => {
+          const row = "#ci" + i;
+          tl.to(row, { color: "#17151a", duration: 0.2 }, at(t));
+          tl.to(row + " .box", { backgroundColor: "#12a150", borderColor: "#12a150", duration: 0.15 }, at(t));
+          tl.fromTo(row + " .box", { scale: 1.6 }, { scale: 1, duration: 0.35, ease: "back.out(3)", immediateRender: false }, at(t));
+          tl.fromTo(row, { backgroundColor: "rgba(255,212,38,.45)" }, { backgroundColor: "rgba(255,212,38,0)", duration: 1.2, immediateRender: false }, at(t));
+        });
+        // S5 result: AI recommends the GBP
+        scene("#h5", "#s5", at(51.0), 0);
+        tl.fromTo("#u1", { opacity: 0, x: 80 }, { opacity: 1, x: 0, duration: 0.3, ease: "back.out(2)" }, at(51.2));
+        tl.fromTo("#a1", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, at(51.7));
+        tl.fromTo("#rec", { opacity: 0, scale: 2.2 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2.4)" }, at(52.3));
+
+        // ---------- full-screen B-roll 1: keyword review replies ----------
+        tl.fromTo("#f1", { opacity: 0 }, { opacity: 1, duration: 0.2 }, at(30.65));
+        tl.fromTo("#f1 .head", { opacity: 0, y: -40 }, { opacity: 1, y: 0, duration: 0.35, ease: "back.out(2)" }, at(30.7));
+        popIn("#rv1", at(30.9), { x: -200 });
+        popIn("#rv2", at(31.6), { x: 200 });
+        tl.fromTo("#rv2 .kw", { backgroundColor: "rgba(255,242,179,0)" }, { backgroundColor: "rgba(255,226,102,1)", duration: 0.3, stagger: 0.4, immediateRender: false }, at(32.3));
+        tl.to("#f1", { opacity: 0, duration: 0.2 }, at(33.62) - 0.2);
+
+        // ---------- full-screen B-roll 2: weekly posts ----------
+        const wk = document.getElementById("week");
+        wk.innerHTML = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((d) => `<div class="day">${d}<i></i></div>`).join("");
+        tl.fromTo("#f2", { opacity: 0 }, { opacity: 1, duration: 0.2 }, at(39.45));
+        tl.fromTo("#f2 .head", { opacity: 0, y: -40 }, { opacity: 1, y: 0, duration: 0.35, ease: "back.out(2)" }, at(39.5));
+        popIn("#post", at(39.75), { rotation: -4 });
+        tl.fromTo("#week .day", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.25, stagger: 0.06 }, at(40.3));
+        [0, 3, 6].forEach((k, j) => {
+          const dot = `#week .day:nth-child(${k + 1}) i`;
+          tl.to(dot, { backgroundColor: "#12a150", duration: 0.15 }, at(41.0) + j * 0.55);
+          tl.set(dot, { textContent: "✓" }, at(41.0) + j * 0.55);
+          tl.fromTo(dot, { scale: 1.8 }, { scale: 1, duration: 0.3, ease: "back.out(3)", immediateRender: false }, at(41.0) + j * 0.55);
+        });
+        tl.to("#f2", { opacity: 0, duration: 0.2 }, at(43.9) - 0.2);
+
+        // ---------- remember these points ----------
+        tl.set("#remember", { opacity: 1 }, at(58.3));
+        tl.fromTo("#remember .pill", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.3, ease: "back.out(2)" }, at(58.3));
+        tl.fromTo("#remember .icons div", { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: 0.25, stagger: 0.09, ease: "back.out(2.6)" }, at(58.8));
+        tl.to("#remember .icons div", { y: -12, duration: 0.3, stagger: 0.09, yoyo: true, repeat: 1, ease: "sine.inOut" }, at(60.3));
+        out("#remember", at(62.8));
+
+        // ---------- CTA ----------
+        tl.fromTo("#cmt", { opacity: 0, scale: 0.4, rotation: -6 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.4, ease: "back.out(2)" }, at(66.9));
+        tl.to("#cmt .v", { scale: 1.06, duration: 0.35, yoyo: true, repeat: 3, ease: "sine.inOut" }, at(67.5));
+        tl.fromTo("#kit", { opacity: 0, y: 80 }, { opacity: 1, y: 0, duration: 0.4, ease: "back.out(1.8)" }, at(69.8));
+        float("#kit", at(70.3), at(73.9));
+        window.__timelines["main"] = tl;
+      }
+    </script>
+    <script src="captions.js"></script>
+    <script>document.fonts.ready.then(build);</script>
+  </body>
+</html>
