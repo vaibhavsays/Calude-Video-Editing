@@ -1,0 +1,17 @@
+{
+  "theme": "mint",
+  "logos": ["google-search-console.svg", "google-color.svg", "openai.svg", "google-ads.svg"],
+  "logos_top": "140px",
+  "logo_size": "104px",
+  "title": "SEO Is Not Dead",
+  "title_size": "88px",
+  "title_top": "280px",
+  "subtitle": "REAL GSC RESULTS · DAY 13",
+  "sub_top": "410px",
+  "big_word": "PROOF",
+  "big_size": "360px",
+  "big_top": "480px",
+  "person_width": "1080px",
+  "photo": "assets/vaibhav_suit_cutout.png",
+  "output": "cover.png"
+}
