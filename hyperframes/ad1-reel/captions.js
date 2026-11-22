@@ -1,36 +1,5 @@
-// Hinglish subtitles (Roman script only), short punchy groups. Times are on the ORIGINAL (raw/ad1.mp4) clock; T()
-// maps them onto the tight cut (edl.js). "|" splits a segment into phrases sharing its time by text length.
-// *word* = highlighted.
-const SEGMENTS = [
-  [0.29, 3.43, "*Hello business owners*, | toh kya aap bhi chahte hain ki | *ChatGPT*, *Google AI Overviews*"],
-  [3.46, 6.11, "mein aapka *business* aaye | aur zyada se zyada | *customers* aap tak pahunchein?"],
-  [6.72, 8.23, "Toh *rukiye!* | Mera naam"],
-  [8.23, 9.50, "*Vaibhav* hai, | aur main"],
-  [9.91, 13.27, "pichhle *5 saalon* se *SEO* kar raha hoon, | aur ab tak maine | *kai businesses* ko"],
-  [13.68, 17.61, "Google par *online visibility* badhane | aur *naye customers* | tak pahunchne mein"],
-  [17.84, 21.26, "unki help ki hai. | Jaise kuch businesses: | *e-commerce*, *products*, *services*,"],
-  [21.61, 25.74, "*B2B*, *B2C*, *D2C*. | Aur projects ki baat karein toh | *VCL*, *Shree Radhey*,"],
-  [26.00, 29.52, "*Zussio Berry* aur kuch | *international projects* | jaise ki"],
-  [30.13, 32.22, "*Charcoal Factory*, | *Friendly Bamboo*, *Oakalleng*"],
-  [32.46, 35.21, "aur *Party Sparkz*. | Aur in saare businesses ko"],
-  [35.35, 36.58, "*Google AI Overviews* mein | *cite* kiya gaya hai"],
-  [36.99, 39.98, "aur *mention* kiya gaya hai. | Kyunki aaj *buyers* Google par | sirf search nahi karte,"],
-  [40.19, 43.93, "wo *ChatGPT*, *AI Overviews* aur *Gemini* mein | direct poochhte hain | *best service* kaun si hai,"],
-  [44.36, 48.12, "kis company ki. | Aur hum businesses ko | *AI Overviews* aur *ChatGPT* jaise"],
-  [48.46, 51.22, "*AI search engines* par | *visible* hone mein | help karte hain."],
-  [51.24, 54.87, "Aur agar aap bhi apne business ke liye | *AI SEO expert* dhoondh rahe hain, | jo aapki help kare"],
-  [54.87, 58.22, "business ko *AI Overviews* | aur *AI search engines* | mein laane mein,"],
-  [58.74, 61.55, "toh main aapki *help* kar sakta hoon. | Neeche *button* pe click karein | aur *strategic call* book karein."],
-];
-
-SEGMENTS.forEach(([s, e, text]) => {
-  const phrases = text.split("|").map((p) => p.trim());
-  const lens = phrases.map((p) => p.replace(/\*/g, "").length + 4);
-  const total = lens.reduce((a, b) => a + b, 0);
-  let t = s;
-  phrases.forEach((p, i) => {
-    const d = (e - s) * lens[i] / total;
-    CUES.push([T(t), T(i === phrases.length - 1 ? e : t + d), p]);
-    t += d;
-  });
-});
+// Word-timed Hinglish captions (Roman script). Times are on the ORIGINAL (raw/ad1.mp4) clock, measured per word:
+// Descript sentence starts + Parakeet word timestamps + voiced-audio fit (see scratch tools/align_words.py).
+// Each cue: [start, end, [[word_start, word], ...]]; *word* = highlighted.
+const WCUES = [[0.213, 0.99, [[0.253, "*Hello"], [0.48, "business"], [0.72, "owners*,"]]], [0.99, 2.26, [[1.03, "toh"], [1.19, "kya"], [1.35, "aap"], [1.51, "bhi"], [1.67, "chahte"], [1.99, "hain"], [2.14, "ki"]]], [2.26, 3.42, [[2.3, "*ChatGPT*,"], [2.46, "*Google"], [2.78, "AI"], [2.94, "Overviews*"]]], [3.42, 4.85, [[3.46, "mein"], [3.61, "aapka"], [3.97, "*business*"], [4.75, "aaye"]]], [4.85, 5.73, [[4.89, "aur"], [5.03, "zyada"], [5.31, "se"], [5.45, "zyada"]]], [5.73, 7.35, [[5.77, "*customers*"], [6.3, "aap"], [6.83, "tak"], [6.97, "pahunchein?"]]], [7.35, 7.77, [[7.39, "Toh"], [7.53, "*rukiye!*"]]], [7.77, 8.19, [[7.81, "Mera"], [8.09, "naam"]]], [8.19, 8.63, [[8.23, "*Vaibhav*"], [8.43, "aur"], [8.57, "main"]]], [8.63, 10.23, [[8.67, "pichhle"], [8.88, "*5"], [9.09, "saalon*"], [9.29, "se"], [9.4, "*SEO*"], [9.51, "kar"], [9.96, "raha"], [10.16, "hoon"]]], [10.23, 11.272, [[10.27, "aur"], [10.37, "ab"], [10.47, "tak"], [10.57, "maine"], [10.78, "*kai"], [10.88, "businesses*"]]], [11.272, 12.018, [[11.312, "ko"], [11.498, "Google"], [11.868, "par"]]], [12.018, 13.768, [[12.058, "*online"], [12.458, "visibility*"], [13.068, "badhane"]]], [13.768, 14.528, [[13.808, "aur"], [13.928, "*naye"], [14.058, "customers*"], [14.378, "tak"]]], [14.528, 15.3, [[14.568, "pahunchne"], [14.918, "mein"], [15.028, "unki"], [15.258, "help"]]], [15.3, 15.97, [[15.34, "ki"], [15.53, "hai."]]], [15.97, 17.858, [[16.01, "Jaise"], [16.35, "kuch"], [16.538, "businesses"], [17.078, "ki"], [17.208, "baat"], [17.348, "karein"], [17.608, "toh"]]], [17.858, 18.978, [[17.898, "*e-commerce*,"], [18.538, "*products*,"]]], [18.978, 20.609, [[19.018, "*services*,"], [20.058, "*B2B*,"]]], [20.609, 21.909, [[20.649, "*B2C*,"], [21.139, "*D2C*"]]], [21.909, 24.548, [[21.949, "aur"], [22.628, "projects"], [23.108, "jinki"], [23.588, "baat"], [23.828, "karein"], [24.348, "toh"]]], [24.548, 25.518, [[24.588, "*VCL*,"], [24.838, "*Shree"], [25.078, "Radhey*,"]]], [25.518, 27.514, [[25.558, "*Zussio"], [26.198, "Berry*"], [26.678, "aur"], [27.268, "kuch"]]], [27.514, 28.408, [[27.554, "*international"], [28.068, "projects*"]]], [28.408, 29.948, [[28.448, "jaise"], [28.828, "ki"], [29.028, "*Charcoal"], [29.508, "Factory*,"]]], [29.948, 31.62, [[29.988, "*Friendly"], [30.388, "Bamboo*,"], [30.718, "*Oakalleng*"], [31.488, "aur"]]], [31.62, 32.17, [[31.66, "*Party"], [32.05, "Sparkz*,"]]], [32.17, 33.862, [[32.21, "aur"], [32.562, "in"], [32.742, "saare"], [33.122, "businesses"], [33.752, "ko"]]], [33.862, 34.882, [[33.902, "*Google"], [34.192, "AI"], [34.342, "Overviews*"], [34.782, "mein"]]], [34.882, 35.86, [[34.922, "*cite*"], [35.232, "kiya"], [35.452, "gaya"], [35.602, "hai"], [35.752, "aur"]]], [35.86, 37.07, [[35.9, "*mention*"], [36.25, "kiya"], [36.43, "gaya"], [36.59, "hai."]]], [37.07, 38.102, [[37.11, "Kyunki"], [37.43, "aaj"], [37.59, "*buyers*"], [37.762, "Google"], [38.012, "par"]]], [38.102, 39.157, [[38.142, "sirf"], [38.272, "search"], [38.402, "nahi"], [38.662, "karte"], [38.922, "hain,"], [39.062, "wo"]]], [39.157, 40.982, [[39.197, "*ChatGPT*,"], [40.162, "*Google"], [40.442, "AI"], [40.592, "Overviews*"]]], [40.982, 42.122, [[41.022, "aur"], [41.172, "*Gemini*"], [41.602, "mein"], [41.752, "direct"]]], [42.122, 43.069, [[42.162, "*best"], [42.329, "service*"], [42.699, "kaun"], [42.809, "si"], [42.949, "hai,"]]], [43.069, 43.69, [[43.109, "kis"], [43.289, "company"]]], [43.69, 44.52, [[43.73, "ki,"], [43.85, "ye"], [44.07, "poochhte"], [44.49, "hain."]]], [44.52, 45.259, [[44.56, "Aur"], [44.64, "hum"], [44.729, "business"], [45.159, "ko"]]], [45.259, 46.379, [[45.299, "*AI"], [45.449, "Overviews*"], [46.149, "aur"]]], [46.379, 47.397, [[46.419, "*ChatGPT*"], [46.659, "jaise"], [47.129, "other"], [47.289, "AI"]]], [47.397, 48.669, [[47.437, "*search"], [47.769, "engines*"], [48.109, "par"], [48.509, "unko"]]], [48.669, 49.269, [[48.709, "*visible*"], [49.009, "hone"], [49.209, "mein"]]], [49.269, 50.179, [[49.309, "help"], [49.409, "karte"], [50.119, "hain."]]], [50.179, 51.196, [[50.219, "Aur"], [50.319, "agar"], [50.519, "aap"], [50.619, "bhi"], [50.719, "apne"], [50.919, "business"]]], [51.196, 51.489, [[51.236, "ke"], [51.386, "liye"]]], [51.489, 52.679, [[51.529, "*AI"], [51.669, "SEO"], [51.809, "expert*"], [52.089, "dhoondh"], [52.289, "rahe"], [52.579, "hain,"]]], [52.679, 53.589, [[52.719, "jo"], [52.859, "aapki"], [53.169, "help"], [53.309, "karein"]]], [53.589, 55.41, [[53.629, "business"], [54.109, "ko"], [54.579, "*AI"], [54.729, "Overviews*"]]], [55.41, 56.209, [[55.45, "aur"], [55.689, "AI"], [56.009, "other"]]], [56.209, 56.949, [[56.249, "*AI"], [56.489, "search"], [56.649, "engines*"]]], [56.949, 57.509, [[56.989, "mein"], [57.099, "laane"], [57.309, "mein,"]]], [57.509, 58.868, [[57.549, "toh"], [57.659, "main"], [57.759, "aapki"], [58.039, "*help*"], [58.189, "kar"], [58.469, "sakta"]]], [58.868, 58.988, [[58.908, "hoon."]]], [58.988, 60.329, [[59.028, "Neeche"], [59.278, "diye"], [59.408, "gaye"], [59.538, "*button*"], [59.788, "par"], [59.929, "click"], [60.079, "karein"]]], [60.329, 61.009, [[60.369, "aur"], [60.499, "mere"], [60.769, "saath"], [60.899, "ek"]]], [61.009, 62.139, [[61.049, "*strategic"], [61.309, "call*"], [61.419, "book"], [61.509, "karein."]]]];
+WCUES.forEach(([s, e, ws]) => CUES.push([T(s), T(e), ws.map(([t, x]) => [T(t), x])]));
