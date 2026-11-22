@@ -73,12 +73,12 @@
 
       <div id="chart" class="clip layer" data-start="0" data-duration="8" data-track-index="1">
         <div id="title">
-          <div class="kicker">GTA 6 DAY ONE vs OPPENHEIMER</div>
-          <div class="main">3.9× MORE MONEY</div>
+          <div class="kicker">GTA 6 PRE-ORDERS vs OPPENHEIMER</div>
+          <div class="main">2.4× MORE MONEY</div>
         </div>
         <div id="wrapA" class="bar-wrap"><div id="barA" class="bar"></div><div id="valA" class="val">$0.00B</div></div>
         <div id="wrapB" class="bar-wrap"><div id="barB" class="bar"></div><div id="valB" class="val">$0M</div></div>
-        <div id="lblA" class="lbl">GTA 6<small>DAY 1 SALES</small></div>
+        <div id="lblA" class="lbl">GTA 6<small>PRE-ORDER SALES</small></div>
         <div id="lblB" class="lbl">OPPENHEIMER<small>TOTAL BOX OFFICE</small></div>
       </div>
 
@@ -246,7 +246,7 @@
       tl.fromTo("#sun", { scale: 1 }, { scale: 1.08, duration: 2, yoyo: true, repeat: 3, ease: "sine.inOut" }, 0);
 
       // chart
-      const HA = 1060, HB = Math.round(HA * 976 / 3790); // bar heights in px (Oppenheimer / "this")
+      const HA = 1060, HB = Math.round(HA * 976 / 2360); // bar heights in px (Oppenheimer / "this")
       tl.fromTo("#title .kicker", { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 0.7);
       tl.fromTo("#title .main", { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(2)" }, 4.0);
       tl.fromTo("#lblB", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 1.0);
@@ -263,9 +263,9 @@
       const cntA = { v: 0 }, valA = document.getElementById("valA");
       gsap.set(valA, { bottom: 20 });
       tl.fromTo(valA, { opacity: 0 }, { opacity: 1, duration: 0.3 }, 3.1);
-      tl.to(cntA, { v: 3.79, duration: 1.4, ease: "expo.out", onUpdate: () => {
+      tl.to(cntA, { v: 2.36, duration: 1.4, ease: "expo.out", onUpdate: () => {
         valA.textContent = "$" + cntA.v.toFixed(2) + "B";
-        valA.style.bottom = (HA * (cntA.v / 3.79) + 20) + "px";
+        valA.style.bottom = (HA * (cntA.v / 2.36) + 20) + "px";
       } }, 3.1);
       tl.fromTo(valA, { scale: 1 }, { scale: 1.2, duration: 0.25, yoyo: true, repeat: 1, ease: "power2.out", immediateRender: false }, 4.3);
       tl.fromTo("#valA", { y: 0 }, { y: -14, duration: 0.5, yoyo: true, repeat: 5, ease: "sine.inOut", immediateRender: false }, 4.4);
