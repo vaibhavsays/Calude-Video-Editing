@@ -1,16 +1,21 @@
 {
   "theme": "pink",
-  "logos": ["pagespeedinsights.svg", "google-color.svg", "openai.svg", "gemini-color.svg"],
+  "logos": [
+    "pagespeedinsights.svg",
+    "google-color.svg",
+    "openai.svg",
+    "gemini-color.svg"
+  ],
   "logos_top": "140px",
   "logo_size": "104px",
   "title": "Slow Website = No AI",
   "title_size": "80px",
   "title_top": "286px",
-  "subtitle": "AI SEO · DAY 10",
+  "subtitle": "AI SEO \u00b7 DAY 10",
   "sub_top": "400px",
-  "big_word": "SLOW",
-  "big_size": "400px",
-  "big_top": "470px",
+  "big_word": "SPEED",
+  "big_size": "290px",
+  "big_top": "465px",
   "person_width": "1080px",
   "photo": "assets/vaibhav_suit_cutout.png",
   "output": "cover.png"
