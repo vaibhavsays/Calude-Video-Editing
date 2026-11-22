@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="vendor/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Montserrat";
+        src: url("vendor/Montserrat-var.woff2") format("woff2");
+        font-weight: 100 900;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: #0b0218; }
+      body { font-family: "Montserrat", sans-serif; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: #0b0218; }
+      .layer { position: absolute; inset: 0; width: 1080px; height: 1920px; }
+      #sky {
+        background: linear-gradient(180deg, #12052b 0%, #2a0b4d 22%, #5b1a73 40%, #a8346f 50%, #e8606a 54.5%, #2a0d3f 54.7%, #1a0830 70%, #0d0420 100%);
+      }
+      #sun {
+        position: absolute; left: 140px; top: 640px; width: 800px; height: 800px; border-radius: 50%;
+        background: radial-gradient(circle, rgba(255,150,120,0.55) 0%, rgba(255,90,140,0.25) 35%, rgba(255,90,140,0) 70%);
+      }
+      #title {
+        position: absolute; left: 0; top: 190px; width: 1080px; text-align: center; color: #fff;
+      }
+      #title .kicker { font-size: 34px; font-weight: 600; letter-spacing: 10px; color: #f0b8ff; text-shadow: 0 0 18px #b84dff; }
+      #title .main { font-size: 54px; font-weight: 900; letter-spacing: 2px; margin-top: 10px; text-shadow: 0 0 24px #ff4fd8, 0 0 4px #fff; }
+      .bar-wrap { position: absolute; bottom: 360px; width: 270px; height: 1200px; }
+      #wrapA { left: 205px; }
+      #wrapB { left: 605px; }
+      .bar {
+        position: absolute; left: 0; bottom: 0; width: 270px; height: 100%; border-radius: 14px 14px 0 0;
+        transform-origin: 50% 100%;
+      }
+      #barA {
+        background: linear-gradient(180deg, rgba(255,80,215,0.92) 0%, rgba(184,77,255,0.55) 60%, rgba(120,40,255,0.25) 100%);
+        border: 4px solid #ff9bf0; border-bottom: none;
+        box-shadow: 0 0 40px rgba(255,79,216,0.8), inset 0 0 40px rgba(255,255,255,0.25);
+      }
+      #barB {
+        background: linear-gradient(180deg, rgba(90,220,255,0.85) 0%, rgba(80,120,255,0.5) 60%, rgba(60,60,255,0.2) 100%);
+        border: 4px solid #a6f0ff; border-bottom: none;
+        box-shadow: 0 0 34px rgba(90,220,255,0.7), inset 0 0 40px rgba(255,255,255,0.25);
+      }
+      .val {
+        position: absolute; left: -60px; width: 390px; text-align: center; color: #fff; font-weight: 900;
+      }
+      #valB { font-size: 70px; text-shadow: 0 0 20px #39d4ff; }
+      #valA { font-size: 60px; white-space: nowrap; text-shadow: 0 0 22px #ff4fd8; }
+      .lbl {
+        position: absolute; top: 1580px; width: 400px; text-align: center; color: #fff;
+        font-size: 40px; font-weight: 800; letter-spacing: 3px;
+      }
+      #lblA { left: 140px; text-shadow: 0 0 16px #ff4fd8; }
+      #lblB { left: 540px; text-shadow: 0 0 16px #39d4ff; }
+      .lbl small { display: block; font-size: 26px; font-weight: 600; letter-spacing: 4px; color: #e5c8ff; margin-top: 6px; }
+      #glowfx { filter: drop-shadow(0 0 10px #c77dff) drop-shadow(0 0 22px #9d4dff); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="8" data-width="1080" data-height="1920">
+      <div id="scene" class="clip layer" data-start="0" data-duration="8" data-track-index="0">
+        <div id="sky" class="layer"></div>
+        <div id="sun"></div>
+        <svg id="city" class="layer" viewBox="0 0 1080 1920"></svg>
+        <svg id="road" class="layer" viewBox="0 0 1080 1920"></svg>
+        <svg id="palms" class="layer" viewBox="0 0 1080 1920"></svg>
+        <svg id="heli" class="layer" viewBox="0 0 1080 1920"></svg>
+        <div id="vignette" class="layer" style="background: radial-gradient(ellipse at 50% 55%, rgba(0,0,0,0) 55%, rgba(8,0,20,0.75) 100%)"></div>
+      </div>
+
+      <div id="chart" class="clip layer" data-start="0" data-duration="8" data-track-index="1">
+        <div id="title">
+          <div class="kicker">WORLDWIDE BOX OFFICE</div>
+          <div class="main">MORE THAN OPPENHEIMER</div>
+        </div>
+        <div id="wrapA" class="bar-wrap"><div id="barA" class="bar"></div><div id="valA" class="val">WAY MORE ▲</div></div>
+        <div id="wrapB" class="bar-wrap"><div id="barB" class="bar"></div><div id="valB" class="val">$0M</div></div>
+        <div id="lblA" class="lbl">THIS<small>&nbsp;</small></div>
+        <div id="lblB" class="lbl">OPPENHEIMER<small>NOLAN · 2023</small></div>
+      </div>
+
+      <svg id="hud" class="clip layer" viewBox="0 0 1080 1920" data-start="0" data-duration="8" data-track-index="2"></svg>
+    </div>
+
+    <script>
+      const NS = "http://www.w3.org/2000/svg";
+      const el = (tag, attrs, parent) => {
+        const e = document.createElementNS(NS, tag);
+        for (const k in attrs) e.setAttribute(k, attrs[k]);
+        if (parent) parent.appendChild(e);
+        return e;
+      };
+      let seed = 1977;
+      const rnd = () => { seed |= 0; seed = (seed + 0x6d2b79f5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+      const HZ = 1050; // horizon
+
+      // ---------- City skyline ----------
+      const city = document.getElementById("city");
+      const defs = el("defs", {}, city);
+      const g1 = el("linearGradient", { id: "bfar", x1: 0, y1: 0, x2: 0, y2: 1 }, defs);
+      el("stop", { offset: "0", "stop-color": "#6a2a8a" }, g1); el("stop", { offset: "1", "stop-color": "#3a1458" }, g1);
+      const g2 = el("linearGradient", { id: "bnear", x1: 0, y1: 0, x2: 0, y2: 1 }, defs);
+      el("stop", { offset: "0", "stop-color": "#2e0f4a" }, g2); el("stop", { offset: "1", "stop-color": "#160626" }, g2);
+      // streak clouds
+      for (let i = 0; i < 5; i++) {
+        el("ellipse", { cx: 150 + rnd() * 800, cy: 520 + rnd() * 330, rx: 220 + rnd() * 260, ry: 6 + rnd() * 10, fill: i % 2 ? "#ff8fb0" : "#c060c0", opacity: 0.35, style: "filter: blur(6px)" }, city);
+      }
+      const flicker = [];
+      function buildings(count, minH, maxH, fill, winColor, winOp, xs) {
+        let x = -20;
+        while (x < 1100) {
+          const w = 34 + rnd() * 60, h = minH + Math.pow(rnd(), 1.6) * (maxH - minH);
+          const top = HZ - h;
+          el("rect", { x, y: top, width: w, height: h + 2, fill }, city);
+          if (rnd() < 0.35) el("rect", { x: x + w / 2 - 2, y: top - 30 - rnd() * 40, width: 4, height: 70, fill }, city);
+          for (let wy = top + 12; wy < HZ - 10; wy += 16) {
+            for (let wx = x + 6; wx < x + w - 8; wx += 12) {
+              if (rnd() < winOp) {
+                const r = el("rect", { x: wx, y: wy, width: 5, height: 7, fill: rnd() < 0.7 ? winColor : "#ff7ad9", opacity: 0.5 + rnd() * 0.5 }, city);
+                if (rnd() < 0.04) flicker.push(r);
+              }
+            }
+          }
+          x += w + xs * rnd();
+        }
+      }
+      buildings(0, 60, 380, "url(#bfar)", "#ffc98a", 0.18, 6);
+      buildings(0, 40, 260, "url(#bnear)", "#ffb36b", 0.28, 30);
+      // hero towers
+      [[300, 420, 70], [470, 520, 80], [690, 460, 64], [880, 390, 70]].forEach(([x, h, w]) => {
+        el("rect", { x, y: HZ - h, width: w, height: h, fill: "url(#bnear)" }, city);
+        el("rect", { x: x + w / 2 - 2, y: HZ - h - 70, width: 4, height: 70, fill: "#2e0f4a" }, city);
+        const tip = el("circle", { cx: x + w / 2, cy: HZ - h - 70, r: 5, fill: "#ff3b5c" }, city);
+        flicker.push(tip);
+        for (let wy = HZ - h + 14; wy < HZ - 10; wy += 18) for (let wx = x + 8; wx < x + w - 8; wx += 14)
+          if (rnd() < 0.4) el("rect", { x: wx, y: wy, width: 6, height: 8, fill: "#ffc98a", opacity: 0.4 + rnd() * 0.6 }, city);
+      });
+      // street-light glow on horizon
+      for (let i = 0; i < 26; i++) el("circle", { cx: rnd() * 1080, cy: HZ - 4 - rnd() * 14, r: 3 + rnd() * 5, fill: rnd() < 0.5 ? "#ffb347" : "#ff6fcf", style: "filter: blur(2px)" }, city);
+
+      // ---------- Road ----------
+      const road = document.getElementById("road");
+      const rdefs = el("defs", {}, road);
+      const rg = el("linearGradient", { id: "rg", x1: 0, y1: 0, x2: 0, y2: 1 }, rdefs);
+      el("stop", { offset: "0", "stop-color": "#4a1a5e" }, rg); el("stop", { offset: "0.4", "stop-color": "#24103c" }, rg); el("stop", { offset: "1", "stop-color": "#0e0620" }, rg);
+      el("polygon", { points: `470,${HZ} 610,${HZ} 1500,1920 -420,1920`, fill: "url(#rg)" }, road);
+      el("line", { x1: 470, y1: HZ, x2: -420, y2: 1920, stroke: "#d07cff", "stroke-width": 4, opacity: 0.6 }, road);
+      el("line", { x1: 610, y1: HZ, x2: 1500, y2: 1920, stroke: "#d07cff", "stroke-width": 4, opacity: 0.6 }, road);
+      // wet reflections of the city lights
+      for (let i = 0; i < 22; i++) {
+        const x = rnd() * 1080, w = 4 + rnd() * 10;
+        el("rect", { x, y: HZ + 4, width: w, height: 120 + rnd() * 380, fill: rnd() < 0.5 ? "#ffb347" : "#ff6fcf", opacity: 0.18 + rnd() * 0.2, style: "filter: blur(5px)" }, road);
+      }
+      el("rect", { x: 380, y: HZ, width: 320, height: 500, fill: "#ff7aa8", opacity: 0.12, style: "filter: blur(30px)" }, road);
+      const dashes = [];
+      const N = 9;
+      for (let i = 0; i < N; i++) dashes.push(el("polygon", { points: "0,0", fill: "#f6d1ff", opacity: 0.75 }, road));
+      function placeDashes(off) {
+        for (let i = 0; i < N; i++) {
+          const z0 = ((i + off) % N) / N, z1 = z0 + 0.45 / N;
+          const y0 = HZ + 870 * z0 * z0, y1 = HZ + 870 * z1 * z1;
+          const w0 = 2 + 22 * z0 * z0, w1 = 2 + 22 * z1 * z1;
+          dashes[i].setAttribute("points", `${540 - w0},${y0} ${540 + w0},${y0} ${540 + w1},${y1} ${540 - w1},${y1}`);
+        }
+      }
+      placeDashes(0);
+
+      // ---------- Palms ----------
+      const palms = document.getElementById("palms");
+      function palm(bx, by, h, lean, s) {
+        const g = el("g", { fill: "none", stroke: "#0a0314", "stroke-linecap": "round" }, palms);
+        const tx = bx + lean, ty = by - h;
+        el("path", { d: `M${bx},${by} Q${bx + lean * 0.2},${by - h * 0.55} ${tx},${ty}`, "stroke-width": 16 * s }, g);
+        for (let a = 0; a < 9; a++) {
+          const ang = (-170 + a * 42 + rnd() * 14) * Math.PI / 180;
+          const L = (150 + rnd() * 60) * s;
+          const ex = tx + Math.cos(ang) * L, ey = ty + Math.sin(ang) * L * 0.55 + L * 0.35;
+          const cx = tx + Math.cos(ang) * L * 0.5, cy = ty + Math.sin(ang) * L * 0.5 - 40 * s;
+          el("path", { d: `M${tx},${ty} Q${cx},${cy} ${ex},${ey}`, "stroke-width": 14 * s }, g);
+          for (let k = 1; k < 7; k++) {
+            const t = k / 7, px = (1 - t) * (1 - t) * tx + 2 * (1 - t) * t * cx + t * t * ex, py = (1 - t) * (1 - t) * ty + 2 * (1 - t) * t * cy + t * t * ey;
+            el("line", { x1: px, y1: py, x2: px + Math.cos(ang + 1.1) * 26 * s, y2: py + 30 * s, "stroke-width": 5 * s }, g);
+            el("line", { x1: px, y1: py, x2: px + Math.cos(ang - 1.1) * 26 * s, y2: py + 30 * s, "stroke-width": 5 * s }, g);
+          }
+        }
+        return g;
+      }
+      palm(60, 1180, 700, 40, 1.25); palm(170, 1120, 520, -30, 0.95); palm(-20, 1300, 860, 80, 1.4);
+      palm(1020, 1170, 640, -40, 1.15); palm(930, 1110, 470, 25, 0.85); palm(1110, 1320, 820, -90, 1.35);
+      el("rect", { x: 0, y: 1080, width: 260, height: 120, fill: "#0a0314", style: "filter: blur(14px)" }, palms);
+      el("rect", { x: 820, y: 1080, width: 260, height: 120, fill: "#0a0314", style: "filter: blur(14px)" }, palms);
+
+      // ---------- Helicopter ----------
+      const heli = document.getElementById("heli");
+      const hg = el("g", { id: "heliG", fill: "#0a0314" }, heli);
+      el("ellipse", { cx: 0, cy: 0, rx: 46, ry: 22 }, hg);
+      el("path", { d: "M30,-6 L120,-12 L124,-2 L36,8 Z" }, hg);
+      el("path", { d: "M112,-14 L128,-34 L134,-32 L124,-6 Z" }, hg);
+      el("path", { d: "M-30,18 L-36,30 L40,30 M-8,22 L-12,30", stroke: "#0a0314", "stroke-width": 4, fill: "none" }, hg);
+      el("ellipse", { cx: -24, cy: -4, rx: 16, ry: 10, fill: "#3a1c52" }, hg);
+      el("rect", { x: -4, y: -30, width: 8, height: 10 }, hg);
+      const rotor = el("rect", { id: "rotor", x: -110, y: -33, width: 220, height: 4, opacity: 0.85 }, hg);
+      const hlight = el("circle", { cx: 0, cy: 22, r: 5, fill: "#ff3b5c" }, hg);
+
+      // ---------- HUD frame ----------
+      const hud = document.getElementById("hud");
+      const hudG = el("g", { id: "glowfx", fill: "none", stroke: "#d08bff", "stroke-width": 5, "stroke-linejoin": "round" }, hud);
+      const frame = el("path", { d: "M70,60 L400,60 L430,90 L650,90 L680,60 L1010,60 L1040,90 L1040,1830 L1010,1860 L700,1860 L680,1840 L400,1840 L380,1860 L70,1860 L40,1830 L40,90 Z" }, hudG);
+      el("path", { d: "M60,140 L60,400 M1020,140 L1020,400 M60,1520 L60,1780 M1020,1520 L1020,1780", "stroke-width": 3, opacity: 0.8 }, hudG);
+      el("path", { d: "M120,76 L360,76 M720,76 L960,76 M120,1846 L340,1846 M740,1846 L960,1846", "stroke-width": 2, opacity: 0.7, "stroke-dasharray": "6 8" }, hudG);
+      // controller icon
+      const pad = el("g", { transform: "translate(540,72)", "stroke-width": 4 }, hudG);
+      el("path", { d: "M-46,-14 Q-36,-26 -16,-22 L16,-22 Q36,-26 46,-14 Q58,14 46,26 Q36,32 22,16 L-22,16 Q-36,32 -46,26 Q-58,14 -46,-14 Z" }, pad);
+      el("path", { d: "M-30,-4 L-14,-4 M-22,-12 L-22,4" }, pad);
+      el("circle", { cx: 22, cy: -8, r: 3, fill: "#d08bff" }, pad); el("circle", { cx: 30, cy: 0, r: 3, fill: "#d08bff" }, pad);
+      // ring at the bottom
+      const ringG = el("g", { id: "ringG" }, hudG);
+      el("ellipse", { cx: 540, cy: 1730, rx: 420, ry: 56, "stroke-width": 6 }, ringG);
+      el("ellipse", { cx: 540, cy: 1730, rx: 340, ry: 40, "stroke-width": 2, opacity: 0.7 }, ringG);
+      el("ellipse", { cx: 540, cy: 1730, rx: 400, ry: 48, fill: "#9d4dff", stroke: "none", opacity: 0.25 }, ringG);
+      const frameLen = frame.getTotalLength();
+      frame.setAttribute("stroke-dasharray", frameLen);
+
+      // ---------- Timeline ----------
+      const tl = gsap.timeline({ paused: true });
+      const T = 8;
+      // scene intro
+      tl.fromTo("#sky, #sun, #city, #road", { opacity: 0 }, { opacity: 1, duration: 0.8, ease: "power2.out" }, 0);
+      tl.fromTo("#palms", { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 1, ease: "power3.out" }, 0.1);
+      tl.fromTo("#city", { y: 30 }, { y: 0, duration: 1.2, ease: "power2.out" }, 0);
+      tl.fromTo(frame, { attr: { "stroke-dashoffset": frameLen } }, { attr: { "stroke-dashoffset": 0 }, duration: 1.1, ease: "power2.inOut" }, 0.1);
+      tl.fromTo("#hud", { opacity: 0.2 }, { opacity: 1, duration: 0.4 }, 0.1);
+      tl.fromTo("#ringG", { scale: 0.6, opacity: 0, transformOrigin: "540px 1730px" }, { scale: 1, opacity: 1, duration: 0.8, ease: "back.out(1.6)" }, 0.5);
+      // ambient loops (finite)
+      const dash = { o: 0 };
+      tl.to(dash, { o: N * 3, duration: T, ease: "none", onUpdate: () => placeDashes(dash.o) }, 0);
+      tl.fromTo("#heliG", { x: 1180, rotation: -6, svgOrigin: "0 0" }, { x: 620, duration: T, ease: "none" }, 0);
+      tl.fromTo("#heliG", { y: 400 }, { y: 375, duration: 1, yoyo: true, repeat: 7, ease: "sine.inOut" }, 0);
+      tl.fromTo(rotor, { scaleX: 1, svgOrigin: "0 -31" }, { scaleX: 0.15, duration: 0.06, yoyo: true, repeat: 133, ease: "none" }, 0);
+      tl.fromTo(hlight, { opacity: 1 }, { opacity: 0.1, duration: 0.4, yoyo: true, repeat: 19, ease: "steps(1)" }, 0);
+      flicker.forEach((r, i) => tl.fromTo(r, { opacity: 1 }, { opacity: 0.15, duration: 0.5 + (i % 4) * 0.2, yoyo: true, repeat: 7, ease: "steps(1)" }, (i % 5) * 0.3));
+      tl.fromTo("#ringG > ellipse:nth-child(2)", { scale: 1, opacity: 0.7, transformOrigin: "540px 1730px" }, { scale: 1.18, opacity: 0, duration: 1.2, repeat: 5, ease: "power1.out" }, 1);
+      tl.fromTo("#sun", { scale: 1 }, { scale: 1.08, duration: 2, yoyo: true, repeat: 3, ease: "sine.inOut" }, 0);
+
+      // chart
+      const HB = 560, HA = 1060; // bar heights in px (Oppenheimer / "this")
+      tl.fromTo("#title .kicker", { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 0.7);
+      tl.fromTo("#title .main", { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(2)" }, 4.0);
+      tl.fromTo("#lblB", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 1.0);
+      tl.fromTo("#barB", { scaleY: 0 }, { scaleY: HB / 1200, duration: 1.6, ease: "power3.out" }, 1.3);
+      const cnt = { v: 0 }, valB = document.getElementById("valB");
+      gsap.set(valB, { bottom: 0 });
+      tl.fromTo(valB, { opacity: 0 }, { opacity: 1, duration: 0.3 }, 1.3);
+      tl.to(cnt, { v: 976, duration: 1.6, ease: "power3.out", onUpdate: () => {
+        valB.textContent = "$" + Math.round(cnt.v) + "M";
+        valB.style.bottom = (HB * (cnt.v / 976) + 20) + "px";
+      } }, 1.3);
+      tl.fromTo("#lblA", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 2.9);
+      tl.fromTo("#barA", { scaleY: 0 }, { scaleY: HA / 1200, duration: 1.4, ease: "expo.out" }, 3.1);
+      gsap.set("#valA", { bottom: HA + 20 });
+      tl.fromTo("#valA", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(2.5)" }, 3.9);
+      tl.fromTo("#valA", { y: 0 }, { y: -14, duration: 0.5, yoyo: true, repeat: 5, ease: "sine.inOut", immediateRender: false }, 4.4);
+      tl.to("#wrapB", { opacity: 0.6, duration: 0.6 }, 4.0);
+      tl.fromTo("#barA", { boxShadow: "0 0 40px rgba(255,79,216,0.8), inset 0 0 40px rgba(255,255,255,0.25)" }, { boxShadow: "0 0 90px rgba(255,79,216,1), inset 0 0 60px rgba(255,255,255,0.4)", duration: 0.6, yoyo: true, repeat: 5, ease: "sine.inOut", immediateRender: false }, 4.4);
+      // final light camera push
+      tl.fromTo("#root > .layer:not(#hud)", { scale: 1 }, { scale: 1.04, duration: T, ease: "none", transformOrigin: "50% 60%" }, 0);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
