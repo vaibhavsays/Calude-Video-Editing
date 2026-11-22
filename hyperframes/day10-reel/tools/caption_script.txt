@@ -1,0 +1,10 @@
+0.089	2.183	So *why your website* | loads like a *bull cart*?
+2.284	5.970	Agar aapki *website* open hone mein | *3 seconds* se zyada le rahi hai, | toh aap *game* mein already *bahar* ho.
+6.310	10.104	So welcome to *Day 10* | of 100 Days of | *Decoding AI SEO* by Vaibhav.
+10.104	12.498	Dekho, *AI crawlers* | bahut *fast* hote hain, | aur agar aapki website faltu ke
+12.498	16.100	*animations*, *images* aur *videos* se | bhari padi hai, | toh use chhod kar | aage nikal jaate hain.
+16.630	19.140	Aur agar aap chahte hain ki | aapki website ke saath | ye sab cheezein na hon, toh
+19.330	21.668	aaj hi *5 kaam* karein. | Pehla, *images* ko
+21.668	25.339	*compress* karna. | Doosra, *videos* ko *compress* karna. | Jo faltu ke *animations* hain, unko
+25.339	30.355	hatana. | Extra *CSS*, *HTML*, *JavaScript* ko hatana. | Aur paanchva, aapke jo *Core Web Vitals*
+30.369	34.703	hote hain, | jaise ki *CLS* ho gaya, *FCP* ho gaya, | in saari cheezon ko *fix* karna.
