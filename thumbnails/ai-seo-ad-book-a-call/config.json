@@ -1,0 +1,17 @@
+{
+  "theme": "blue",
+  "logos": ["openai.svg", "google-color.svg", "gemini-color.svg", "google-search-console.svg"],
+  "logos_top": "140px",
+  "logo_size": "104px",
+  "title": "Get Your Business Into AI",
+  "title_size": "72px",
+  "title_top": "290px",
+  "subtitle": "AI SEO EXPERT · 5+ YEARS",
+  "sub_top": "400px",
+  "big_word": "AI SEO",
+  "big_size": "270px",
+  "big_top": "470px",
+  "person_width": "1080px",
+  "photo": "assets/vaibhav_suit_cutout.png",
+  "output": "cover.png"
+}
