@@ -1,0 +1,11 @@
+0.548	3.696	Aapki *website* bhi daily | isi tarah *gir* rahi hai, | agar aapne in *15 cheezon* par | kaam nahi kiya
+3.696	8.399	toh. | So welcome to *Day 12* | of 100 Days of | *Decoding AI SEO*. | And those 15
+8.443	12.939	important things are: | *build entity SEO*, | *run digital PR campaigns*, | leverage
+12.955	17.718	*parasite SEO*, | *collect real and verified reviews*, | participate authentically on
+17.732	23.424	*Reddit and forums*, | *get featured in "best of" listicles*, | *write direct answers*, | publish
+23.480	29.578	*original data and research*, | *structure content* | with lists and tables, | implement
+29.586	34.045	*comprehensive schema markup*, | *optimize for conversational prompts*, | create YouTube
+34.052	39.775	*videos with clear transcripts*, | *strengthen author E-E-A-T*, | *keep facts and stats*
+39.796	42.856	*updated*, | *allow AI crawlers* in robots.txt.
+42.871	47.282	Ensure bots like | *OAI-SearchBot*, *PerplexityBot*, | Claude
+47.287	50.711	*Bot* and *Google-Extended* | are not blocked from crawling | your key pages.
