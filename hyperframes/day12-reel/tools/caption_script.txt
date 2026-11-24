@@ -1,5 +1,6 @@
-0.548	3.696	Aapki *website* bhi daily | isi tarah *gir* rahi hai, | agar aapne in *15 cheezon* par | kaam nahi kiya
-3.696	8.399	toh. | So welcome to *Day 12* | of 100 Days of | *Decoding AI SEO*. | And those 15
+0.030	1.900	Aapki *website* bhi daily | isi tarah *gir* rahi hai,
+2.000	3.560	agar aapne in *15 cheezon* par | kaam nahi kiya toh.
+3.600	8.399	So welcome to *Day 12* | of 100 Days of | *Decoding AI SEO*. | And those 15
 8.443	12.939	important things are: | *build entity SEO*, | *run digital PR campaigns*, | leverage
 12.955	17.718	*parasite SEO*, | *collect real and verified reviews*, | participate authentically on
 17.732	23.424	*Reddit and forums*, | *get featured in "best of" listicles*, | *write direct answers*, | publish

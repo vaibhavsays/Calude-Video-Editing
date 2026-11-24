@@ -3,238 +3,239 @@
 "w": "Aapki",
 "brk": true,
 "seg": 0,
-"s": 0.548,
-"e": 0.738
+"s": 0.03,
+"e": 0.28
 },
 {
 "w": "*website*",
 "brk": false,
 "seg": 0,
-"s": 0.738,
-"e": 1.038
+"s": 0.28,
+"e": 0.63
 },
 {
 "w": "bhi",
 "brk": false,
 "seg": 0,
-"s": 1.038,
-"e": 1.138
+"s": 0.63,
+"e": 0.74
 },
 {
 "w": "daily",
 "brk": false,
 "seg": 0,
-"s": 1.138,
-"e": 1.338
+"s": 0.74,
+"e": 0.97
 },
 {
 "w": "isi",
 "brk": true,
 "seg": 0,
-"s": 1.338,
-"e": 1.528
+"s": 0.97,
+"e": 1.2
 },
 {
 "w": "tarah",
 "brk": false,
 "seg": 0,
-"s": 1.528,
-"e": 1.728
+"s": 1.2,
+"e": 1.43
 },
 {
 "w": "*gir*",
 "brk": false,
 "seg": 0,
-"s": 1.728,
-"e": 1.828
+"s": 1.43,
+"e": 1.55
 },
 {
 "w": "rahi",
 "brk": false,
 "seg": 0,
-"s": 1.828,
-"e": 2.028
+"s": 1.55,
+"e": 1.78
 },
 {
 "w": "hai,",
 "brk": false,
 "seg": 0,
-"s": 2.028,
-"e": 2.128
+"seg_end": 1.9,
+"s": 1.78,
+"e": 1.89
 },
 {
 "w": "agar",
 "brk": true,
-"seg": 0,
-"s": 2.128,
-"e": 2.348
+"seg": 1,
+"s": 2.0,
+"e": 2.2
 },
 {
 "w": "aapne",
 "brk": false,
-"seg": 0,
-"s": 2.348,
-"e": 2.538
+"seg": 1,
+"s": 2.2,
+"e": 2.38
 },
 {
 "w": "in",
 "brk": false,
-"seg": 0,
-"s": 2.538,
-"e": 2.638
+"seg": 1,
+"s": 2.38,
+"e": 2.47
 },
 {
 "w": "*15",
 "brk": false,
-"seg": 0,
-"s": 2.638,
-"e": 2.838
+"seg": 1,
+"s": 2.47,
+"e": 2.66
 },
 {
 "w": "cheezon*",
 "brk": false,
-"seg": 0,
-"s": 2.838,
-"e": 3.038
+"seg": 1,
+"s": 2.66,
+"e": 2.84
 },
 {
 "w": "par",
 "brk": false,
-"seg": 0,
-"s": 3.038,
-"e": 3.188
+"seg": 1,
+"s": 2.84,
+"e": 2.93
 },
 {
 "w": "kaam",
 "brk": true,
-"seg": 0,
-"s": 3.188,
-"e": 3.318
+"seg": 1,
+"s": 2.93,
+"e": 3.03
 },
 {
 "w": "nahi",
 "brk": false,
-"seg": 0,
-"s": 3.318,
-"e": 3.598
+"seg": 1,
+"s": 3.03,
+"e": 3.26
 },
 {
 "w": "kiya",
 "brk": false,
-"seg": 0,
-"seg_end": 3.696,
-"s": 3.598,
-"e": 3.688
+"seg": 1,
+"s": 3.26,
+"e": 3.38
 },
 {
 "w": "toh.",
-"brk": true,
+"brk": false,
 "seg": 1,
-"s": 3.696,
-"e": 3.776
+"seg_end": 3.56,
+"s": 3.38,
+"e": 3.55
 },
 {
 "w": "So",
 "brk": true,
-"seg": 1,
-"s": 3.766,
-"e": 3.846
+"seg": 2,
+"s": 3.6,
+"e": 3.83
 },
 {
 "w": "welcome",
 "brk": false,
-"seg": 1,
+"seg": 2,
 "s": 3.84,
 "e": 4.07
 },
 {
 "w": "to",
 "brk": false,
-"seg": 1,
+"seg": 2,
 "s": 4.08,
 "e": 4.21
 },
 {
 "w": "*Day",
 "brk": false,
-"seg": 1,
+"seg": 2,
 "s": 4.21,
 "e": 4.35
 },
 {
 "w": "12*",
 "brk": false,
-"seg": 1,
+"seg": 2,
 "s": 4.35,
 "e": 4.7
 },
 {
 "w": "of",
 "brk": true,
-"seg": 1,
+"seg": 2,
 "s": 4.7,
 "e": 4.84
 },
 {
 "w": "100",
 "brk": false,
-"seg": 1,
+"seg": 2,
 "s": 4.84,
 "e": 5.11
 },
 {
 "w": "Days",
 "brk": false,
-"seg": 1,
+"seg": 2,
 "s": 5.12,
 "e": 5.27
 },
 {
 "w": "of",
 "brk": false,
-"seg": 1,
+"seg": 2,
 "s": 5.28,
 "e": 5.36
 },
 {
 "w": "*Decoding",
 "brk": true,
-"seg": 1,
+"seg": 2,
 "s": 5.36,
 "e": 6.39
 },
 {
 "w": "AI",
 "brk": false,
-"seg": 1,
+"seg": 2,
 "s": 6.39,
 "e": 6.68
 },
 {
 "w": "SEO*.",
 "brk": false,
-"seg": 1,
+"seg": 2,
 "s": 6.68,
 "e": 7.03
 },
 {
 "w": "And",
 "brk": true,
-"seg": 1,
+"seg": 2,
 "s": 7.04,
 "e": 7.43
 },
 {
 "w": "those",
 "brk": false,
-"seg": 1,
+"seg": 2,
 "s": 7.44,
 "e": 7.79
 },
 {
 "w": "15",
 "brk": false,
-"seg": 1,
+"seg": 2,
 "seg_end": 8.399,
 "s": 7.79,
 "e": 8.38
@@ -242,77 +243,77 @@
 {
 "w": "important",
 "brk": true,
-"seg": 2,
+"seg": 3,
 "s": 8.443,
 "e": 8.793
 },
 {
 "w": "things",
 "brk": false,
-"seg": 2,
+"seg": 3,
 "s": 8.8,
 "e": 9.02
 },
 {
 "w": "are:",
 "brk": false,
-"seg": 2,
+"seg": 3,
 "s": 9.04,
 "e": 9.48
 },
 {
 "w": "*build",
 "brk": true,
-"seg": 2,
+"seg": 3,
 "s": 9.55,
 "e": 9.85
 },
 {
 "w": "entity",
 "brk": false,
-"seg": 2,
+"seg": 3,
 "s": 9.87,
 "e": 10.49
 },
 {
 "w": "SEO*,",
 "brk": false,
-"seg": 2,
+"seg": 3,
 "s": 10.49,
 "e": 10.83
 },
 {
 "w": "*run",
 "brk": true,
-"seg": 2,
+"seg": 3,
 "s": 10.83,
 "e": 11.06
 },
 {
 "w": "digital",
 "brk": false,
-"seg": 2,
+"seg": 3,
 "s": 11.07,
 "e": 11.54
 },
 {
 "w": "PR",
 "brk": false,
-"seg": 2,
+"seg": 3,
 "s": 11.55,
 "e": 11.94
 },
 {
 "w": "campaigns*,",
 "brk": false,
-"seg": 2,
+"seg": 3,
 "s": 11.95,
 "e": 12.37
 },
 {
 "w": "leverage",
 "brk": true,
-"seg": 2,
+"seg": 3,
 "seg_end": 12.939,
 "s": 12.51,
 "e": 12.9
@@ -320,70 +321,70 @@
 {
 "w": "*parasite",
 "brk": true,
-"seg": 3,
+"seg": 4,
 "s": 12.955,
 "e": 13.575
 },
 {
 "w": "SEO*,",
 "brk": false,
-"seg": 3,
+"seg": 4,
 "s": 13.575,
 "e": 13.715
 },
 {
 "w": "*collect",
 "brk": true,
-"seg": 3,
+"seg": 4,
 "s": 14.11,
 "e": 14.58
 },
 {
 "w": "real",
 "brk": false,
-"seg": 3,
+"seg": 4,
 "s": 14.59,
 "e": 14.9
 },
 {
 "w": "and",
 "brk": false,
-"seg": 3,
+"seg": 4,
 "s": 14.91,
 "e": 15.06
 },
 {
 "w": "verified",
 "brk": false,
-"seg": 3,
+"seg": 4,
 "s": 15.07,
 "e": 15.54
 },
 {
 "w": "reviews*,",
 "brk": false,
-"seg": 3,
+"seg": 4,
 "s": 15.55,
 "e": 15.86
 },
 {
 "w": "participate",
 "brk": true,
-"seg": 3,
+"seg": 4,
 "s": 16.27,
 "e": 16.81
 },
 {
 "w": "authentically",
 "brk": false,
-"seg": 3,
+"seg": 4,
 "s": 16.83,
 "e": 17.55
 },
 {
 "w": "on",
 "brk": false,
-"seg": 3,
+"seg": 4,
 "seg_end": 17.718,
 "s": 17.55,
 "e": 17.7
@@ -391,91 +392,91 @@
 {
 "w": "*Reddit",
 "brk": true,
-"seg": 4,
+"seg": 5,
 "s": 17.732,
 "e": 18.182
 },
 {
 "w": "and",
 "brk": false,
-"seg": 4,
+"seg": 5,
 "s": 18.19,
 "e": 18.28
 },
 {
 "w": "forums*,",
 "brk": false,
-"seg": 4,
+"seg": 5,
 "s": 18.35,
 "e": 19.01
 },
 {
 "w": "*get",
 "brk": true,
-"seg": 4,
+"seg": 5,
 "s": 19.056,
 "e": 19.366
 },
 {
 "w": "featured",
 "brk": false,
-"seg": 4,
+"seg": 5,
 "s": 19.376,
 "e": 19.686
 },
 {
 "w": "in",
 "brk": false,
-"seg": 4,
+"seg": 5,
 "s": 19.696,
 "e": 19.926
 },
 {
 "w": "\"best",
 "brk": false,
-"seg": 4,
+"seg": 5,
 "s": 19.936,
 "e": 20.166
 },
 {
 "w": "of\"",
 "brk": false,
-"seg": 4,
+"seg": 5,
 "s": 20.176,
 "e": 20.406
 },
 {
 "w": "listicles*,",
 "brk": false,
-"seg": 4,
+"seg": 5,
 "s": 20.416,
 "e": 21.376
 },
 {
 "w": "*write",
 "brk": true,
-"seg": 4,
+"seg": 5,
 "s": 21.376,
 "e": 21.766
 },
 {
 "w": "direct",
 "brk": false,
-"seg": 4,
+"seg": 5,
 "s": 21.776,
 "e": 22.176
 },
 {
 "w": "answers*,",
 "brk": false,
-"seg": 4,
+"seg": 5,
 "s": 22.256,
 "e": 22.696
 },
 {
 "w": "publish",
 "brk": true,
-"seg": 4,
+"seg": 5,
 "seg_end": 23.424,
 "s": 22.976,
 "e": 23.416
@@ -483,77 +484,77 @@
 {
 "w": "*original",
 "brk": true,
-"seg": 5,
+"seg": 6,
 "s": 23.48,
 "e": 23.84
 },
 {
 "w": "data",
 "brk": false,
-"seg": 5,
+"seg": 6,
 "s": 23.856,
 "e": 24.166
 },
 {
 "w": "and",
 "brk": false,
-"seg": 5,
+"seg": 6,
 "s": 24.176,
 "e": 24.326
 },
 {
 "w": "research*,",
 "brk": false,
-"seg": 5,
+"seg": 6,
 "s": 24.336,
 "e": 25.046
 },
 {
 "w": "*structure",
 "brk": true,
-"seg": 5,
+"seg": 6,
 "s": 25.056,
 "e": 25.606
 },
 {
 "w": "content*",
 "brk": false,
-"seg": 5,
+"seg": 6,
 "s": 25.616,
 "e": 26.086
 },
 {
 "w": "with",
 "brk": true,
-"seg": 5,
+"seg": 6,
 "s": 26.096,
 "e": 26.276
 },
 {
 "w": "lists",
 "brk": false,
-"seg": 5,
+"seg": 6,
 "s": 26.336,
 "e": 26.616
 },
 {
 "w": "and",
 "brk": false,
-"seg": 5,
+"seg": 6,
 "s": 26.616,
 "e": 26.966
 },
 {
 "w": "tables,",
 "brk": false,
-"seg": 5,
+"seg": 6,
 "s": 26.976,
 "e": 28.966
 },
 {
 "w": "implement",
 "brk": true,
-"seg": 5,
+"seg": 6,
 "seg_end": 29.578,
 "s": 28.995,
 "e": 29.565
@@ -561,63 +562,63 @@
 {
 "w": "*comprehensive",
 "brk": true,
-"seg": 6,
+"seg": 7,
 "s": 29.586,
 "e": 30.346
 },
 {
 "w": "schema",
 "brk": false,
-"seg": 6,
+"seg": 7,
 "s": 30.355,
 "e": 30.745
 },
 {
 "w": "markup*,",
 "brk": false,
-"seg": 6,
+"seg": 7,
 "s": 30.755,
 "e": 31.145
 },
 {
 "w": "*optimize",
 "brk": true,
-"seg": 6,
+"seg": 7,
 "s": 31.395,
 "e": 31.945
 },
 {
 "w": "for",
 "brk": false,
-"seg": 6,
+"seg": 7,
 "s": 31.955,
 "e": 32.185
 },
 {
 "w": "conversational",
 "brk": false,
-"seg": 6,
+"seg": 7,
 "s": 32.195,
 "e": 32.745
 },
 {
 "w": "prompts*,",
 "brk": false,
-"seg": 6,
+"seg": 7,
 "s": 32.755,
 "e": 33.145
 },
 {
 "w": "create",
 "brk": true,
-"seg": 6,
+"seg": 7,
 "s": 33.395,
 "e": 33.785
 },
 {
 "w": "YouTube",
 "brk": false,
-"seg": 6,
+"seg": 7,
 "seg_end": 34.045,
 "s": 33.795,
 "e": 34.035
@@ -625,77 +626,77 @@
 {
 "w": "*videos",
 "brk": true,
-"seg": 7,
+"seg": 8,
 "s": 34.052,
 "e": 34.352
 },
 {
 "w": "with",
 "brk": false,
-"seg": 7,
+"seg": 8,
 "s": 34.352,
 "e": 34.502
 },
 {
 "w": "clear",
 "brk": false,
-"seg": 7,
+"seg": 8,
 "s": 34.515,
 "e": 34.815
 },
 {
 "w": "transcripts*,",
 "brk": false,
-"seg": 7,
+"seg": 8,
 "s": 34.835,
 "e": 35.545
 },
 {
 "w": "*strengthen",
 "brk": true,
-"seg": 7,
+"seg": 8,
 "s": 35.555,
 "e": 36.065
 },
 {
 "w": "author",
 "brk": false,
-"seg": 7,
+"seg": 8,
 "s": 36.275,
 "e": 36.855
 },
 {
 "w": "E-E-A-T*,",
 "brk": false,
-"seg": 7,
+"seg": 8,
 "s": 36.915,
 "e": 37.485
 },
 {
 "w": "*keep",
 "brk": true,
-"seg": 7,
+"seg": 8,
 "s": 38.18,
 "e": 38.48
 },
 {
 "w": "facts",
 "brk": false,
-"seg": 7,
+"seg": 8,
 "s": 38.85,
 "e": 39.16
 },
 {
 "w": "and",
 "brk": false,
-"seg": 7,
+"seg": 8,
 "s": 39.17,
 "e": 39.32
 },
 {
 "w": "stats*",
 "brk": false,
-"seg": 7,
+"seg": 8,
 "seg_end": 39.775,
 "s": 39.33,
 "e": 39.76
@@ -703,42 +704,42 @@
 {
 "w": "*updated*,",
 "brk": true,
-"seg": 8,
+"seg": 9,
 "s": 39.796,
 "e": 40.416
 },
 {
 "w": "*allow",
 "brk": true,
-"seg": 8,
+"seg": 9,
 "s": 40.416,
 "e": 40.786
 },
 {
 "w": "AI",
 "brk": false,
-"seg": 8,
+"seg": 9,
 "s": 41.01,
 "e": 41.4
 },
 {
 "w": "crawlers*",
 "brk": false,
-"seg": 8,
+"seg": 9,
 "s": 41.41,
 "e": 41.8
 },
 {
 "w": "in",
 "brk": false,
-"seg": 8,
+"seg": 9,
 "s": 41.81,
 "e": 41.89
 },
 {
 "w": "robots.txt.",
 "brk": false,
-"seg": 8,
+"seg": 9,
 "seg_end": 42.856,
 "s": 41.89,
 "e": 42.84
@@ -746,42 +747,42 @@
 {
 "w": "Ensure",
 "brk": true,
-"seg": 9,
+"seg": 10,
 "s": 42.871,
 "e": 43.991
 },
 {
 "w": "bots",
 "brk": false,
-"seg": 9,
+"seg": 10,
 "s": 43.73,
 "e": 44.029999999999994
 },
 {
 "w": "like",
 "brk": false,
-"seg": 9,
+"seg": 10,
 "s": 44.37,
 "e": 45.07
 },
 {
 "w": "*OAI-SearchBot*,",
 "brk": true,
-"seg": 9,
+"seg": 10,
 "s": 44.85,
 "e": 45.15
 },
 {
 "w": "*PerplexityBot*,",
 "brk": false,
-"seg": 9,
+"seg": 10,
 "s": 46.05,
 "e": 46.9
 },
 {
 "w": "Claude",
 "brk": true,
-"seg": 9,
+"seg": 10,
 "seg_end": 47.282,
 "s": 47.09,
 "e": 47.39
@@ -789,77 +790,77 @@
 {
 "w": "*Bot*",
 "brk": true,
-"seg": 10,
+"seg": 11,
 "s": 47.287,
 "e": 47.647
 },
 {
 "w": "and",
 "brk": false,
-"seg": 10,
+"seg": 11,
 "s": 47.653,
 "e": 47.833
 },
 {
 "w": "*Google-Extended*",
 "brk": false,
-"seg": 10,
+"seg": 11,
 "s": 47.833,
 "e": 48.603
 },
 {
 "w": "are",
 "brk": true,
-"seg": 10,
+"seg": 11,
 "s": 48.613,
 "e": 48.763
 },
 {
 "w": "not",
 "brk": false,
-"seg": 10,
+"seg": 11,
 "s": 48.773,
 "e": 49.003
 },
 {
 "w": "blocked",
 "brk": false,
-"seg": 10,
+"seg": 11,
 "s": 49.013,
 "e": 49.313
 },
 {
 "w": "from",
 "brk": false,
-"seg": 10,
+"seg": 11,
 "s": 49.413,
 "e": 49.563
 },
 {
 "w": "crawling",
 "brk": false,
-"seg": 10,
+"seg": 11,
 "s": 49.573,
 "e": 49.963
 },
 {
 "w": "your",
 "brk": true,
-"seg": 10,
+"seg": 11,
 "s": 49.973,
 "e": 50.203
 },
 {
 "w": "key",
 "brk": false,
-"seg": 10,
+"seg": 11,
 "s": 50.213,
 "e": 50.443
 },
 {
 "w": "pages.",
 "brk": false,
-"seg": 10,
+"seg": 11,
 "seg_end": 50.711,
 "s": 50.453,
 "e": 50.693

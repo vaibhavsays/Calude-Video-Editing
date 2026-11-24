@@ -11,7 +11,7 @@ import json
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-TAKES = [(0.45, 50.95)]
+TAKES = [(0.0, 50.95)]
 LEAD, TAIL, MIN_PAUSE = 0.20, 0.12, 0.30
 
 sil = [tuple(map(float, l.split())) for l in open(HERE / "silences.txt") if l.strip()]
