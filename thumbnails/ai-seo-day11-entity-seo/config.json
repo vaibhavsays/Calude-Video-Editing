@@ -1,0 +1,17 @@
+{
+  "theme": "mint",
+  "logos": ["openai.svg", "google-color.svg", "perplexity-color.svg", "gemini-color.svg"],
+  "logos_top": "140px",
+  "logo_size": "104px",
+  "title": "Keywords Are Dead. Meet Entities",
+  "title_size": "62px",
+  "title_top": "290px",
+  "subtitle": "AI SEO · DAY 11",
+  "sub_top": "400px",
+  "big_word": "ENTITY",
+  "big_size": "250px",
+  "big_top": "470px",
+  "person_width": "1080px",
+  "photo": "assets/vaibhav_suit_cutout.png",
+  "output": "cover.png"
+}
