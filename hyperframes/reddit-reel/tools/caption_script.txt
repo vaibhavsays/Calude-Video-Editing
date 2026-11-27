@@ -1,0 +1,14 @@
+0.040	3.320	Okay so, agar aapko | *Google* search engine pe | actual mein *first position* mein rank
+3.360	6.560	karna hai, | toh aapko simple | ye *method* apply karna hai. | Aapko simple aa jaana hai search
+6.600	9.640	engine pe, | aapko apne *course* ke related | ya phir aapki koi bhi | *services* ke related
+9.720	13.660	ek *query* search karni hai | yahan pe | and uske aage likhna hai | *colon and reddit.com*.
+14.060	18.120	Aapko *enter* karna hai. | Second, koi bhi, koi bhi | *Reddit* ka hi koi bhi | page kholein, | suppose hum
+18.160	21.560	ye karte hain. | Ab yahan pe logon ne already | *questions* kiye hue hain, | jo *real questions*
+21.600	25.740	hain user, | jo log poochte hain. | Yahan pe koi bhi ek | question pe jaake | aap *click* kijiye.
+25.800	29.180	Ab yahan pe aapko | wo *exact question* milega | jo aap apne *website* mein | cover kar sakte hain,
+29.220	32.720	*blog* mein ya *pages* mein | cover kar sakte hain | and usmein aapka | *khud ka answer* implement
+32.780	36.680	kijiye, | aapka khud ka jo | *personalized answer* hai, | personalized uska answer hai, | wo aap
+36.720	40.680	yahan pe *implement* karna | and agar koi bhi user | usko dobara se search karta hai, | toh
+40.740	45.160	yahan pe Reddit mein | bahar aakar, | Reddit mein *aapki website* | *show* hogi | and aapke hi *answers*
+45.200	49.260	show honge. | Jaise Red-, Reddit | ya *Coursera* aa raha hai yahan pe, | *Udemy* aa raha hai, | toh
+49.300	50.880	yahan pe *aapki website* | *show hone wali hai*.
