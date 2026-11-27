@@ -1,0 +1,17 @@
+{
+  "theme": "pink",
+  "logos": ["google-color.svg", "reddit.svg", "openai.svg", "gemini-color.svg"],
+  "logos_top": "140px",
+  "logo_size": "104px",
+  "title": "Rank #1 With This Reddit Trick",
+  "title_size": "66px",
+  "title_top": "290px",
+  "subtitle": "FREE GOOGLE SEO HACK",
+  "sub_top": "400px",
+  "big_word": "RANK #1",
+  "big_size": "230px",
+  "big_top": "475px",
+  "person_width": "1080px",
+  "photo": "assets/vaibhav_suit_cutout.png",
+  "output": "cover.png"
+}
